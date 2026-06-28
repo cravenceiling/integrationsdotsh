@@ -1,42 +1,31 @@
 /**
- * The API — the single source of truth.
- *
- * Endpoints are defined once as an Effect `HttpApi`; the typed server, the
- * OpenAPI document (`/openapi.json`), and downstream artifacts (MCP, CLI) all
- * derive from this. Runs as a pure web fetch handler on Cloudflare Workers.
+ * The REST API — defined once as an Effect HttpApi. The typed server and the
+ * OpenAPI document (/openapi.json) both derive from this. Runs as a pure web
+ * fetch handler on Cloudflare Workers.
  */
-import { Effect, FileSystem, Layer, Path, Schema } from "effect";
+import { FileSystem, Layer, Path } from "effect";
 import { Etag, HttpPlatform } from "effect/unstable/http";
 import * as HttpRouter from "effect/unstable/http/HttpRouter";
 import { HttpApi, HttpApiBuilder, HttpApiEndpoint, HttpApiGroup } from "effect/unstable/httpapi";
-import { detect } from "../src/lib/detect.ts";
-
-// Response shape (top-level typed; per-format detail kept loose for now).
-const DetectionResult = Schema.Struct({
-  domain: Schema.String,
-  found: Schema.Array(Schema.String),
-  apiCatalog: Schema.optional(Schema.Unknown),
-  apiSchema: Schema.optional(Schema.Unknown),
-  mcp: Schema.Array(Schema.Unknown),
-  agentCard: Schema.optional(Schema.Unknown),
-  agentSkills: Schema.optional(Schema.Unknown),
-  llmsTxt: Schema.Boolean,
-  errors: Schema.Array(Schema.String),
-});
+import * as OpenApi from "effect/unstable/httpapi/OpenApi";
+import { DetectionResult, DetectParams, runDetect } from "./operations.ts";
 
 const Detect = HttpApiEndpoint.get("detect", "/api/:domain/detect", {
-  params: Schema.Struct({ domain: Schema.String }),
+  params: DetectParams,
   success: DetectionResult,
 });
 
-export const Api = HttpApi.make("integrations.sh").add(
-  HttpApiGroup.make("detect").add(Detect),
-);
+export const Api = HttpApi.make("integrations.sh")
+  .add(HttpApiGroup.make("detect").add(Detect))
+  .annotate(OpenApi.Title, "integrations.sh")
+  .annotate(OpenApi.Version, "0.1.0")
+  .annotate(
+    OpenApi.Description,
+    "Discover how to integrate with any service — APIs, MCP servers, GraphQL, CLIs — and detect what a domain exposes to agents.",
+  );
 
 const DetectGroup = HttpApiBuilder.group(Api, "detect", (handlers) =>
-  handlers.handle("detect", (req: { readonly params: { readonly domain: string } }) =>
-    Effect.promise(() => detect(req.params.domain.trim().toLowerCase()) as Promise<typeof DetectionResult.Type>),
-  ),
+  handlers.handle("detect", (req: { readonly params: { readonly domain: string } }) => runDetect(req.params.domain)),
 );
 
 const Platform = Layer.mergeAll(Path.layer, Etag.layerWeak, HttpPlatform.layer).pipe(
