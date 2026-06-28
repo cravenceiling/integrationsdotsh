@@ -1,0 +1,22 @@
+---
+// Shared breadcrumb. Renders `registry / domain / kind`-style trails.
+// Styling comes from the global `.crumb` rules in Base.astro so every page
+// matches. Segments with an `href` render as links; the last is usually plain.
+interface Segment {
+  label: string;
+  href?: string;
+}
+interface Props {
+  segments: Segment[];
+}
+const { segments } = Astro.props;
+---
+
+<nav class="crumb" aria-label="Breadcrumb">
+  {segments.map((s, i) => (
+    <>
+      {i > 0 && <span class="sep">/</span>}
+      {s.href ? <a href={s.href}>{s.label}</a> : <span>{s.label}</span>}
+    </>
+  ))}
+</nav>

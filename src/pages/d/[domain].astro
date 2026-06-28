@@ -1,5 +1,6 @@
 ---
 import Base from "~/layouts/Base.astro";
+import Breadcrumb from "~/components/Breadcrumb.astro";
 import { index, byId } from "~/lib/data.ts";
 import type { IndexRecord } from "~/lib/data.ts";
 import type { Kind } from "~/lib/types.ts";
@@ -72,9 +73,12 @@ const metaFor = (r: IndexRecord): string => {
 <Base title={title} description={description} path={`/d/${domain}/`}>
   <div class="container">
     <article data-pagefind-body>
-      <div class="crumb">
-        <a href="/">registry</a><span class="sep">/</span>{domain}
-      </div>
+      <Breadcrumb
+        segments={[
+          { label: "registry", href: "/" },
+          { label: domain },
+        ]}
+      />
 
       <header class="head">
         <div class="favicon">

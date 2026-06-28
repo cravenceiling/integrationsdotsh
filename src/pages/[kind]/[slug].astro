@@ -1,5 +1,6 @@
 ---
 import Base from "~/layouts/Base.astro";
+import Breadcrumb from "~/components/Breadcrumb.astro";
 import Markdown from "~/components/Markdown.tsx";
 import { byKind, kindLabel, domainById } from "~/lib/data.ts";
 import type { Kind } from "~/lib/types.ts";
@@ -32,11 +33,13 @@ const description = (item.description || `${item.name} ${kindLabel[item.kind]} d
 <Base title={title} description={description} path={`/${item.kind}/${item.slug}/`}>
   <div class="container">
     <article data-pagefind-body>
-      <div class="crumb">
-        <a href="/">registry</a><span class="sep">/</span>
-        <a href={`/d/${encodeURIComponent(domain)}/`}>{item.slug}</a><span class="sep">/</span>
-        <a href={`/?kind=${item.kind}`}>{item.kind}</a>
-      </div>
+      <Breadcrumb
+        segments={[
+          { label: "registry", href: "/" },
+          { label: domain, href: `/d/${encodeURIComponent(domain)}/` },
+          { label: item.kind, href: `/?kind=${item.kind}` },
+        ]}
+      />
 
       <header class="head">
         <div class="favicon">
