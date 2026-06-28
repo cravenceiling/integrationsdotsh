@@ -1,4 +1,5 @@
 import { detect } from "../src/lib/detect.ts";
+import { mcpHandler } from "./registry.ts";
 
 export interface Env {
   ASSETS: { fetch: (request: Request) => Promise<Response> };
@@ -25,6 +26,11 @@ export default {
     ctx: ExecutionContext,
   ): Promise<Response> {
     const url = new URL(request.url);
+
+    // MCP server (write-once tool registry) — point Claude/Cursor at /mcp.
+    if (url.pathname === "/mcp") {
+      return mcpHandler(request);
+    }
 
     // Detection endpoint: run the full agent-readiness battery for a domain.
     // GET /api/<domain>/detect -> structured DetectionResult (cached 1h).
