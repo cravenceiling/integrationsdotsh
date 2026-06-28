@@ -30,6 +30,11 @@ export const DETECT_DESCRIPTION =
   "server-card, agent-card, agent-skills, llms.txt) plus live capability " +
   "detection — MCP self-onboarding (DCR/CIMD) and the live OpenAPI schema.";
 
-/** The detect handler, shared by REST and MCP. */
+/** The detect handler, shared by REST and MCP. JSON-cleans the result so the
+ * Schema.Unknown response encoder never sees an explicit `undefined` (not a
+ * valid JSON value). */
 export const runDetect = (domain: string): Effect.Effect<typeof DetectionResult.Type> =>
-  Effect.promise(() => detect(domain.trim().toLowerCase()) as Promise<typeof DetectionResult.Type>);
+  Effect.promise(async () => {
+    const r = await detect(domain.trim().toLowerCase());
+    return JSON.parse(JSON.stringify(r)) as typeof DetectionResult.Type;
+  });
