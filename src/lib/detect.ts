@@ -78,6 +78,34 @@ async function get(
   }
 }
 
+/** Like get(), but reads only the first chunk — for sniffing big artifacts
+ * (e.g. OpenAPI specs) without downloading or parsing the whole body. */
+async function peek(
+  fetchImpl: FetchLike,
+  url: string,
+  init?: RequestInit,
+  maxBytes = 4096,
+): Promise<{ res: Response; head: string } | null> {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+  try {
+    const headers = { "user-agent": "integrations.sh-detector/0.1 (+https://integrations.sh)", ...(init?.headers as Record<string, string> | undefined) };
+    const res = await fetchImpl(url, { redirect: "follow", ...init, headers, signal: ctrl.signal });
+    if (!res.body) {
+      const text = await res.text();
+      return { res, head: text.slice(0, maxBytes) };
+    }
+    const reader = res.body.getReader();
+    const { value } = await reader.read();
+    reader.cancel().catch(() => {});
+    return { res, head: value ? new TextDecoder().decode(value).slice(0, maxBytes) : "" };
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(t);
+  }
+}
+
 /** Parse JSON only when it actually looks like JSON (guards SPA/HTML fallbacks). */
 function asJson(text: string, contentType: string | null): any | null {
   const trimmed = text.trimStart();
@@ -149,14 +177,17 @@ async function checkLlmsTxt(fetchImpl: FetchLike, domain: string): Promise<boole
  */
 async function checkApiSchema(fetchImpl: FetchLike, domain: string) {
   const paths = ["/api/schema/", "/openapi.json", "/swagger.json", "/api/openapi.json", "/v1/openapi.json"];
-  // Probe all candidate paths concurrently; keep the first (by order) that is a spec.
+  // Probe concurrently; sniff only the head (no body download, no parse).
   const results = await Promise.all(paths.map(async (p) => {
-    const hit = await get(fetchImpl, `https://${domain}${p}`);
+    const url = `https://${domain}${p}`;
+    const hit = await peek(fetchImpl, url);
     if (!hit || !hit.res.ok) return undefined;
     const ct = hit.res.headers.get("content-type") ?? "";
-    const doc = asJson(hit.text, ct);
-    const isOpenapi = /openapi/i.test(ct) || Boolean(doc && (doc.openapi || doc.swagger));
-    return isOpenapi ? { url: `https://${domain}${p}`, format: "openapi" as const, version: doc?.openapi ?? doc?.swagger } : undefined;
+    if (/text\/html/i.test(ct)) return undefined; // SPA fallback
+    const isOpenapi = /openapi|swagger/i.test(ct) || /["']?(?:openapi|swagger)["']?\s*:/.test(hit.head);
+    if (!isOpenapi) return undefined;
+    const version = /["']?(?:openapi|swagger)["']?\s*:\s*["']([^"']+)["']/.exec(hit.head)?.[1];
+    return { url, format: "openapi" as const, version };
   }));
   return results.find(Boolean);
 }
