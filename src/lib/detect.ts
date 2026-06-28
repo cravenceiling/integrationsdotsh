@@ -38,11 +38,17 @@ export interface DetectionResult {
     mcp: string[];
   };
   apiSchema?: { url: string; format: "openapi"; version?: string };
-  /** How to authenticate — the bet. Aggregated across REST, MCP, and PRM. */
+  /** How to authenticate — the bet. Detected from the site's OAuth well-known. */
   auth?: {
-    rest?: ReadonlyArray<{ name: string; type: string; scheme?: string; in?: string; keyName?: string; bearerFormat?: string; openIdConnectUrl?: string; flows?: unknown }>;
-    mcp?: ReadonlyArray<{ url: string; type?: string; authorizationServer?: string }>;
-    oauthProtectedResource?: { authorizationServers: string[]; scopes?: string[] };
+    oauth?: {
+      authorizationServers?: string[];
+      scopes?: string[];
+      registrationEndpoint?: string;
+      dcr?: boolean;
+      cimd?: boolean;
+      grantTypes?: string[];
+    };
+    mcp?: ReadonlyArray<{ url: string; type?: string; authorizationServer?: string; dcr?: boolean; cimd?: boolean }>;
   };
   mcp: McpDetection[];
   agentCard?: { name?: string; url?: string };
@@ -136,24 +142,11 @@ async function checkLlmsTxt(fetchImpl: FetchLike, domain: string): Promise<boole
   return hit.text.length > 0 && !/<!doctype|<html/i.test(hit.text.slice(0, 200));
 }
 
-/** Summarize the OpenAPI `securitySchemes` — how to authenticate to the API. */
-function extractRestAuth(doc: any) {
-  const schemes = doc?.components?.securitySchemes ?? doc?.securityDefinitions; // OAS3 / Swagger2
-  if (!schemes || typeof schemes !== "object") return undefined;
-  const out = Object.entries<any>(schemes).map(([name, s]) => ({
-    name,
-    type: s?.type,
-    scheme: s?.scheme,
-    in: s?.in,
-    keyName: s?.name, // for apiKey: the header/query param to send, e.g. "X-API-Key"
-    bearerFormat: s?.bearerFormat,
-    openIdConnectUrl: s?.openIdConnectUrl,
-    flows: s?.flows,
-  }));
-  return out.length ? out : undefined;
-}
-
-/** Probe conventional live-spec paths; parse the OpenAPI to also surface auth. */
+/**
+ * Detect that an OpenAPI spec is *published* (a site signal). We deliberately
+ * do NOT parse the spec's contents — auth and the rest come from the site's
+ * well-known endpoints, not from mining specs.
+ */
 async function checkApiSchema(fetchImpl: FetchLike, domain: string) {
   const paths = ["/api/schema/", "/openapi.json", "/swagger.json", "/api/openapi.json", "/v1/openapi.json"];
   for (const p of paths) {
@@ -163,24 +156,50 @@ async function checkApiSchema(fetchImpl: FetchLike, domain: string) {
     const doc = asJson(hit.text, ct);
     const isOpenapi = /openapi/i.test(ct) || Boolean(doc && (doc.openapi || doc.swagger));
     if (!isOpenapi) continue;
-    return {
-      url: `https://${domain}${p}`,
-      format: "openapi" as const,
-      version: doc?.openapi ?? doc?.swagger,
-      rest: extractRestAuth(doc),
-    };
+    return { url: `https://${domain}${p}`, format: "openapi" as const, version: doc?.openapi ?? doc?.swagger };
   }
   return undefined;
 }
 
-/** OAuth 2.0 Protected Resource Metadata (RFC 9728) — the API's auth servers. */
-async function checkOauthProtectedResource(fetchImpl: FetchLike, domain: string) {
-  const hit = await get(fetchImpl, `https://${domain}/.well-known/oauth-protected-resource`);
-  if (!hit || !hit.res.ok) return undefined;
-  const doc = asJson(hit.text, hit.res.headers.get("content-type"));
-  const servers = doc?.authorization_servers;
-  if (!Array.isArray(servers) || servers.length === 0) return undefined;
-  return { authorizationServers: servers as string[], scopes: doc?.scopes_supported as string[] | undefined };
+/** Read an OAuth Authorization Server metadata doc (RFC 8414) for capabilities. */
+async function asMetadata(fetchImpl: FetchLike, asUrl: string) {
+  const base = asUrl.replace(/\/$/, "");
+  const hit =
+    (await get(fetchImpl, `${base}/.well-known/oauth-authorization-server`)) ??
+    (await get(fetchImpl, `${base}/.well-known/openid-configuration`));
+  const doc = hit && hit.res.ok ? asJson(hit.text, hit.res.headers.get("content-type")) : undefined;
+  if (!doc) return undefined;
+  return {
+    registrationEndpoint: doc.registration_endpoint as string | undefined,
+    dcr: Boolean(doc.registration_endpoint), // Dynamic Client Registration (RFC 7591)
+    cimd: doc.client_id_metadata_document_supported === true, // Client ID Metadata Document
+    grantTypes: doc.grant_types_supported as string[] | undefined,
+    scopes: doc.scopes_supported as string[] | undefined,
+  };
+}
+
+/**
+ * The site's API OAuth — from well-known only: protected-resource (RFC 9728)
+ * for the resource→auth-server map + scopes, then the authorization-server
+ * metadata for DCR / CIMD / grant types.
+ */
+async function checkApiOAuth(fetchImpl: FetchLike, domain: string) {
+  const prm = await get(fetchImpl, `https://${domain}/.well-known/oauth-protected-resource`);
+  const prmDoc = prm && prm.res.ok ? asJson(prm.text, prm.res.headers.get("content-type")) : undefined;
+  const servers: string[] | undefined = Array.isArray(prmDoc?.authorization_servers) && prmDoc.authorization_servers.length
+    ? prmDoc.authorization_servers
+    : undefined;
+  const asUrl = servers?.[0] ?? `https://${domain}`; // fall back to the domain's own AS metadata
+  const meta = await asMetadata(fetchImpl, asUrl);
+  if (!servers && !meta) return undefined;
+  return {
+    authorizationServers: servers ?? [asUrl],
+    scopes: (prmDoc?.scopes_supported as string[] | undefined) ?? meta?.scopes,
+    registrationEndpoint: meta?.registrationEndpoint,
+    dcr: meta?.dcr,
+    cimd: meta?.cimd,
+    grantTypes: meta?.grantTypes,
+  };
 }
 
 /**
@@ -216,21 +235,15 @@ async function detectMcpOnboarding(fetchImpl: FetchLike, mcpUrl: string): Promis
 
 export async function detect(domain: string, fetchImpl: FetchLike = fetch): Promise<DetectionResult> {
   const errors: string[] = [];
-  const [apiCatalog, serverCard, agentCard, agentSkills, llmsTxt, apiSchemaRaw, oauthPR] = await Promise.all([
+  const [apiCatalog, serverCard, agentCard, agentSkills, llmsTxt, apiSchema, apiOAuth] = await Promise.all([
     checkApiCatalog(fetchImpl, domain).catch((e) => (errors.push(`api-catalog: ${e}`), undefined)),
     checkServerCard(fetchImpl, domain).catch((e) => (errors.push(`server-card: ${e}`), undefined)),
     checkAgentCard(fetchImpl, domain).catch((e) => (errors.push(`agent-card: ${e}`), undefined)),
     checkAgentSkills(fetchImpl, domain).catch((e) => (errors.push(`agent-skills: ${e}`), undefined)),
     checkLlmsTxt(fetchImpl, domain).catch(() => false),
     checkApiSchema(fetchImpl, domain).catch(() => undefined),
-    checkOauthProtectedResource(fetchImpl, domain).catch(() => undefined),
+    checkApiOAuth(fetchImpl, domain).catch(() => undefined),
   ]);
-
-  // Keep apiSchema as the spec locator; lift its auth into the aggregate below.
-  const restAuth = apiSchemaRaw?.rest;
-  const apiSchema = apiSchemaRaw
-    ? { url: apiSchemaRaw.url, format: apiSchemaRaw.format, version: apiSchemaRaw.version }
-    : undefined;
 
   // Collect MCP endpoints from the server card + api-catalog, then probe each
   // for self-onboarding capability.
@@ -241,15 +254,14 @@ export async function detect(domain: string, fetchImpl: FetchLike = fetch): Prom
     [...mcpSeen.values()].map(async (m) => ({ ...m, ...(await detectMcpOnboarding(fetchImpl, m.url).catch(() => ({}))) })),
   );
 
-  // Aggregate auth — the bet — across REST (OpenAPI securitySchemes), MCP
-  // (oauth2 + authorization server), and the PRM well-known.
+  // Aggregate auth — the bet — from the site's OAuth well-known: the API's
+  // authorization server (DCR/CIMD/scopes) and each MCP endpoint's auth.
   const mcpAuth = mcp
     .filter((m) => m.auth && m.auth !== "none")
-    .map((m) => ({ url: m.url, type: m.auth, authorizationServer: m.authorizationServer }));
+    .map((m) => ({ url: m.url, type: m.auth, authorizationServer: m.authorizationServer, dcr: m.dcr, cimd: m.cimd }));
   const auth = {
-    ...(restAuth ? { rest: restAuth } : {}),
+    ...(apiOAuth ? { oauth: apiOAuth } : {}),
     ...(mcpAuth.length ? { mcp: mcpAuth } : {}),
-    ...(oauthPR ? { oauthProtectedResource: oauthPR } : {}),
   };
   const hasAuth = Object.keys(auth).length > 0;
 
