@@ -14,7 +14,12 @@ const Detect = Tool.make("detect", {
   description: DETECT_DESCRIPTION,
   parameters: DetectParams,
   success: DetectionResult,
-});
+})
+  // detect only fetches a domain's public surface — safe to auto-run.
+  .annotate(Tool.Readonly, true)
+  .annotate(Tool.Destructive, false)
+  .annotate(Tool.Idempotent, true);
+// openWorldHint stays true (default): it reaches arbitrary external domains.
 
 export const toolkit = Toolkit.make(Detect);
 
