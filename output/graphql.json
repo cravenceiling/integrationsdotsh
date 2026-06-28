@@ -1034,7 +1034,7 @@
     "name": "Microsoft Graph (DEMO)",
     "description": "Connect to the data that drives productivity – mail, calendar, contacts, documents, directory, devices, and more.",
     "url": "http://graphql-demo.azurewebsites.net/",
-    "icon": "https://azurewebsites.net/favicon.ico",
+    "icon": "https://graphql-demo.azurewebsites.net/favicon.ico",
     "categories": [],
     "feeds": [
       "graphql-apis"
@@ -1103,7 +1103,7 @@
     "name": "Shopify Storefront",
     "description": "The Storefront API gives you full creative control to build customized purchasing experiences for your customers.",
     "url": "https://graphql.myshopify.com/api/graphql.json",
-    "icon": "https://myshopify.com/favicon.ico",
+    "icon": "https://graphql.myshopify.com/favicon.ico",
     "categories": [],
     "feeds": [
       "graphql-apis"

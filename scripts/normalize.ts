@@ -1,7 +1,12 @@
 import { readFileSync, writeFileSync, existsSync, readdirSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { getDomain } from "tldts";
+import { getDomain as tldGetDomain } from "tldts";
+
+// Registrable domain per the Public Suffix List, with the PSL's private section
+// enabled so platform-hosted services resolve to their own host
+// (app.vercel.app, user.github.io) instead of collapsing onto the platform.
+const getDomain = (url: string) => tldGetDomain(url, { allowPrivateDomains: true });
 import type { Integration, Feed, Kind, ExtractedTool } from "../src/lib/types.ts";
 import { faviconUrl } from "../src/lib/favicon.ts";
 
