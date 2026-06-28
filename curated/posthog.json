@@ -1,0 +1,61 @@
+{
+  "slug": "posthog",
+  "name": "PostHog",
+  "tagline": "Product analytics an agent can query in natural language.",
+  "description": "PostHog's MCP server exposes 50+ tools: run HogQL, build insights and dashboards, manage feature flags. Agents can answer 'what changed in signups last week?' against real product data.",
+  "domain": "posthog.com",
+  "icon": "https://www.google.com/s2/favicons?domain=posthog.com&sz=64",
+  "categories": [
+    "analytics",
+    "developer-tools"
+  ],
+  "auth": {
+    "methods": [
+      {
+        "type": "api_key",
+        "label": "Personal API key",
+        "note": "Scoped keys created per-use; used by both the MCP server and REST API."
+      }
+    ],
+    "guide": "Create a personal API key under [Settings → Personal API keys](https://app.posthog.com/settings/user-api-keys) (`phx_…`). Choose the **MCP Server** preset when creating it — that grants exactly the scopes the MCP tools need.\n\n**MCP (hosted):**\n\n```bash\nclaude mcp add --transport http posthog https://mcp.posthog.com/mcp \\\n  --header \"Authorization: Bearer phx_your_key\"\n```\n\n**REST API:** the same key works against the private API:\n\n```bash\ncurl https://us.posthog.com/api/projects/ \\\n  -H \"Authorization: Bearer $POSTHOG_API_KEY\"\n```\n\nNote the **region split**: US Cloud uses `us.posthog.com`, EU Cloud uses `eu.posthog.com` — match your instance or you'll get auth errors with a valid key. Project API keys (`phc_…`) are for event *capture* only and won't work here.",
+    "sources": [
+      {
+        "title": "PostHog Docs — MCP server",
+        "url": "https://posthog.com/docs/model-context-protocol"
+      },
+      {
+        "title": "PostHog Docs — Personal API keys",
+        "url": "https://posthog.com/docs/api"
+      }
+    ],
+    "generatedAt": "2026-06-11",
+    "verified": true
+  },
+  "interfaces": [
+    {
+      "format": "mcp",
+      "name": "PostHog MCP",
+      "endpoint": "https://mcp.posthog.com/mcp",
+      "auth": "api_key",
+      "authHeader": "Authorization: Bearer {phx_key}",
+      "docs": "https://posthog.com/docs/model-context-protocol",
+      "origin": "vendor"
+    },
+    {
+      "format": "openapi",
+      "name": "PostHog REST API",
+      "endpoint": "https://us.posthog.com/api",
+      "auth": "api_key",
+      "authHeader": "Authorization: Bearer {phx_key}",
+      "docs": "https://posthog.com/docs/api",
+      "origin": "vendor"
+    }
+  ],
+  "links": {
+    "homepage": "https://posthog.com",
+    "docs": "https://posthog.com/docs"
+  },
+  "related": [
+    "mcp/posthog"
+  ]
+}

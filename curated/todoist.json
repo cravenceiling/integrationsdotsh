@@ -1,0 +1,63 @@
+{
+  "slug": "todoist",
+  "name": "Todoist",
+  "tagline": "Tasks, projects, and reminders your agent can manage.",
+  "description": "Todoist is a task manager with a mature developer platform. Agents can create and complete tasks, organize projects, and query filters through the unified v1 REST API or the official hosted MCP server.",
+  "domain": "todoist.com",
+  "icon": "https://www.google.com/s2/favicons?domain=todoist.com&sz=64",
+  "categories": [
+    "productivity",
+    "project-management"
+  ],
+  "auth": {
+    "methods": [
+      {
+        "type": "api_key",
+        "label": "Personal API token",
+        "note": "Best for personal scripts and single-user agents."
+      },
+      {
+        "type": "oauth2",
+        "label": "OAuth 2.0",
+        "note": "Required for multi-user apps. Newer apps get expiring access tokens with rotating refresh tokens."
+      }
+    ],
+    "guide": "**Personal token (fastest):** grab your API token from [Settings → Integrations → Developer](https://app.todoist.com/app/settings/integrations) in the Todoist app, then send it as a bearer token:\n\n```bash\ncurl https://api.todoist.com/api/v1/tasks \\\n  -H \"Authorization: Bearer $TODOIST_API_TOKEN\"\n```\n\n**OAuth 2.0 (multi-user apps):** register an app in the [App Management Console](https://developer.todoist.com/appconsole.html), send users to `https://app.todoist.com/oauth/authorize` with `client_id`, `scope`, and `state`, then exchange the returned `code` at `https://api.todoist.com/oauth/access_token`. Scopes include `task:add`, `data:read`, `data:read_write`, `data:delete`, `project:delete`, and `backups:read`. Access tokens for newer apps expire after one hour and come with rotating refresh tokens.\n\n**MCP:** the official server at `https://ai.todoist.net/mcp` uses OAuth — compatible clients (Claude Code, Cursor) open the consent screen for you on first use.\n\nNote: Todoist's unified **API v1** (`https://api.todoist.com/api/v1/`) replaces the older REST v2 and Sync v9 APIs — new integrations should target v1.",
+    "sources": [
+      {
+        "title": "Todoist API v1 reference — Authorization",
+        "url": "https://developer.todoist.com/api/v1/"
+      },
+      {
+        "title": "Todoist MCP endpoint (OAuth-protected resource)",
+        "url": "https://ai.todoist.net/.well-known/oauth-protected-resource/mcp"
+      }
+    ],
+    "generatedAt": "2026-06-11",
+    "verified": true
+  },
+  "interfaces": [
+    {
+      "format": "mcp",
+      "name": "Todoist MCP",
+      "endpoint": "https://ai.todoist.net/mcp",
+      "auth": "oauth",
+      "docs": "https://www.todoist.com/help/articles/use-todoist-with-ai-1B3vKmrL9",
+      "origin": "vendor"
+    },
+    {
+      "format": "openapi",
+      "name": "Todoist API v1",
+      "endpoint": "https://api.todoist.com/api/v1",
+      "auth": "api_key",
+      "authHeader": "Authorization: Bearer {token}",
+      "docs": "https://developer.todoist.com/api/v1/",
+      "origin": "vendor"
+    }
+  ],
+  "links": {
+    "homepage": "https://todoist.com",
+    "docs": "https://developer.todoist.com"
+  },
+  "related": []
+}

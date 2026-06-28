@@ -1,0 +1,73 @@
+{
+  "slug": "sentry",
+  "name": "Sentry",
+  "tagline": "Errors, traces, and root-cause analysis for debugging agents.",
+  "description": "Sentry's hosted MCP server gives agents direct access to issues, events, releases, and Seer root-cause runs — the context a coding agent needs to fix what's actually broken in production.",
+  "domain": "sentry.io",
+  "icon": "https://www.google.com/s2/favicons?domain=sentry.dev&sz=64",
+  "categories": [
+    "observability",
+    "developer-tools"
+  ],
+  "auth": {
+    "methods": [
+      {
+        "type": "oauth2",
+        "label": "OAuth 2.0",
+        "note": "The hosted MCP server authenticates via OAuth in supporting clients."
+      },
+      {
+        "type": "token",
+        "label": "Auth token",
+        "note": "Organization or personal tokens for the REST API and CI."
+      }
+    ],
+    "guide": "**MCP with OAuth (easiest):** add `https://mcp.sentry.dev/mcp` in an OAuth-capable client and approve access to your org.\n\n```bash\nclaude mcp add --transport http sentry https://mcp.sentry.dev/mcp\n```\n\n**Auth tokens (REST):** create an organization token under [Settings → Auth Tokens](https://sentry.io/orgredirect/organizations/:orgslug/settings/auth-tokens/) — or a personal token under User settings — and send it as a bearer header:\n\n```bash\ncurl https://sentry.io/api/0/projects/ \\\n  -H \"Authorization: Bearer $SENTRY_AUTH_TOKEN\"\n```\n\nOrganization tokens are scoped at creation; give debugging agents read-only event/issue scopes unless they need to resolve or assign.",
+    "sources": [
+      {
+        "title": "Sentry Docs — MCP server",
+        "url": "https://docs.sentry.io/product/sentry-mcp/"
+      },
+      {
+        "title": "Sentry Docs — Auth tokens",
+        "url": "https://docs.sentry.io/account/auth-tokens/"
+      }
+    ],
+    "generatedAt": "2026-06-11",
+    "verified": true
+  },
+  "interfaces": [
+    {
+      "format": "mcp",
+      "name": "Sentry MCP",
+      "endpoint": "https://mcp.sentry.dev/mcp",
+      "auth": "oauth",
+      "docs": "https://docs.sentry.io/product/sentry-mcp/",
+      "origin": "vendor"
+    },
+    {
+      "format": "openapi",
+      "name": "Sentry Web API",
+      "endpoint": "https://sentry.io/api/0",
+      "auth": "token",
+      "authHeader": "Authorization: Bearer {auth_token}",
+      "docs": "https://docs.sentry.io/api/",
+      "origin": "vendor"
+    },
+    {
+      "format": "cli",
+      "name": "sentry-cli",
+      "install": "curl -sL https://sentry.io/get-cli/ | sh && sentry-cli login",
+      "auth": "token",
+      "docs": "https://docs.sentry.io/cli/",
+      "origin": "vendor"
+    }
+  ],
+  "links": {
+    "homepage": "https://sentry.io",
+    "docs": "https://docs.sentry.io"
+  },
+  "related": [
+    "mcp/sentry"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "_note": "DEMO SEED — a small hand-picked set of well-known service CLIs mapped to their domains, to validate CLIs as a fourth format in the domain grouping. The real source should be a pipeline over fig autocomplete specs / a maintained CLI registry, not this file.",
+  "clis": [
+    { "name": "gh", "domain": "github.com", "install": "brew install gh && gh auth login", "docs": "https://cli.github.com", "description": "GitHub's official CLI — repos, issues, PRs, releases, and Actions from the terminal." },
+    { "name": "vercel", "domain": "vercel.com", "install": "npm i -g vercel && vercel login", "docs": "https://vercel.com/docs/cli", "description": "Deploy, inspect, and manage Vercel projects and deployments." },
+    { "name": "stripe", "domain": "stripe.com", "install": "brew install stripe/stripe-cli/stripe && stripe login", "docs": "https://docs.stripe.com/stripe-cli", "description": "Test webhooks, trigger events, and call the Stripe API from the shell." },
+    { "name": "wrangler", "domain": "cloudflare.com", "install": "npm i -g wrangler && wrangler login", "docs": "https://developers.cloudflare.com/workers/wrangler/", "description": "Build and deploy Cloudflare Workers, Pages, and bindings." },
+    { "name": "supabase", "domain": "supabase.com", "install": "brew install supabase/tap/supabase && supabase login", "docs": "https://supabase.com/docs/reference/cli", "description": "Manage Supabase projects, migrations, and local development." },
+    { "name": "netlify", "domain": "netlify.com", "install": "npm i -g netlify-cli && netlify login", "docs": "https://docs.netlify.com/cli/get-started/", "description": "Deploy sites, manage functions, and stream logs on Netlify." },
+    { "name": "heroku", "domain": "heroku.com", "install": "brew tap heroku/brew && brew install heroku && heroku login", "docs": "https://devcenter.heroku.com/articles/heroku-cli", "description": "Manage Heroku apps, dynos, add-ons, and releases." },
+    { "name": "doctl", "domain": "digitalocean.com", "install": "brew install doctl && doctl auth init", "docs": "https://docs.digitalocean.com/reference/doctl/", "description": "DigitalOcean's CLI for droplets, databases, and app platform." },
+    { "name": "flyctl", "domain": "fly.io", "install": "brew install flyctl && fly auth login", "docs": "https://fly.io/docs/flyctl/", "description": "Deploy and scale apps on Fly.io's edge platform." },
+    { "name": "railway", "domain": "railway.app", "install": "npm i -g @railway/cli && railway login", "docs": "https://docs.railway.app/develop/cli", "description": "Deploy and manage services and environments on Railway." },
+    { "name": "pscale", "domain": "planetscale.com", "install": "brew install planetscale/tap/pscale && pscale auth login", "docs": "https://planetscale.com/docs/reference/planetscale-cli", "description": "Manage PlanetScale databases, branches, and deploy requests." },
+    { "name": "sentry-cli", "domain": "sentry.io", "install": "curl -sL https://sentry.io/get-cli/ | sh && sentry-cli login", "docs": "https://docs.sentry.io/cli/", "description": "Upload source maps, manage releases, and send events to Sentry." },
+    { "name": "twilio", "domain": "twilio.com", "install": "brew tap twilio/brew && brew install twilio && twilio login", "docs": "https://www.twilio.com/docs/twilio-cli/quickstart", "description": "Manage Twilio numbers, messaging, and serverless functions." },
+    { "name": "doppler", "domain": "doppler.com", "install": "brew install dopplerhq/cli/doppler && doppler login", "docs": "https://docs.doppler.com/docs/cli", "description": "Sync secrets and inject them into local and CI environments." },
+    { "name": "ngrok", "domain": "ngrok.com", "install": "brew install ngrok && ngrok config add-authtoken <token>", "docs": "https://ngrok.com/docs/agent/cli/", "description": "Expose local servers to the public internet over secure tunnels." },
+    { "name": "gcloud", "domain": "cloud.google.com", "install": "brew install --cask google-cloud-sdk && gcloud auth login", "docs": "https://cloud.google.com/sdk/gcloud", "description": "Manage Google Cloud resources, IAM, and deployments." },
+    { "name": "aws", "domain": "amazonaws.com", "install": "brew install awscli && aws configure", "docs": "https://docs.aws.amazon.com/cli/", "description": "The AWS command-line interface across every AWS service." },
+    { "name": "az", "domain": "azure.com", "install": "brew install azure-cli && az login", "docs": "https://learn.microsoft.com/cli/azure/", "description": "Manage Azure resources, identities, and deployments." },
+    { "name": "linear", "domain": "linear.app", "install": "npm i -g @linear/cli && linear auth", "docs": "https://linear.app/developers", "description": "Create and manage Linear issues and projects from the terminal." },
+    { "name": "shopify", "domain": "shopify.com", "install": "npm i -g @shopify/cli && shopify auth login", "docs": "https://shopify.dev/docs/api/shopify-cli", "description": "Build, test, and deploy Shopify apps and themes." }
+  ]
+}

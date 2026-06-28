@@ -1,0 +1,74 @@
+{
+  "slug": "shopify",
+  "name": "Shopify",
+  "tagline": "Storefronts and commerce data, GraphQL-first.",
+  "description": "Shopify is GraphQL-first: the Admin API for store management and the Storefront API for shopping experiences. Agents authenticate with per-store access tokens from a custom app.",
+  "domain": "shopify.com",
+  "icon": "https://www.google.com/s2/favicons?domain=shopify.com&sz=64",
+  "categories": [
+    "commerce",
+    "e-commerce"
+  ],
+  "auth": {
+    "methods": [
+      {
+        "type": "api_key",
+        "label": "Admin access token",
+        "note": "Per-store token from a custom app; sent via X-Shopify-Access-Token header."
+      },
+      {
+        "type": "api_key",
+        "label": "Storefront access token",
+        "note": "Public or private token for the Storefront API."
+      }
+    ],
+    "guide": "**Admin API:** in your store's admin, go to *Settings → Apps and sales channels → Develop apps*, create a custom app, grant it the Admin API scopes you need, and install it. That issues an access token (`shpat_…`) sent via a custom header — **not** a bearer header:\n\n```bash\ncurl https://your-store.myshopify.com/admin/api/2025-04/graphql.json \\\n  -H \"X-Shopify-Access-Token: $SHOPIFY_ADMIN_TOKEN\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"query\": \"{ shop { name } }\"}'\n```\n\n**Storefront API:** the same custom-app screen issues Storefront tokens for cart and product browsing — public tokens go in `X-Shopify-Storefront-Access-Token`.\n\nAPI versions are date-pinned (e.g. `2025-04`) and rotate quarterly; pin one in your agent's config and bump deliberately.",
+    "sources": [
+      {
+        "title": "Shopify.dev — Admin API authentication",
+        "url": "https://shopify.dev/docs/api/admin-graphql"
+      },
+      {
+        "title": "Shopify.dev — Storefront API",
+        "url": "https://shopify.dev/docs/api/storefront"
+      }
+    ],
+    "generatedAt": "2026-06-11",
+    "verified": true
+  },
+  "interfaces": [
+    {
+      "format": "graphql",
+      "name": "Admin API (GraphQL)",
+      "endpoint": "https://{store}.myshopify.com/admin/api/2025-04/graphql.json",
+      "auth": "api_key",
+      "authHeader": "X-Shopify-Access-Token: {shpat_token}",
+      "docs": "https://shopify.dev/docs/api/admin-graphql",
+      "origin": "vendor"
+    },
+    {
+      "format": "graphql",
+      "name": "Storefront API",
+      "endpoint": "https://{store}.myshopify.com/api/2025-04/graphql.json",
+      "auth": "api_key",
+      "authHeader": "X-Shopify-Storefront-Access-Token: {token}",
+      "docs": "https://shopify.dev/docs/api/storefront",
+      "origin": "vendor"
+    },
+    {
+      "format": "mcp",
+      "name": "Shopify MCP",
+      "endpoint": "https://setup.shopify.com/mcp",
+      "auth": "oauth",
+      "docs": "https://shopify.dev/docs/apps/build/storefront-mcp",
+      "origin": "vendor"
+    }
+  ],
+  "links": {
+    "homepage": "https://shopify.com",
+    "docs": "https://shopify.dev"
+  },
+  "related": [
+    "mcp/shopify"
+  ]
+}

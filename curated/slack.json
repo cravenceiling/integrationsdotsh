@@ -1,0 +1,62 @@
+{
+  "slug": "slack",
+  "name": "Slack",
+  "tagline": "Read, search, and send messages where your team already works.",
+  "description": "Slack's hosted MCP server covers messaging, search, and canvases. The underlying Web API is one of the most battle-tested REST surfaces anywhere — token-based, method-oriented, and fully documented.",
+  "domain": "slack.com",
+  "icon": "https://www.google.com/s2/favicons?domain=slack.com&sz=64",
+  "categories": [
+    "communication",
+    "productivity"
+  ],
+  "auth": {
+    "methods": [
+      {
+        "type": "oauth2",
+        "label": "OAuth 2.0",
+        "note": "The MCP server and all Slack apps authenticate through OAuth with granular scopes."
+      },
+      {
+        "type": "token",
+        "label": "Bot / user token",
+        "note": "Issued after app install; sent as a bearer header to the Web API."
+      }
+    ],
+    "guide": "**MCP with OAuth (easiest):** add `https://mcp.slack.com/mcp` in an OAuth-capable client and approve the workspace consent screen.\n\n```bash\nclaude mcp add --transport http slack https://mcp.slack.com/mcp\n```\n\n**Web API tokens:** create an app at [api.slack.com/apps](https://api.slack.com/apps), add the scopes you need (e.g. `chat:write`, `channels:read`, `search:read`), and install it to your workspace. That issues a bot token (`xoxb-…`) or user token (`xoxp-…`):\n\n```bash\ncurl https://slack.com/api/conversations.list \\\n  -H \"Authorization: Bearer xoxb-your-token\"\n```\n\nScopes are enforced per-method — if an agent only needs to read and post, don't grant admin scopes. Workspace admins can restrict which apps install at all.",
+    "sources": [
+      {
+        "title": "Slack API — Web API basics & tokens",
+        "url": "https://docs.slack.dev/apis/web-api/"
+      }
+    ],
+    "generatedAt": "2026-06-11",
+    "verified": true
+  },
+  "interfaces": [
+    {
+      "format": "mcp",
+      "name": "Slack MCP",
+      "endpoint": "https://mcp.slack.com/mcp",
+      "auth": "oauth",
+      "docs": "https://docs.slack.dev/mcp/",
+      "origin": "vendor"
+    },
+    {
+      "format": "openapi",
+      "name": "Slack Web API",
+      "endpoint": "https://slack.com/api",
+      "auth": "token",
+      "authHeader": "Authorization: Bearer {xoxb_token}",
+      "docs": "https://docs.slack.dev/apis/web-api/",
+      "origin": "vendor"
+    }
+  ],
+  "links": {
+    "homepage": "https://slack.com",
+    "docs": "https://docs.slack.dev"
+  },
+  "related": [
+    "mcp/slack",
+    "openapi/slack-com"
+  ]
+}

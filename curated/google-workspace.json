@@ -1,0 +1,59 @@
+{
+  "slug": "google-workspace",
+  "name": "Google Workspace",
+  "tagline": "Gmail, Calendar, Drive, Docs, and Sheets from one credential.",
+  "description": "Google Workspace exposes its services through per-product REST APIs built on the Google Discovery Service, a vendor-published CLI (`gws`), and a popular community CLI (`gog`). All of them authenticate through Google Cloud OAuth — the setup is the hard part, and it's shared across every interface.",
+  "domain": "workspace.google.com",
+  "icon": "https://www.google.com/s2/favicons?domain=workspace.google.com&sz=64",
+  "categories": ["productivity", "email", "documents"],
+  "auth": {
+    "methods": [
+      { "type": "oauth2", "label": "OAuth 2.0 (Desktop client)", "note": "Bring your own Google Cloud project; both CLIs and the APIs use it." },
+      { "type": "token", "label": "Service account", "note": "For headless and Workspace-admin scenarios via domain-wide delegation." }
+    ],
+    "guide": "Everything Workspace-related authenticates through a Google Cloud project — set one up once and every interface below can use it.\n\n**Vendor CLI (`gws`, easiest):** if you have `gcloud` installed, one command bootstraps the project, enables APIs, and logs you in:\n\n```bash\nbrew install googleworkspace-cli\ngws auth setup   # one-time; later sessions: gws auth login\n```\n\nCredentials are encrypted at rest with the key in your OS keyring. For CI, export credentials and point `GOOGLE_WORKSPACE_CLI_CREDENTIALS_FILE` at the file. Gotcha: OAuth apps in testing mode are capped at ~25 scopes — log in with only the services you need (`gws auth login -s drive,gmail,sheets`).\n\n**Community CLI (`gog`):** create a Desktop-app OAuth client in the [Cloud Console](https://console.cloud.google.com/apis/credentials), download the client JSON, then:\n\n```bash\nbrew install openclaw/tap/gogcli\ngog auth credentials ~/Downloads/client_secret.json\ngog auth add you@gmail.com --services gmail,calendar,drive\n```\n\nGotcha: OAuth apps in \"External + Testing\" status get refresh tokens that expire after 7 days — publish the app to make them durable.\n\n**REST APIs directly:** the same OAuth client works against every per-product API (`gmail.googleapis.com`, `www.googleapis.com/calendar/v3`, …) with `Authorization: Bearer {access_token}`. Service accounts with domain-wide delegation cover admin automation, but don't replace OAuth for consumer accounts.",
+    "sources": [
+      { "title": "googleworkspace/cli — install & auth", "url": "https://github.com/googleworkspace/cli" },
+      { "title": "openclaw/gogcli — install & auth", "url": "https://github.com/openclaw/gogcli" }
+    ],
+    "generatedAt": "2026-06-12",
+    "verified": true
+  },
+  "interfaces": [
+    {
+      "format": "cli",
+      "name": "gws",
+      "origin": "vendor",
+      "install": "brew install googleworkspace-cli && gws auth setup",
+      "auth": "oauth",
+      "docs": "https://github.com/googleworkspace/cli",
+      "note": "Published in Google's googleworkspace org (Apache-2.0) but labeled \"not an officially supported Google product\". Built dynamically from the Discovery Service; ships agent skills."
+    },
+    {
+      "format": "openapi",
+      "name": "Workspace REST APIs",
+      "origin": "vendor",
+      "endpoint": "https://gmail.googleapis.com",
+      "auth": "oauth",
+      "authHeader": "Authorization: Bearer {access_token}",
+      "docs": "https://developers.google.com/workspace",
+      "note": "Per-product APIs (Gmail, Calendar, Drive, Docs, Sheets…) described by the Google Discovery Service."
+    },
+    {
+      "format": "cli",
+      "name": "gog",
+      "origin": "community",
+      "maintainer": "openclaw",
+      "repo": "https://github.com/openclaw/gogcli",
+      "install": "brew install openclaw/tap/gogcli && gog auth add you@gmail.com",
+      "auth": "oauth",
+      "docs": "https://gogcli.sh",
+      "note": "MIT-licensed, multi-account, keyring-backed token storage. No Google affiliation."
+    }
+  ],
+  "links": {
+    "homepage": "https://workspace.google.com",
+    "docs": "https://developers.google.com/workspace"
+  },
+  "related": []
+}

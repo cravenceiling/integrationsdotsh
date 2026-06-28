@@ -285,6 +285,42 @@ function buildGraphql(): Integration[] {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// CLI: sources/cli.json (demo seed) -> records grouped by their service domain
+// ─────────────────────────────────────────────────────────────────────────────
+
+interface CliSeed {
+  name: string;
+  domain: string;
+  install: string;
+  docs?: string;
+  repo?: string;
+  description?: string;
+}
+
+function buildCli(): Integration[] {
+  const path = join(SOURCES, "cli.json");
+  if (!existsSync(path)) return [];
+  const data = readJson<{ clis: CliSeed[] }>(path);
+  const recs: Integration[] = (data.clis ?? []).map((c) => {
+    const slug = slugify(c.name);
+    return {
+      id: `cli/${slug}`,
+      kind: "cli" as const,
+      slug,
+      name: c.name,
+      description: c.description ?? "",
+      url: c.docs,
+      icon: `https://www.google.com/s2/favicons?domain=${encodeURIComponent(c.domain)}&sz=64`,
+      categories: [],
+      feeds: ["cli-seed" as Feed],
+      cli: { install: c.install, domain: c.domain, docs: c.docs, repo: c.repo },
+      raw: { "cli-seed": c } as never,
+    };
+  });
+  return dedupeSlugs(recs);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Overrides: deep-merged onto records by id
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -443,37 +479,114 @@ function dedupeSlugs(recs: Integration[]): Integration[] {
 // Index: slim record for search
 // ─────────────────────────────────────────────────────────────────────────────
 
+// The registrable domain a record belongs to — the grouping key for the
+// domain-grouped homepage. OpenAPI carries an eTLD+1 provider already; for MCP
+// and GraphQL we derive it from the endpoint (mcp.notion.com → notion.com).
+// Well-known consumer products that live as sub-specs of a platform domain
+// (Google Discovery, etc.). Without this they group under the platform
+// (googleapis.com) and the brand disappears. Keyed by the full apis.guru
+// provider string "<platform>:<service>".
+const DOMAIN_REMAP: Record<string, string> = {
+  "googleapis.com:gmail": "gmail.com",
+  "googleapis.com:calendar": "calendar.google.com",
+  "googleapis.com:drive": "drive.google.com",
+  "googleapis.com:docs": "docs.google.com",
+  "googleapis.com:sheets": "sheets.google.com",
+  "googleapis.com:slides": "slides.google.com",
+  "googleapis.com:people": "contacts.google.com",
+  "googleapis.com:tasks": "tasks.google.com",
+  "googleapis.com:youtube": "youtube.com",
+  "googleapis.com:chat": "chat.google.com",
+};
+
+function recordDomain(r: Integration): string {
+  let url: string | undefined;
+  if (r.kind === "openapi") {
+    const provider = (r.openapi?.provider ?? "").trim();
+    if (DOMAIN_REMAP[provider]) return DOMAIN_REMAP[provider];
+    const d = provider.split(":")[0].toLowerCase();
+    if (d) return d;
+    url = r.openapi?.swaggerUrl ?? r.url;
+  } else if (r.kind === "mcp") {
+    url = r.mcp?.remoteUrl ?? r.url;
+  } else if (r.kind === "cli") {
+    return r.cli?.domain ?? "";
+  } else {
+    url = r.graphql?.endpoint ?? r.url;
+  }
+  return (url ? getDomain(url) : null) ?? (r.url ? getDomain(r.url) ?? "" : "");
+}
+
 function buildIndex(all: Integration[]) {
-  return all.map((r) => ({
-    id: r.id,
-    kind: r.kind,
-    slug: r.slug,
-    name: r.name,
-    description: r.description.slice(0, 240),
-    url: r.url,
-    icon: r.icon,
-    categories: r.categories,
-    feeds: r.feeds,
-    popularity: r.popularity,
-  }));
+  return all.map((r) => {
+    const domain = recordDomain(r);
+    const remapped = r.kind === "openapi" && DOMAIN_REMAP[(r.openapi?.provider ?? "").trim()];
+    return {
+      id: r.id,
+      kind: r.kind,
+      slug: r.slug,
+      // Strip the platform prefix from remapped names: "googleapis.com – gmail" → "gmail".
+      name: remapped ? r.name.replace(/^.*?[–-]\s*/, "") : r.name,
+      description: r.description.slice(0, 240),
+      url: r.url,
+      icon: remapped ? `https://www.google.com/s2/favicons?domain=${domain}&sz=64` : r.icon,
+      domain,
+      categories: r.categories,
+      feeds: r.feeds,
+      popularity: r.popularity,
+    };
+  });
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Run
 // ─────────────────────────────────────────────────────────────────────────────
 
+// Hosts whose MCP endpoints are gated behind a single product (not a public,
+// directly-reachable server). Anthropic-hosted connectors only work inside
+// Claude, so they aren't publicly accessible.
+const GATED_HOST = /(^|\.)claude\.com$|(^|\.)anthropic\.com$/;
+
+// A record is "publicly accessible" if anyone can reach or install it without
+// going through a specific vendor's product. For MCP that means a public remote
+// endpoint on a non-gated host, or a public install command; directory-only
+// listings with neither are dropped. OpenAPI/GraphQL come from public-spec
+// registries, so they qualify unless the endpoint is explicitly local.
+function isPublic(r: Integration): boolean {
+  if (r.kind === "mcp") {
+    const url = r.mcp?.remoteUrl;
+    if (url) {
+      try {
+        return !GATED_HOST.test(new URL(url).hostname);
+      } catch {
+        /* malformed URL — fall through to install check */
+      }
+    }
+    return Boolean(r.mcp?.install);
+  }
+  if (r.kind === "graphql") {
+    const ep = r.graphql?.endpoint ?? "";
+    return !/localhost|127\.0\.0\.1|\.local\b/.test(ep);
+  }
+  if (r.kind === "cli") return Boolean(r.cli?.install); // publicly installable
+  return true; // openapi: apis.guru lists public API specs
+}
+
 function main() {
   // Order: build feed records → apply overrides (may add new records) → fill
-  // tools from cache → swap broken icons for domain-based fallbacks.
-  const mcp = applyFavicons(applyToolsCache("mcp", applyOverrides("mcp", buildMcp())));
-  const openapi = applyFavicons(applyToolsCache("openapi", applyOverrides("openapi", buildOpenapi())));
-  const graphql = applyFavicons(applyToolsCache("graphql", applyOverrides("graphql", buildGraphql())));
+  // tools from cache → swap broken icons for domain-based fallbacks → keep only
+  // publicly-accessible records.
+  const mcp = applyFavicons(applyToolsCache("mcp", applyOverrides("mcp", buildMcp()))).filter(isPublic);
+  const openapi = applyFavicons(applyToolsCache("openapi", applyOverrides("openapi", buildOpenapi()))).filter(isPublic);
+  const graphql = applyFavicons(applyToolsCache("graphql", applyOverrides("graphql", buildGraphql()))).filter(isPublic);
+  const cli = buildCli().filter(isPublic);
 
   writeFileSync(join(OUTPUT, "mcp.json"), JSON.stringify(mcp, null, 2));
   writeFileSync(join(OUTPUT, "openapi.json"), JSON.stringify(openapi, null, 2));
   writeFileSync(join(OUTPUT, "graphql.json"), JSON.stringify(graphql, null, 2));
+  writeFileSync(join(OUTPUT, "cli.json"), JSON.stringify(cli, null, 2));
 
-  const all = [...mcp, ...openapi, ...graphql];
+  const all = [...mcp, ...openapi, ...graphql, ...cli];
   const index = JSON.stringify(buildIndex(all));
   writeFileSync(join(OUTPUT, "index.json"), index);
   writeFileSync(join(PUBLIC, "api.json"), index);
@@ -486,6 +599,7 @@ function main() {
   );
   console.log(`openapi: ${openapi.length.toString().padStart(5)}  (${withTools(openapi)} with tools)`);
   console.log(`graphql: ${graphql.length.toString().padStart(5)}  (${withTools(graphql)} with tools)`);
+  console.log(`cli:     ${cli.length.toString().padStart(5)}`);
   console.log(`total:   ${all.length.toString().padStart(5)}`);
 
   const validatedIcons = Object.keys(faviconCache).length;

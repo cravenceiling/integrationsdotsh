@@ -1,0 +1,77 @@
+{
+  "slug": "stripe",
+  "name": "Stripe",
+  "tagline": "Payments infrastructure with first-class agent tooling.",
+  "description": "Stripe ships an official MCP server with documentation search and account tools, a meticulously specified REST API, and the Stripe CLI. Restricted API keys make it one of the safest services to hand to an autonomous agent.",
+  "domain": "stripe.com",
+  "icon": "https://www.google.com/s2/favicons?domain=stripe.com&sz=64",
+  "categories": [
+    "payments",
+    "financial-services"
+  ],
+  "auth": {
+    "methods": [
+      {
+        "type": "oauth2",
+        "label": "OAuth (MCP)",
+        "note": "Granular, user-based, revocable from the Dashboard. Recommended for MCP clients."
+      },
+      {
+        "type": "api_key",
+        "label": "Restricted API key",
+        "note": "For autonomous agents and non-OAuth clients. Never hand an agent your full secret key."
+      }
+    ],
+    "guide": "**MCP with OAuth (recommended):** add `https://mcp.stripe.com` in any OAuth-capable client and approve the consent form. Sessions are visible and revocable under [Dashboard → user settings → OAuth sessions](https://dashboard.stripe.com/settings/user). An admin must first [enable MCP access](https://dashboard.stripe.com/settings/mcp) — it's managed separately for sandbox and live mode.\n\n```bash\nclaude mcp add --transport http stripe https://mcp.stripe.com/\n```\n\n**Restricted API key (autonomous agents):** create a *restricted* key under [Developers → API keys](https://dashboard.stripe.com/apikeys) with only the permissions your agent needs, then pass it as a bearer header:\n\n```json\n\"stripe\": {\n  \"url\": \"https://mcp.stripe.com\",\n  \"headers\": { \"Authorization\": \"Bearer rk_live_...\" }\n}\n```\n\nThe same key works against the REST API directly (`curl https://api.stripe.com/v1/customers -u \"rk_live_...:\"`). Supply keys via environment variables or a secrets vault — never inline in config that gets committed.",
+    "sources": [
+      {
+        "title": "Stripe Docs — Model Context Protocol",
+        "url": "https://docs.stripe.com/mcp"
+      },
+      {
+        "title": "Stripe Docs — API keys",
+        "url": "https://docs.stripe.com/keys"
+      }
+    ],
+    "generatedAt": "2026-06-11",
+    "verified": true
+  },
+  "interfaces": [
+    {
+      "format": "mcp",
+      "name": "Stripe MCP",
+      "endpoint": "https://mcp.stripe.com",
+      "auth": "mixed",
+      "authHeader": "Authorization: Bearer {restricted_key}",
+      "docs": "https://docs.stripe.com/mcp",
+      "note": "OAuth in supporting clients; restricted-key bearer header for autonomous agents. Local stdio alternative: npx -y @stripe/mcp@latest",
+      "origin": "vendor"
+    },
+    {
+      "format": "openapi",
+      "name": "Stripe REST API",
+      "endpoint": "https://api.stripe.com",
+      "specUrl": "https://raw.githubusercontent.com/stripe/openapi/master/openapi/spec3.json",
+      "auth": "api_key",
+      "authHeader": "Authorization: Bearer {secret_key}",
+      "docs": "https://docs.stripe.com/api",
+      "origin": "vendor"
+    },
+    {
+      "format": "cli",
+      "name": "stripe",
+      "install": "brew install stripe/stripe-cli/stripe && stripe login",
+      "auth": "oauth",
+      "docs": "https://docs.stripe.com/stripe-cli",
+      "origin": "vendor"
+    }
+  ],
+  "links": {
+    "homepage": "https://stripe.com",
+    "docs": "https://docs.stripe.com"
+  },
+  "related": [
+    "mcp/stripe",
+    "openapi/stripe-com"
+  ]
+}

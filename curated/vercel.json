@@ -1,0 +1,74 @@
+{
+  "slug": "vercel",
+  "name": "Vercel",
+  "tagline": "Deployments, projects, and logs your agent can ship with.",
+  "description": "Vercel's official MCP server covers documentation search, project management, and deployment analysis. The REST API and CLI give agents full control of the deploy loop — push, inspect, roll back.",
+  "domain": "vercel.com",
+  "icon": "https://www.google.com/s2/favicons?domain=vercel.com&sz=64",
+  "categories": [
+    "hosting",
+    "developer-tools"
+  ],
+  "auth": {
+    "methods": [
+      {
+        "type": "oauth2",
+        "label": "OAuth 2.0",
+        "note": "The hosted MCP server uses OAuth in supporting clients."
+      },
+      {
+        "type": "token",
+        "label": "Access token",
+        "note": "Account tokens for the REST API; scope to a team where possible."
+      }
+    ],
+    "guide": "**MCP with OAuth (easiest):** add `https://mcp.vercel.com` in an OAuth-capable client and approve access.\n\n```bash\nclaude mcp add --transport http vercel https://mcp.vercel.com\n```\n\n**Access token (REST):** create one under [Account Settings → Tokens](https://vercel.com/account/settings/tokens), choose the team scope and an expiry, then send it as a bearer header:\n\n```bash\ncurl https://api.vercel.com/v9/projects \\\n  -H \"Authorization: Bearer $VERCEL_TOKEN\"\n```\n\n**CLI:** `vercel login` authenticates the `vercel` CLI; agents running in your shell can then deploy (`vercel deploy`), inspect (`vercel inspect`), and read logs (`vercel logs`) without extra setup.",
+    "sources": [
+      {
+        "title": "Vercel Docs — MCP server",
+        "url": "https://vercel.com/docs/mcp/vercel-mcp"
+      },
+      {
+        "title": "Vercel Docs — REST API authentication",
+        "url": "https://vercel.com/docs/rest-api#authentication"
+      }
+    ],
+    "generatedAt": "2026-06-11",
+    "verified": true
+  },
+  "interfaces": [
+    {
+      "format": "mcp",
+      "name": "Vercel MCP",
+      "endpoint": "https://mcp.vercel.com",
+      "auth": "oauth",
+      "docs": "https://vercel.com/docs/mcp/vercel-mcp",
+      "origin": "vendor"
+    },
+    {
+      "format": "openapi",
+      "name": "Vercel REST API",
+      "endpoint": "https://api.vercel.com",
+      "auth": "token",
+      "authHeader": "Authorization: Bearer {token}",
+      "docs": "https://vercel.com/docs/rest-api",
+      "origin": "vendor"
+    },
+    {
+      "format": "cli",
+      "name": "vercel",
+      "install": "npm i -g vercel && vercel login",
+      "auth": "oauth",
+      "docs": "https://vercel.com/docs/cli",
+      "origin": "vendor"
+    }
+  ],
+  "links": {
+    "homepage": "https://vercel.com",
+    "docs": "https://vercel.com/docs"
+  },
+  "related": [
+    "mcp/vercel",
+    "openapi/vercel-com"
+  ]
+}

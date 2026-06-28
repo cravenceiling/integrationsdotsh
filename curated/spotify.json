@@ -1,0 +1,49 @@
+{
+  "slug": "spotify",
+  "name": "Spotify",
+  "tagline": "Playlists, search, and playback for music-aware agents.",
+  "description": "Spotify's Web API covers search, playlists, libraries, and playback control. OAuth is mandatory for anything user-specific, with the client-credentials flow available for catalog-only access.",
+  "domain": "spotify.com",
+  "icon": "https://www.google.com/s2/favicons?domain=spotify.com&sz=64",
+  "categories": [
+    "media",
+    "entertainment"
+  ],
+  "auth": {
+    "methods": [
+      {
+        "type": "oauth2",
+        "label": "OAuth 2.0",
+        "note": "Authorization-code flow for user data; client-credentials for catalog-only access."
+      }
+    ],
+    "guide": "Register an app in the [Developer Dashboard](https://developer.spotify.com/dashboard) to get a client ID and secret.\n\n**Catalog-only access** (search, metadata — no user data) uses the client-credentials flow:\n\n```bash\ncurl -X POST https://accounts.spotify.com/api/token \\\n  -d grant_type=client_credentials \\\n  -d client_id=$SPOTIFY_CLIENT_ID \\\n  -d client_secret=$SPOTIFY_CLIENT_SECRET\n```\n\n**User data** (playlists, library, playback) needs the authorization-code flow: send the user to `https://accounts.spotify.com/authorize` with your scopes (e.g. `playlist-modify-private`, `user-read-playback-state`), then exchange the code for tokens. Access tokens expire after one hour — store and rotate the refresh token.\n\n```bash\ncurl https://api.spotify.com/v1/me/playlists \\\n  -H \"Authorization: Bearer $ACCESS_TOKEN\"\n```",
+    "sources": [
+      {
+        "title": "Spotify for Developers — Authorization",
+        "url": "https://developer.spotify.com/documentation/web-api/concepts/authorization"
+      }
+    ],
+    "generatedAt": "2026-06-11",
+    "verified": true
+  },
+  "interfaces": [
+    {
+      "format": "openapi",
+      "name": "Spotify Web API",
+      "endpoint": "https://api.spotify.com/v1",
+      "auth": "oauth",
+      "authHeader": "Authorization: Bearer {access_token}",
+      "docs": "https://developer.spotify.com/documentation/web-api",
+      "origin": "vendor"
+    }
+  ],
+  "links": {
+    "homepage": "https://spotify.com",
+    "docs": "https://developer.spotify.com"
+  },
+  "related": [
+    "mcp/spotify",
+    "openapi/spotify-com"
+  ]
+}

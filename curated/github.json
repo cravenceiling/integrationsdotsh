@@ -1,0 +1,86 @@
+{
+  "slug": "github",
+  "name": "GitHub",
+  "tagline": "Repos, issues, PRs, and Actions in every format agents speak.",
+  "description": "GitHub exposes more agent-callable surface area than almost any service: an official remote MCP server, a fully-specified REST API, a GraphQL API, and the `gh` CLI. Pick the format that fits your agent — they all reach the same data.",
+  "domain": "github.com",
+  "icon": "https://www.google.com/s2/favicons?domain=github.com&sz=64",
+  "categories": [
+    "developer-tools",
+    "version-control"
+  ],
+  "auth": {
+    "methods": [
+      {
+        "type": "oauth2",
+        "label": "OAuth 2.0",
+        "note": "The remote MCP server walks compatible clients through OAuth automatically."
+      },
+      {
+        "type": "pat",
+        "label": "Personal access token",
+        "note": "Fine-grained PATs let you scope access per-repo and per-permission."
+      }
+    ],
+    "guide": "**Remote MCP (easiest):** point your client at `https://api.githubcopilot.com/mcp/`. Clients with OAuth support (VS Code 1.101+, Claude Code, Cursor) handle the consent flow automatically. For clients without OAuth, pass a PAT instead: `Authorization: Bearer <your-pat>`.\n\n**Personal access token:** create one under [Settings → Developer settings → Personal access tokens](https://github.com/settings/tokens). Prefer fine-grained tokens scoped to the repos and permissions your agent actually needs. Use it with REST and GraphQL:\n\n```bash\n# REST\ncurl https://api.github.com/user -H \"Authorization: Bearer $GITHUB_TOKEN\"\n\n# GraphQL\ncurl https://api.github.com/graphql \\\n  -H \"Authorization: Bearer $GITHUB_TOKEN\" \\\n  -d '{\"query\": \"{ viewer { login } }\"}'\n```\n\n**CLI:** `gh auth login` stores credentials in your keychain; agents running in your shell inherit them. This is often the lowest-friction path for coding agents.",
+    "sources": [
+      {
+        "title": "github/github-mcp-server — remote server & PAT setup",
+        "url": "https://github.com/github/github-mcp-server"
+      },
+      {
+        "title": "GitHub REST API — authenticating",
+        "url": "https://docs.github.com/en/rest/authentication/authenticating-to-the-rest-api"
+      }
+    ],
+    "generatedAt": "2026-06-11",
+    "verified": true
+  },
+  "interfaces": [
+    {
+      "format": "mcp",
+      "name": "GitHub MCP Server",
+      "endpoint": "https://api.githubcopilot.com/mcp/",
+      "auth": "mixed",
+      "authHeader": "Authorization: Bearer {pat}",
+      "docs": "https://github.com/github/github-mcp-server",
+      "note": "OAuth in supporting clients, or a PAT bearer header anywhere else.",
+      "origin": "vendor"
+    },
+    {
+      "format": "openapi",
+      "name": "GitHub REST API",
+      "endpoint": "https://api.github.com",
+      "specUrl": "https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/api.github.com/api.github.com.json",
+      "auth": "token",
+      "authHeader": "Authorization: Bearer {pat}",
+      "docs": "https://docs.github.com/en/rest",
+      "origin": "vendor"
+    },
+    {
+      "format": "graphql",
+      "name": "GitHub GraphQL API",
+      "endpoint": "https://api.github.com/graphql",
+      "auth": "token",
+      "authHeader": "Authorization: Bearer {pat}",
+      "docs": "https://docs.github.com/en/graphql",
+      "origin": "vendor"
+    },
+    {
+      "format": "cli",
+      "name": "gh",
+      "install": "brew install gh && gh auth login",
+      "auth": "oauth",
+      "docs": "https://cli.github.com",
+      "origin": "vendor"
+    }
+  ],
+  "links": {
+    "homepage": "https://github.com",
+    "docs": "https://docs.github.com"
+  },
+  "related": [
+    "graphql/github",
+    "openapi/github-com"
+  ]
+}

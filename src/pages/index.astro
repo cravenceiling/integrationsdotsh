@@ -1,206 +1,228 @@
 ---
 import Base from "~/layouts/Base.astro";
-import IntegrationCard from "~/components/IntegrationCard.astro";
-import { all, byKind, kindLabel } from "~/lib/data.ts";
-import type { Feed, Kind } from "~/lib/types.ts";
+import { all, byKind } from "~/lib/data.ts";
 
-const items = [...all].sort((a, b) => {
-  const pa = a.popularity ?? 0;
-  const pb = b.popularity ?? 0;
-  if (pa !== pb) return pb - pa;
-  return a.name.localeCompare(b.name);
-});
-
-const kinds: Kind[] = ["mcp", "openapi", "graphql"];
-const feeds: Feed[] = ["claude", "openai", "apis-guru", "graphql-apis", "override"];
-const feedCounts: Record<string, number> = {};
-for (const r of all) for (const f of r.feeds) feedCounts[f] = (feedCounts[f] ?? 0) + 1;
+const counts = {
+  total: all.length,
+  mcp: byKind.mcp.length,
+  openapi: byKind.openapi.length,
+  graphql: byKind.graphql.length,
+  cli: byKind.cli.length,
+};
 ---
 
-<Base title="integrations.sh — find any MCP, OpenAPI, or GraphQL integration">
-  <section class="hero">
-    <h1>integrations.sh</h1>
-    <p class="sub">
-      {all.length.toLocaleString()} integrations — {byKind.mcp.length.toLocaleString()} MCP servers,
-      {byKind.openapi.length.toLocaleString()} OpenAPI specs, {byKind.graphql.length.toLocaleString()} GraphQL APIs.
-    </p>
-    <input
-      id="q"
-      type="search"
-      placeholder="Search integrations…"
-      autocomplete="off"
-      autocorrect="off"
-      autocapitalize="off"
-      spellcheck="false"
-    />
-    <div class="filters" id="filters">
-      <fieldset>
-        <legend>Kind</legend>
-        <label class="chip"><input type="checkbox" name="kind" value="" checked /> All</label>
-        {kinds.map((k) => (
-          <label class={`chip kind-${k}`}>
-            <input type="checkbox" name="kind" value={k} />
-            {kindLabel[k]} <span class="count">{byKind[k].length.toLocaleString()}</span>
-          </label>
-        ))}
-      </fieldset>
-      <fieldset>
-        <legend>Feed</legend>
-        <label class="chip"><input type="checkbox" name="feed" value="" checked /> All</label>
-        {feeds.map((f) => (
-          <label class="chip">
-            <input type="checkbox" name="feed" value={f} />
-            {f} {feedCounts[f] ? <span class="count">{feedCounts[f].toLocaleString()}</span> : null}
-          </label>
-        ))}
-      </fieldset>
-    </div>
-  </section>
+<Base title="integrations.sh — every integration, in every format agents speak" path="/">
+  <div class="container">
+    <section class="hero">
+      <p class="eyebrow">registry · MCP servers · OpenAPI · GraphQL</p>
+      <h1>Every integration, in every format agents speak.</h1>
+      <p class="sub" id="lede">
+        {counts.total.toLocaleString()} publicly-accessible integration specs across
+        MCP, OpenAPI, and GraphQL — grouped by domain, readable by you and your agent.
+      </p>
+      <div class="search-row">
+        <input
+          id="q" type="search"
+          placeholder="Search integrations…"
+          autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+        />
+        <kbd>/</kbd>
+      </div>
+      <nav class="kinds" id="kinds">
+        <button class="active" data-kind="">All</button>
+        <button data-kind="mcp">MCP <span>{counts.mcp.toLocaleString()}</span></button>
+        <button data-kind="openapi">API <span>{counts.openapi.toLocaleString()}</span></button>
+        <button data-kind="graphql">GraphQL <span>{counts.graphql.toLocaleString()}</span></button>
+        <button data-kind="cli">CLI <span>{counts.cli.toLocaleString()}</span></button>
+      </nav>
+    </section>
 
-  <p class="result-count" id="result-count">{items.length.toLocaleString()} results</p>
-  <div class="grid" id="grid">
-    {items.map((item) => <IntegrationCard item={item} />)}
+    <table class="rows">
+      <tbody id="tbody"></tbody>
+    </table>
+    <div id="sentinel" aria-hidden="true"></div>
+    <p class="status" id="status"></p>
   </div>
-  <p class="empty" id="empty" hidden>No matches.</p>
 </Base>
 
-<script is:inline>
-  (() => {
-    const grid = document.getElementById("grid");
-    const cards = Array.from(grid.querySelectorAll(".card"));
-    const q = document.getElementById("q");
-    const counter = document.getElementById("result-count");
-    const empty = document.getElementById("empty");
-    const filters = document.getElementById("filters");
+<script>
+  const PAGE = 80;
+  const tbody = document.getElementById("tbody");
+  const q = document.getElementById("q");
+  const status = document.getElementById("status");
+  const sentinel = document.getElementById("sentinel");
+  const kindsNav = document.getElementById("kinds");
 
-    let activeKinds = new Set();
-    let activeFeeds = new Set();
-    let term = "";
+  const TLABEL = { mcp: "MCP", openapi: "API", graphql: "GraphQL", cli: "CLI" };
+  const TORDER = ["mcp", "openapi", "graphql", "cli"];
 
-    const apply = () => {
-      const t = term.trim().toLowerCase();
-      let visible = 0;
-      for (const el of cards) {
-        const k = el.dataset.kind;
-        const fs = (el.dataset.feeds || "").split(",");
-        const matchKind = activeKinds.size === 0 || activeKinds.has(k);
-        const matchFeed = activeFeeds.size === 0 || fs.some((f) => activeFeeds.has(f));
-        const matchTerm = !t || (el.dataset.search || "").includes(t);
-        const show = matchKind && matchFeed && matchTerm;
-        el.hidden = !show;
-        if (show) visible++;
-      }
-      counter.textContent = `${visible.toLocaleString()} ${visible === 1 ? "result" : "results"}`;
-      empty.hidden = visible !== 0;
-    };
+  let records = [];
+  let filtered = [];    // domain groups
+  let shown = 0;
+  let kind = "";
+  let term = "";
 
-    // Debounce typing for cheaper filtering on large lists.
-    let to = 0;
-    q.addEventListener("input", () => {
-      term = q.value;
-      clearTimeout(to);
-      to = setTimeout(apply, 80);
-    });
+  const params = new URLSearchParams(location.search);
+  kind = params.get("kind") ?? "";
+  term = params.get("q") ?? "";
+  if (term) q.value = term;
+  for (const b of kindsNav.querySelectorAll("button")) {
+    b.classList.toggle("active", (b.dataset.kind ?? "") === kind);
+  }
 
-    // Chip groups: an "All" chip with empty value clears the group.
-    filters.addEventListener("change", (e) => {
-      const input = e.target;
-      if (input.tagName !== "INPUT") return;
-      const group = input.name;
-      const isAll = input.value === "";
-      const set = group === "kind" ? activeKinds : activeFeeds;
+  const esc = (s) =>
+    String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const fav = (d) => `https://www.google.com/s2/favicons?domain=${encodeURIComponent(d)}&sz=64`;
+  const dpath = (d) => `/d/${encodeURIComponent(d)}/`;
 
-      if (isAll) {
-        // Clicking All clears the set + unchecks all siblings.
-        set.clear();
-        for (const sib of filters.querySelectorAll(`input[name="${group}"]`)) {
-          sib.checked = sib.value === "";
-        }
-      } else {
-        if (input.checked) set.add(input.value);
-        else set.delete(input.value);
-        // Sync the All chip.
-        const allChip = filters.querySelector(`input[name="${group}"][value=""]`);
-        allChip.checked = set.size === 0;
-      }
-      apply();
-    });
+  const buildGroups = (recs) => {
+    const map = new Map();
+    for (const r of recs) {
+      const d = r.domain || r.slug;
+      let g = map.get(d);
+      if (!g) { g = { domain: d, icon: r.icon, pop: 0, total: 0, types: {} }; map.set(d, g); }
+      const c = g.types[r.kind] ?? (g.types[r.kind] = { count: 0, kind: r.kind });
+      c.count++;
+      g.total++;
+      g.pop = Math.max(g.pop, r.popularity ?? 0);
+      if (!g.icon) g.icon = r.icon;
+    }
+    return [...map.values()].sort((a, b) =>
+      b.pop - a.pop || b.total - a.total || a.domain.localeCompare(b.domain));
+  };
 
-    // Focus search on /
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "/" && document.activeElement !== q) {
-        e.preventDefault();
-        q.focus();
-      }
-    });
-  })();
+  const groupRowHtml = (g) => {
+    const icon = `<img class="c-fav" src="${esc(g.icon || fav(g.domain))}" alt="" loading="lazy" width="18" height="18" onerror="this.src='${fav(g.domain)}'">`;
+    const chips = TORDER.filter((t) => g.types[t]).map((t) => {
+      const c = g.types[t];
+      return `<a class="chip" href="${dpath(g.domain)}#${t}">${TLABEL[t]}${c.count > 1 ? `<span class="n">${c.count}</span>` : ""}</a>`;
+    }).join("");
+    return `<tr>
+      <td class="c-icon">${icon}</td>
+      <td class="c-name"><a href="${dpath(g.domain)}">${esc(g.domain)}</a></td>
+      <td class="c-chips">${chips}</td></tr>`;
+  };
+
+  const render = (reset) => {
+    if (reset) { tbody.innerHTML = ""; shown = 0; }
+    const next = filtered.slice(shown, shown + PAGE);
+    tbody.insertAdjacentHTML("beforeend", next.map(groupRowHtml).join(""));
+    shown += next.length;
+    status.textContent = filtered.length
+      ? `${filtered.length.toLocaleString()} domain${filtered.length === 1 ? "" : "s"}`
+      : "No matches.";
+  };
+
+  const io = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && shown < filtered.length) render(false);
+  }, { rootMargin: "700px" });
+  io.observe(sentinel);
+
+  const matchRecord = (r, t) =>
+    r.name.toLowerCase().includes(t) || (r.domain ?? "").includes(t) || r.slug.includes(t) || (r.description ?? "").toLowerCase().includes(t);
+
+  const apply = () => {
+    const t = term.trim().toLowerCase();
+    let pool = records;
+    if (kind) pool = pool.filter((r) => r.kind === kind);
+    if (t) pool = pool.filter((r) => matchRecord(r, t));
+    filtered = buildGroups(pool);
+
+    const u = new URL(location.href);
+    kind ? u.searchParams.set("kind", kind) : u.searchParams.delete("kind");
+    term.trim() ? u.searchParams.set("q", term.trim()) : u.searchParams.delete("q");
+    history.replaceState(null, "", u);
+    render(true);
+  };
+
+  fetch("/api.json")
+    .then((r) => r.json())
+    .then((rows) => { records = rows; apply(); });
+
+  let to = 0;
+  q.addEventListener("input", () => { term = q.value; clearTimeout(to); to = setTimeout(apply, 90); });
+  kindsNav.addEventListener("click", (e) => {
+    const btn = e.target.closest("button");
+    if (!btn) return;
+    kind = btn.dataset.kind ?? "";
+    for (const b of kindsNav.querySelectorAll("button")) b.classList.toggle("active", b === btn);
+    apply();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "/" && document.activeElement !== q) { e.preventDefault(); q.focus(); }
+  });
 </script>
 
 <style>
-  .hero { padding: 32px 0 24px; max-width: 760px; margin: 0 auto; text-align: center; }
-  .hero h1 { font-size: 32px; letter-spacing: -0.02em; margin: 0 0 8px; }
-  .hero .sub { color: var(--muted); margin: 0 0 22px; font-size: 14px; }
+  .hero { padding: 64px 0 8px; max-width: 660px; }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--gray-400);
+    margin: 0 0 16px;
+  }
+  h1 { font-size: 36px; font-weight: 600; letter-spacing: -0.04em; line-height: 1.15; margin: 0 0 14px; }
+  .sub { color: var(--gray-500); font-size: 15.5px; line-height: 1.6; margin: 0 0 28px; }
+
+  .search-row { position: relative; max-width: 480px; }
   #q {
     width: 100%;
-    padding: 12px 16px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--fg);
-    font: inherit;
+    padding: 11px 44px 11px 14px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    color: var(--gray-1000);
+    font: inherit; font-size: 14px;
     outline: none;
     transition: border-color 0.12s;
   }
-  #q:focus { border-color: var(--accent); }
-  #q::placeholder { color: var(--muted); }
-  .filters {
-    display: flex;
-    gap: 16px;
-    margin-top: 16px;
-    flex-wrap: wrap;
-    justify-content: center;
+  #q:focus { border-color: var(--gray-400); }
+  #q::placeholder { color: var(--gray-300); }
+  .search-row kbd {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    font-family: var(--font-mono); font-size: 11px; color: var(--gray-300);
+    border: 1px solid var(--gray-100); border-radius: 4px; padding: 1px 7px;
   }
-  .filters fieldset {
-    border: 0;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    align-items: center;
+
+  .kinds { display: flex; gap: 20px; padding: 20px 0 0; }
+  .kinds button {
+    background: none; border: 0; padding: 4px 0;
+    font-family: var(--font-mono); font-size: 12.5px;
+    color: var(--gray-400); cursor: pointer;
+    border-bottom: 1px solid transparent;
   }
-  .filters legend {
-    color: var(--muted);
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding-right: 8px;
+  .kinds button:hover { color: var(--gray-700); }
+  .kinds button.active { color: var(--gray-1000); border-bottom-color: var(--gray-1000); }
+  .kinds button span { opacity: 0.5; margin-left: 4px; }
+
+  table.rows { width: 100%; border-collapse: collapse; margin-top: 18px; }
+  :global(table.rows tbody tr) { border-bottom: 1px solid var(--gray-100); }
+  :global(table.rows td) { padding: 13px 20px 13px 0; vertical-align: middle; }
+  :global(.c-icon) { width: 30px; padding-right: 12px; }
+  :global(.c-fav), :global(.c-icon .ph) {
+    width: 18px; height: 18px; border-radius: 4px; display: block; object-fit: contain;
   }
-  .chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 4px 10px;
-    font-size: 12px;
-    cursor: pointer;
-    user-select: none;
-    color: var(--muted);
-    transition: border-color 0.12s, color 0.12s;
+  :global(.c-icon .ph) {
+    background: var(--gray-50); border: 1px solid var(--gray-100);
+    font-size: 10px; font-weight: 600; color: var(--gray-400);
+    display: grid; place-items: center;
   }
-  .chip input { display: none; }
-  .chip:has(input:checked) { color: var(--fg); border-color: #2c333d; background: #1c2128; }
-  .chip.kind-mcp:has(input:checked) { color: #c4b5fd; border-color: #4c3a9f; }
-  .chip.kind-openapi:has(input:checked) { color: #93c5fd; border-color: #1e4ea8; }
-  .chip.kind-graphql:has(input:checked) { color: #f9a8d4; border-color: #9d2470; }
-  .chip .count { color: var(--muted); font-size: 11px; opacity: 0.7; }
-  .result-count { color: var(--muted); font-size: 12px; margin: 24px 0 12px; }
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 12px;
+  :global(.c-name) { white-space: nowrap; }
+  :global(.c-name a) { font-weight: 500; font-size: 14.5px; text-decoration: none; }
+  :global(table.rows tr:hover .c-name a) { text-decoration: underline; text-underline-offset: 3px; }
+
+  :global(.c-chips) { text-align: right; white-space: nowrap; padding-right: 0 !important; }
+  :global(.c-chips .chip) {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: var(--font-mono); font-size: 12px;
+    color: var(--gray-500);
+    border: 1px solid var(--gray-100); background: var(--gray-25);
+    border-radius: 5px; padding: 3px 9px; margin-left: 8px;
+    text-decoration: none;
   }
-  .empty { color: var(--muted); text-align: center; margin: 48px 0; }
+  :global(.c-chips .chip:hover) { color: var(--gray-1000); border-color: var(--gray-300); }
+  :global(.c-chips .chip .n) { opacity: 0.5; }
+
+  .status { color: var(--gray-400); font-family: var(--font-mono); font-size: 12px; margin: 16px 0 0; }
+  #sentinel { height: 1px; }
 </style>

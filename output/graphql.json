@@ -1779,5 +1779,37 @@
         }
       }
     }
+  },
+  {
+    "id": "graphql/gitlab",
+    "kind": "graphql",
+    "slug": "gitlab",
+    "name": "GitLab",
+    "description": "GitLab's official GraphQL API — query and mutate projects, issues, merge requests, pipelines, and more. Some read queries are public; mutations require authentication.",
+    "categories": [],
+    "feeds": [
+      "override"
+    ],
+    "raw": {},
+    "url": "https://docs.gitlab.com/api/graphql/",
+    "icon": "https://www.google.com/s2/favicons?domain=gitlab.com&sz=64",
+    "graphql": {
+      "endpoint": "https://gitlab.com/api/graphql",
+      "hasSecurity": true,
+      "docs": [
+        {
+          "description": "GraphiQL explorer",
+          "url": "https://gitlab.com/-/graphql-explorer"
+        },
+        {
+          "description": "API reference",
+          "url": "https://docs.gitlab.com/api/graphql/reference/"
+        },
+        {
+          "description": "Getting started",
+          "url": "https://docs.gitlab.com/api/graphql/getting_started/"
+        }
+      ]
+    }
   }
 ]
