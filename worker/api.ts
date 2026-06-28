@@ -8,12 +8,14 @@ import { Etag, HttpPlatform } from "effect/unstable/http";
 import * as HttpRouter from "effect/unstable/http/HttpRouter";
 import { HttpApi, HttpApiBuilder, HttpApiEndpoint, HttpApiGroup } from "effect/unstable/httpapi";
 import * as OpenApi from "effect/unstable/httpapi/OpenApi";
-import { DetectionResult, DetectParams, runDetect } from "./operations.ts";
+import { DETECT_DESCRIPTION, DetectionResult, DetectParams, runDetect } from "./operations.ts";
 
 const Detect = HttpApiEndpoint.get("detect", "/api/:domain/detect", {
   params: DetectParams,
   success: DetectionResult,
-});
+})
+  .annotate(OpenApi.Summary, "Detect a domain's agent-readiness")
+  .annotate(OpenApi.Description, DETECT_DESCRIPTION);
 
 export const Api = HttpApi.make("integrations.sh")
   .add(HttpApiGroup.make("detect", { topLevel: true }).add(Detect))
