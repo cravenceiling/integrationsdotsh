@@ -16,7 +16,7 @@ const Detect = HttpApiEndpoint.get("detect", "/api/:domain/detect", {
 });
 
 export const Api = HttpApi.make("integrations.sh")
-  .add(HttpApiGroup.make("detect").add(Detect))
+  .add(HttpApiGroup.make("detect", { topLevel: true }).add(Detect))
   .annotate(OpenApi.Title, "integrations.sh")
   .annotate(OpenApi.Version, "0.1.0")
   .annotate(
