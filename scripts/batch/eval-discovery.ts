@@ -172,7 +172,7 @@ export function checklist(
   const brandLabel = resultDomain ? resultDomain.split(".")[0] : null;
   const urlOffenders = [...collectUrls(result)].filter((url) => {
     if (corpusText !== undefined) return !corpusText.includes(url);
-    if (/[{}]/.test(url) || /\/\/[^/]*\b[A-Z]{2,}[A-Z_-]*[A-Z]\b/.test(url)) return false; // {tenant} and YOUR_INSTANCE placeholders
+    if (/[{}*]/.test(url) || /\/\/[^/]*\b[A-Z]{2,}[A-Z_-]*[A-Z]\b/.test(url)) return false; // {tenant}, *.wildcard, YOUR_INSTANCE placeholders
     if (/^https?:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0)([:/]|$)/.test(url)) return false; // self-hosted quickstart examples
     if (/\.(example|test|invalid|localhost)([:/]|$)|(^|\.)(example|your-?[a-z-]+)\.(com|org|net|example)([:/]|$)/.test(url)) return false; // RFC 2606 + your-instance placeholders
     const urlDomain = registrable(url);
