@@ -1,0 +1,352 @@
+{
+  "result": {
+    "version": 3,
+    "domain": "commure.com",
+    "detect": {
+      "domain": "commure.com",
+      "found": [],
+      "mcp": [],
+      "llmsTxt": false,
+      "errors": []
+    },
+    "usedLlm": true,
+    "discoveredAt": "2026-07-02T11:45:28.419Z",
+    "summary": "Commure exposes a public Ambient docs portal plus authenticated Ambient web app and SCIM provisioning API; SSO is documented for setup, but no public GraphQL, MCP, or CLI surface was confirmed.",
+    "credentials": {
+      "commure_user_password": {
+        "type": "basic",
+        "label": "Commure Ambient user account password",
+        "generateUrl": "https://ambient.commure.com",
+        "setup": "Go to [ambient.commure.com](https://ambient.commure.com), click **Sign-up** to create a work account, or use **Forgot Password** on the login screen to set a new password for an existing account. This is the password you use with your work email at sign-in.",
+        "acquisition": "manual"
+      },
+      "commure_scim_token": {
+        "type": "bearer",
+        "label": "Commure SCIM bearer token",
+        "generateUrl": "https://docs.ambient.commure.com/enterprise/scim",
+        "setup": "Contact Commure support to enable SCIM for your site. Commure will generate a site-specific SCIM bearer token and provide it to you. Configure your IdP’s SCIM connector with the base URL `https://rcm-api.athelas.com/v1/scribe/scim/v2/` and the bearer token from Commure.",
+        "acquisition": "manual"
+      }
+    },
+    "surfaces": [
+      {
+        "slug": "commure-ambient-web-app",
+        "name": "Commure Ambient web app",
+        "type": "http",
+        "docs": "https://docs.ambient.commure.com/get_started/login.md",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.ambient.commure.com/get_started/login.md"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "commure_user_password",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Basic"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.ambient.commure.com/get_started/login.md"
+                ]
+              }
+            }
+          ]
+        },
+        "url": "https://ambient.commure.com"
+      },
+      {
+        "slug": "commure-scim-provisioning-api",
+        "name": "Commure SCIM Provisioning API",
+        "type": "http",
+        "docs": "https://docs.ambient.commure.com/enterprise/scim.md",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.ambient.commure.com/enterprise/scim.md"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "commure_scim_token",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Bearer"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.ambient.commure.com/enterprise/scim.md"
+                ]
+              }
+            }
+          ]
+        },
+        "url": "https://rcm-api.athelas.com/v1/scribe/scim/v2/"
+      },
+      {
+        "slug": "commure-ambient-sso-setup",
+        "name": "Commure Ambient SSO setup",
+        "type": "http",
+        "docs": "https://docs.ambient.commure.com/enterprise/sso-self-serve.md",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.ambient.commure.com/enterprise/sso-self-serve.md"
+          ]
+        },
+        "auth": {
+          "status": "unknown"
+        },
+        "url": "https://docs.ambient.commure.com/enterprise/sso-self-serve.md"
+      },
+      {
+        "slug": "commure-ambient-docs-portal",
+        "name": "Commure Ambient docs portal",
+        "type": "http",
+        "docs": "https://docs.ambient.commure.com/llms.txt",
+        "basis": {
+          "via": "discovered",
+          "evidence": []
+        },
+        "auth": {
+          "status": "none",
+          "basis": {
+            "via": "discovered",
+            "evidence": [
+              "https://docs.ambient.commure.com/llms.txt"
+            ]
+          }
+        },
+        "url": "https://docs.ambient.commure.com/"
+      }
+    ]
+  },
+  "discoveredAt": "2026-07-02T11:45:28.419Z",
+  "model": "loop-gpt-5.4-mini",
+  "usage": {
+    "prompt_tokens": 93940,
+    "completion_tokens": 1091,
+    "total_tokens": 95031
+  },
+  "visited": [
+    "https://developer.hashicorp.com/terraform/cloud-docs/api-docs",
+    "https://docs.ambient.commure.com/ehr-integrations/Athena_API",
+    "https://docs.ambient.commure.com/enterprise/scim.md",
+    "https://docs.ambient.commure.com/enterprise/sso-self-serve.md",
+    "https://docs.ambient.commure.com/get_started/login.md",
+    "https://docs.ambient.commure.com/llms.txt",
+    "https://scribe.commure.com/",
+    "https://www.commure.com/",
+    "https://www.commure.com/ambient-ai",
+    "https://www.postman.com/commure/commure-s-public-workspace/collection/xyfpqlf/patient-chart"
+  ],
+  "grounding": [
+    "http://ambient.commure.com",
+    "https://ambient.commure.com/",
+    "https://bifrost-public-https-v4.gw.postman.com",
+    "https://bifrost-web-https-v4.gw.postman.co",
+    "https://bifrost-web-https-v4.gw.postman.com",
+    "https://developer.hashicorp.com/terraform/cloud-docs/api-docs",
+    "https://docs.ambient.commure.com/",
+    "https://docs.ambient.commure.com/#content-area",
+    "https://docs.ambient.commure.com/#fields-written-back-to",
+    "https://docs.ambient.commure.com/#key-metrics",
+    "https://docs.ambient.commure.com/#launch-checklist",
+    "https://docs.ambient.commure.com/advanced/collaborator",
+    "https://docs.ambient.commure.com/advanced/collaborator.md",
+    "https://docs.ambient.commure.com/advanced/dictation",
+    "https://docs.ambient.commure.com/advanced/dictation.md",
+    "https://docs.ambient.commure.com/advanced/patient-360",
+    "https://docs.ambient.commure.com/advanced/patient-360.md",
+    "https://docs.ambient.commure.com/ai_studio/after-visit-summaries",
+    "https://docs.ambient.commure.com/ai_studio/after-visit-summaries.md",
+    "https://docs.ambient.commure.com/ai_studio/ai-summaries",
+    "https://docs.ambient.commure.com/ai_studio/ai-summaries.md",
+    "https://docs.ambient.commure.com/ai_studio/carry-forward",
+    "https://docs.ambient.commure.com/ai_studio/carry-forward.md",
+    "https://docs.ambient.commure.com/ai_studio/commure_assistant",
+    "https://docs.ambient.commure.com/ai_studio/commure_assistant.md",
+    "https://docs.ambient.commure.com/ai_studio/custom-formatting",
+    "https://docs.ambient.commure.com/ai_studio/custom-formatting.md",
+    "https://docs.ambient.commure.com/ai_studio/dot-phrases",
+    "https://docs.ambient.commure.com/ai_studio/dot-phrases.md",
+    "https://docs.ambient.commure.com/ai_studio/macro-library",
+    "https://docs.ambient.commure.com/ai_studio/macro-library.md",
+    "https://docs.ambient.commure.com/ai_studio/macros",
+    "https://docs.ambient.commure.com/ai_studio/macros.md",
+    "https://docs.ambient.commure.com/ai_studio/personal-dictionary",
+    "https://docs.ambient.commure.com/ai_studio/personal-dictionary.md",
+    "https://docs.ambient.commure.com/ai_studio/preferences",
+    "https://docs.ambient.commure.com/ai_studio/preferences.md",
+    "https://docs.ambient.commure.com/ai_studio/template-library",
+    "https://docs.ambient.commure.com/ai_studio/template-library.md",
+    "https://docs.ambient.commure.com/appointment-based-integration.md",
+    "https://docs.ambient.commure.com/basics/myscribes",
+    "https://docs.ambient.commure.com/basics/myscribes.md",
+    "https://docs.ambient.commure.com/basics/navigation",
+    "https://docs.ambient.commure.com/basics/navigation.md",
+    "https://docs.ambient.commure.com/basics/scribe-actions",
+    "https://docs.ambient.commure.com/basics/scribe-actions.md",
+    "https://docs.ambient.commure.com/basics/visits",
+    "https://docs.ambient.commure.com/basics/visits.md",
+    "https://docs.ambient.commure.com/chrome-extension-integration.md",
+    "https://docs.ambient.commure.com/commure-ambient/advanced/assistant-note-editing",
+    "https://docs.ambient.commure.com/commure-ambient/advanced/assistant-note-editing.md",
+    "https://docs.ambient.commure.com/commure-dictation/ambient-integration.md",
+    "https://docs.ambient.commure.com/commure-dictation/ambient-mic.md",
+    "https://docs.ambient.commure.com/commure-dictation/basic-usage.md",
+    "https://docs.ambient.commure.com/commure-dictation/handheld-microphones.md",
+    "https://docs.ambient.commure.com/commure-dictation/hotkeys.md",
+    "https://docs.ambient.commure.com/commure-dictation/installation.md",
+    "https://docs.ambient.commure.com/commure-dictation/introduction",
+    "https://docs.ambient.commure.com/commure-dictation/introduction.md",
+    "https://docs.ambient.commure.com/commure-dictation/macros.md",
+    "https://docs.ambient.commure.com/commure-dictation/personal-dictionary.md",
+    "https://docs.ambient.commure.com/commure-dictation/system-requirements.md",
+    "https://docs.ambient.commure.com/commure-dictation/troubleshooting.md",
+    "https://docs.ambient.commure.com/commure-dictation/voice-commands.md",
+    "https://docs.ambient.commure.com/contact/sales-and-support",
+    "https://docs.ambient.commure.com/contact/sales-and-support.md",
+    "https://docs.ambient.commure.com/copy-and-paste.md",
+    "https://docs.ambient.commure.com/ehr-integrations/AdvancedMD",
+    "https://docs.ambient.commure.com/ehr-integrations/AdvancedMD.md",
+    "https://docs.ambient.commure.com/ehr-integrations/Athena",
+    "https://docs.ambient.commure.com/ehr-integrations/Athena.md",
+    "https://docs.ambient.commure.com/ehr-integrations/Athena_API",
+    "https://docs.ambient.commure.com/ehr-integrations/Athena_API.md",
+    "https://docs.ambient.commure.com/ehr-integrations/NextGen",
+    "https://docs.ambient.commure.com/ehr-integrations/NextGen.md",
+    "https://docs.ambient.commure.com/ehr-integrations/PracticeFusion",
+    "https://docs.ambient.commure.com/ehr-integrations/PracticeFusion.md",
+    "https://docs.ambient.commure.com/ehr-integrations/Tebra",
+    "https://docs.ambient.commure.com/ehr-integrations/Tebra.md",
+    "https://docs.ambient.commure.com/ehr-integrations/TherapyNotes",
+    "https://docs.ambient.commure.com/ehr-integrations/TherapyNotes.md",
+    "https://docs.ambient.commure.com/ehr-integrations/WebPT",
+    "https://docs.ambient.commure.com/ehr-integrations/WebPT.md",
+    "https://docs.ambient.commure.com/ehr-integrations/eCW",
+    "https://docs.ambient.commure.com/ehr-integrations/eCW.md",
+    "https://docs.ambient.commure.com/ehr-integrations/meditech-expanse-integration",
+    "https://docs.ambient.commure.com/ehr-integrations/meditech-expanse-integration.md",
+    "https://docs.ambient.commure.com/enterprise/admin-panel",
+    "https://docs.ambient.commure.com/enterprise/admin-panel.md",
+    "https://docs.ambient.commure.com/enterprise/scim",
+    "https://docs.ambient.commure.com/enterprise/scim.md",
+    "https://docs.ambient.commure.com/enterprise/security",
+    "https://docs.ambient.commure.com/enterprise/security.md",
+    "https://docs.ambient.commure.com/enterprise/sso-self-serve",
+    "https://docs.ambient.commure.com/enterprise/sso-self-serve.md",
+    "https://docs.ambient.commure.com/get_started/download",
+    "https://docs.ambient.commure.com/get_started/download.md",
+    "https://docs.ambient.commure.com/get_started/first-scribe",
+    "https://docs.ambient.commure.com/get_started/first-scribe.md",
+    "https://docs.ambient.commure.com/get_started/login",
+    "https://docs.ambient.commure.com/get_started/login.md",
+    "https://docs.ambient.commure.com/get_started/overview",
+    "https://docs.ambient.commure.com/get_started/overview.md",
+    "https://docs.ambient.commure.com/llms.txt",
+    "https://docs.ambient.commure.com/mds/ambient-support-models",
+    "https://docs.ambient.commure.com/mds/ambient-support-models.md",
+    "https://docs.ambient.commure.com/openapi-v2.json",
+    "https://docs.ambient.commure.com/troubleshooting/common-issues",
+    "https://docs.ambient.commure.com/troubleshooting/common-issues.md",
+    "https://docs.ambient.commure.com/troubleshooting/feedback",
+    "https://docs.ambient.commure.com/troubleshooting/feedback.md",
+    "https://mintcdn.com/commure2/PHVn3ibyoNDJ4NUw/images/Screenshot2025-06-10at4.32.35PM.png?fit=max&auto=format&n=PHVn3ibyoNDJ4NUw&q=85&s=8f608948c4f07b18883862198567c134",
+    "https://mintcdn.com/commure2/f15l5N9UlnXy6iO2/images/acs_url.png?fit=max&auto=format&n=f15l5N9UlnXy6iO2&q=85&s=1f950df0aaf6fcc76246beba854556b0",
+    "https://mintcdn.com/commure2/kwgnlW-riPywO8hI/images/sso.png?fit=max&auto=format&n=kwgnlW-riPywO8hI&q=85&s=9ecfa8a286e307c08bb081b2ba97874d",
+    "https://mintcdn.com/commure2/kwgnlW-riPywO8hI/images/sso_testing.gif?s=82520aeff7873772703a3acf48a2f061",
+    "https://mintcdn.com/commure2/kwgnlW-riPywO8hI/images/testing_sso.png?fit=max&auto=format&n=kwgnlW-riPywO8hI&q=85&s=c0f93f838235e30ed2fa4a788e933092",
+    "https://mintcdn.com/commure2/oza8UtTDVgAEG4nF/images/login_pages.png?fit=max&auto=format&n=oza8UtTDVgAEG4nF&q=85&s=0ba9c3f8c74551616b0f22c7adb9379d",
+    "https://rcm-api.athelas.com/v1/scribe",
+    "https://rcm-api.athelas.com/v1/scribe/scim/v2/",
+    "https://scribe.commure.com/",
+    "https://www.commure.com/",
+    "https://www.commure.com/#",
+    "https://www.commure.com/#w-tabs-0-data-w-pane-0",
+    "https://www.commure.com/#w-tabs-0-data-w-pane-1",
+    "https://www.commure.com/#w-tabs-0-data-w-pane-2",
+    "https://www.commure.com/#w-tabs-0-data-w-pane-3",
+    "https://www.commure.com/ambient-ai",
+    "https://www.commure.com/athelas-home",
+    "https://www.commure.com/blog-agents",
+    "https://www.commure.com/blog-scribe",
+    "https://www.commure.com/blog/charge-capture-in-healthcare-what-it-is-why-revenue-leaks-and-how-ai-fixes-it",
+    "https://www.commure.com/blog/commure-up-close-gopesh-engineers-the-core-of-healthcare-billing",
+    "https://www.commure.com/blog/commure-up-close-megan-fulker-on-grit-ownership-and-partnerships-that-last",
+    "https://www.commure.com/blog/pre-visit-summaries-what-are-they-why-they-matter-and-how-ai-is-changing-pre-charting",
+    "https://www.commure.com/blog/what-happens-when-clinicians-build-for-clinicians",
+    "https://www.commure.com/blog/what-is-a-digital-front-door-in-healthcare-a-guide-for-health-system-leaders",
+    "https://www.commure.com/call-center-agents",
+    "https://www.commure.com/careers",
+    "https://www.commure.com/clinical-council",
+    "https://www.commure.com/commure-pro",
+    "https://www.commure.com/company",
+    "https://www.commure.com/contact",
+    "https://www.commure.com/customer-story/huron-perth",
+    "https://www.commure.com/customer-story/mount-sinai",
+    "https://www.commure.com/customer-story/neel-pala",
+    "https://www.commure.com/customer-story/new-york-city-based-health-system-boosts-revenue-cycle-performance",
+    "https://www.commure.com/customer-story/north-east-medical-services-nems",
+    "https://www.commure.com/customer-story/wellnow-urgent-care",
+    "https://www.commure.com/customer-story/yale-new-haven",
+    "https://www.commure.com/customers",
+    "https://www.commure.com/dictation",
+    "https://www.commure.com/engage",
+    "https://www.commure.com/events",
+    "https://www.commure.com/life-at-commure",
+    "https://www.commure.com/news",
+    "https://www.commure.com/orchestrator-referral-management",
+    "https://www.commure.com/partners",
+    "https://www.commure.com/press-releases/commure-launches-orchestrator-the-ai-native-referral-management-and-patient-intake-platform",
+    "https://www.commure.com/press-releases/commure-named-overall-nlp-company-of-the-year-in-2026-ai-breakthrough-awards",
+    "https://www.commure.com/press-releases/commure-raises-70m-at-7b-valuation-to-transform-healthcare-operations-using-ai",
+    "https://www.commure.com/press-releases/willis-knighton-health-selects-commure-as-enterprise-ambient-scribe-ai-partner",
+    "https://www.commure.com/rcm",
+    "https://www.commure.com/resources",
+    "https://www.commure.com/resources/clinicians",
+    "https://www.commure.com/resources/clinicians?type=Blog",
+    "https://www.commure.com/resources/clinicians?type=Customer+Story",
+    "https://www.commure.com/resources/clinicians?type=Webinar",
+    "https://www.commure.com/resources/clinicians?type=whitepapers",
+    "https://www.commure.com/resources/executives",
+    "https://www.commure.com/resources/executives?type=Blog",
+    "https://www.commure.com/resources/executives?type=Customer+Story",
+    "https://www.commure.com/resources/executives?type=Webinar",
+    "https://www.commure.com/resources/executives?type=whitepapers",
+    "https://www.commure.com/resources/finance",
+    "https://www.commure.com/resources/finance?type=Blog",
+    "https://www.commure.com/resources/finance?type=Customer+Story",
+    "https://www.commure.com/resources/finance?type=Webinar",
+    "https://www.commure.com/resources/finance?type=whitepapers",
+    "https://www.commure.com/resources?type=Blog",
+    "https://www.commure.com/resources?type=Customer+Story",
+    "https://www.commure.com/resources?type=Webinar",
+    "https://www.commure.com/resources?type=reports",
+    "https://www.commure.com/strongline",
+    "https://www.commure.com/trust-center",
+    "https://www.mintlify.com?utm_campaign=poweredBy&utm_medium=referral&utm_source=commure2",
+    "https://www.postman.com/commure/commure-s-public-workspace/collection/xyfpqlf/patient-chart",
+    "https://www.youtube.com/embed/jk7E3l08vIw?si=P1PVJ_o2_d7XlepD"
+  ]
+}

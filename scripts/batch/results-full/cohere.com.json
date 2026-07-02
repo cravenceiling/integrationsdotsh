@@ -1,0 +1,330 @@
+{
+  "result": {
+    "version": 3,
+    "domain": "cohere.com",
+    "detect": {
+      "domain": "cohere.com",
+      "found": [
+        "llms.txt"
+      ],
+      "mcp": [],
+      "llmsTxt": true,
+      "errors": []
+    },
+    "usedLlm": true,
+    "discoveredAt": "2026-07-02T11:40:17.115Z",
+    "summary": "Cohere exposes an authenticated HTTP API surface (v2 plus v1 legacy endpoints) and an OpenAI-compatible HTTP API, both using a Cohere API key via `Authorization: Bearer`; no GraphQL, MCP, or CLI surface was confirmed.",
+    "credentials": {
+      "cohere_api_key": {
+        "type": "api_key",
+        "label": "Cohere API key",
+        "generateUrl": "https://dashboard.cohere.com/api-keys",
+        "setup": "Go to the [API keys page](https://dashboard.cohere.com/api-keys) in the Cohere dashboard, sign in, and create a new key. Use the key as the `Authorization: Bearer …` credential for Cohere API requests and SDKs. Keep it private; rotate it if exposed.",
+        "acquisition": "manual"
+      },
+      "cohere_oauth_connector": {
+        "type": "oauth2",
+        "label": "Cohere connector OAuth access",
+        "generateUrl": "https://docs.cohere.com/reference/oauthauthorize-connector",
+        "setup": "Use this when configuring a connector that needs OAuth authorization. In the Cohere docs, open the connector OAuth authorize flow from [Authorize with oAuth](https://docs.cohere.com/reference/oauthauthorize-connector) and complete the consent flow for the connector. This credential is minted inside Cohere's connector management flow and is used for connector-specific OAuth authorization, not for the general API.",
+        "acquisition": "manual"
+      }
+    },
+    "surfaces": [
+      {
+        "slug": "cohere-api",
+        "name": "Cohere API",
+        "type": "http",
+        "docs": "https://docs.cohere.com/reference/about",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.cohere.com/reference/about",
+            "https://docs.cohere.com/reference/chat",
+            "https://docs.cohere.com/reference/embed",
+            "https://docs.cohere.com/reference/rerank",
+            "https://docs.cohere.com/reference/create-audio-transcription"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "cohere_api_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Bearer"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.cohere.com/reference/about"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "cohere-openai-compatibility-api",
+        "name": "Cohere OpenAI Compatibility API",
+        "type": "http",
+        "docs": "https://docs.cohere.com/docs/compatibility-api",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.cohere.com/docs/compatibility-api"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "cohere_api_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Bearer"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.cohere.com/docs/compatibility-api"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "cohere-connector-oauth-authorize",
+        "name": "Cohere Connector OAuth authorize",
+        "type": "http",
+        "docs": "https://docs.cohere.com/reference/oauthauthorize-connector",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.cohere.com/reference/oauthauthorize-connector"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "cohere_api_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Bearer"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.cohere.com/reference/oauthauthorize-connector"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "discoveredAt": "2026-07-02T11:40:17.116Z",
+  "model": "loop-gpt-5.4-mini",
+  "usage": {
+    "prompt_tokens": 174055,
+    "completion_tokens": 1059,
+    "total_tokens": 175114
+  },
+  "visited": [
+    "https://cohere.com/blog/guide-to-mcp",
+    "https://cohere.com/llms.txt",
+    "https://docs.cohere.com/",
+    "https://docs.cohere.com/docs/compatibility-api",
+    "https://docs.cohere.com/reference/about",
+    "https://docs.cohere.com/reference/chat",
+    "https://docs.cohere.com/reference/chat-stream",
+    "https://docs.cohere.com/reference/create-audio-transcription",
+    "https://docs.cohere.com/reference/embed",
+    "https://docs.cohere.com/reference/list-models",
+    "https://docs.cohere.com/reference/oauthauthorize-connector",
+    "https://docs.cohere.com/reference/rerank",
+    "https://github.com/cohere-ai/cohere-python",
+    "https://heeki.medium.com/building-an-mcp-server-as-an-api-developer-cfc162d06a83",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
+  ],
+  "grounding": [
+    "https://api.cohere.ai/compatibility/v1",
+    "https://api.cohere.com/v1/connectors/:id/oauth/authorize",
+    "https://api.cohere.com/v1/models",
+    "https://api.cohere.com/v2/audio/transcriptions",
+    "https://api.cohere.com/v2/chat",
+    "https://api.cohere.com/v2/embed",
+    "https://api.cohere.com/v2/rerank",
+    "https://buildwithfern.com/?utm_campaign=buildWith&utm_medium=docs&utm_source=docs.cohere.com",
+    "https://cohere.com/",
+    "https://cohere.com/blog",
+    "https://cohere.com/blog/aya-expanse-connecting-our-world",
+    "https://cohere.com/blog/aya-multilingual",
+    "https://cohere.com/blog/building-trust-in-ai",
+    "https://cohere.com/blog/cohere-north",
+    "https://cohere.com/blog/compass-search",
+    "https://cohere.com/blog/enterprise-ai-blueprint",
+    "https://cohere.com/blog/guide-to-mcp",
+    "https://cohere.com/blog/introducing-agentic-ai",
+    "https://cohere.com/blog/introducing-aya-vision",
+    "https://cohere.com/blog/introducing-north",
+    "https://cohere.com/blog/introducing-private-deployments",
+    "https://cohere.com/blog/llm-security-risks",
+    "https://cohere.com/blog/security-first-ai",
+    "https://cohere.com/blog/trends-in-ai",
+    "https://cohere.com/command",
+    "https://cohere.com/compass",
+    "https://cohere.com/customer-stories/atomicwork",
+    "https://cohere.com/customer-stories/bamboohr",
+    "https://cohere.com/customer-stories/draftwise",
+    "https://cohere.com/customer-stories/fujitsu",
+    "https://cohere.com/customer-stories/notion",
+    "https://cohere.com/customer-stories/oracle",
+    "https://cohere.com/deployment-options",
+    "https://cohere.com/developers",
+    "https://cohere.com/embed",
+    "https://cohere.com/events",
+    "https://cohere.com/fr",
+    "https://cohere.com/llm-university",
+    "https://cohere.com/llms.txt",
+    "https://cohere.com/llmu",
+    "https://cohere.com/modern-slavery-act",
+    "https://cohere.com/north",
+    "https://cohere.com/papers",
+    "https://cohere.com/privacy",
+    "https://cohere.com/private-deployments",
+    "https://cohere.com/products",
+    "https://cohere.com/rerank",
+    "https://cohere.com/research",
+    "https://cohere.com/research/aya",
+    "https://cohere.com/responsible-ai",
+    "https://cohere.com/security",
+    "https://cohere.com/solutions/energy-and-utilities",
+    "https://cohere.com/solutions/financial-services",
+    "https://cohere.com/solutions/healthcare-and-life-sciences",
+    "https://cohere.com/solutions/manufacturing",
+    "https://cohere.com/solutions/public-sector",
+    "https://cohere.com/solutions/technology",
+    "https://cohere.com/terms-of-use",
+    "https://dashboard.cohere.com/",
+    "https://dashboard.cohere.com/api-keys?_gl=1*14v2pj5*_gcl_au*NTczMTgyMTIzLjE3MzQ1NTY2OTA.*_ga*MTAxNTg1NTM1MS4xNjk1MjMwODQw*_ga_CRGS116RZS*MTczNjI3NzU2NS4xOS4xLjE3MzYyODExMTkuNDkuMC4w",
+    "https://dashboard.cohere.com/login",
+    "https://dashboard.cohere.com/playground/generate",
+    "https://discord.com/invite/co-mmunity",
+    "https://docs.cohere.com/",
+    "https://docs.cohere.com/#audio-transcriptions",
+    "https://docs.cohere.com/#audio-transcriptions-1",
+    "https://docs.cohere.com/#audio-transcriptions-2",
+    "https://docs.cohere.com/#basic-chat-completions",
+    "https://docs.cohere.com/#chat-completions",
+    "https://docs.cohere.com/#chat-completions-1",
+    "https://docs.cohere.com/#chat-with-streaming",
+    "https://docs.cohere.com/#cohere-specific-parameters",
+    "https://docs.cohere.com/#embeddings",
+    "https://docs.cohere.com/#embeddings-1",
+    "https://docs.cohere.com/#embeddings-2",
+    "https://docs.cohere.com/#go",
+    "https://docs.cohere.com/#installation",
+    "https://docs.cohere.com/#java",
+    "https://docs.cohere.com/#python",
+    "https://docs.cohere.com/#request-specification",
+    "https://docs.cohere.com/#sdks",
+    "https://docs.cohere.com/#state-management",
+    "https://docs.cohere.com/#structured-outputs",
+    "https://docs.cohere.com/#supported-parameters",
+    "https://docs.cohere.com/#tool-use-function-calling",
+    "https://docs.cohere.com/#typescript",
+    "https://docs.cohere.com/#unsupported-parameters",
+    "https://docs.cohere.com/changelog",
+    "https://docs.cohere.com/docs",
+    "https://docs.cohere.com/docs/aya",
+    "https://docs.cohere.com/docs/aya-expanse",
+    "https://docs.cohere.com/docs/cohere-embed",
+    "https://docs.cohere.com/docs/command-a-plus",
+    "https://docs.cohere.com/docs/compatibility-api",
+    "https://docs.cohere.com/docs/connector-authentication",
+    "https://docs.cohere.com/docs/fine-tuning",
+    "https://docs.cohere.com/docs/introduction-to-text-generation-at-cohere",
+    "https://docs.cohere.com/docs/migrating-v1-to-v2",
+    "https://docs.cohere.com/docs/models",
+    "https://docs.cohere.com/docs/multi-step-tool-use",
+    "https://docs.cohere.com/docs/north-mini-code-1.0",
+    "https://docs.cohere.com/docs/rate-limits",
+    "https://docs.cohere.com/docs/rerank",
+    "https://docs.cohere.com/docs/retrieval-augmented-generation-rag",
+    "https://docs.cohere.com/docs/semantic-search-embed",
+    "https://docs.cohere.com/docs/the-cohere-platform",
+    "https://docs.cohere.com/docs/the-cohere-platform#large-language-models-llms",
+    "https://docs.cohere.com/docs/transcribe",
+    "https://docs.cohere.com/page/cookbooks",
+    "https://docs.cohere.com/reference/about",
+    "https://docs.cohere.com/reference/cancel-embed-job",
+    "https://docs.cohere.com/reference/chat",
+    "https://docs.cohere.com/reference/chat-stream",
+    "https://docs.cohere.com/reference/classify",
+    "https://docs.cohere.com/reference/create-audio-transcription",
+    "https://docs.cohere.com/reference/create-connector",
+    "https://docs.cohere.com/reference/create-dataset",
+    "https://docs.cohere.com/reference/create-embed-job",
+    "https://docs.cohere.com/reference/createfinetunedmodel",
+    "https://docs.cohere.com/reference/delete-connector",
+    "https://docs.cohere.com/reference/delete-dataset",
+    "https://docs.cohere.com/reference/deletefinetunedmodel",
+    "https://docs.cohere.com/reference/detokenize",
+    "https://docs.cohere.com/reference/embed",
+    "https://docs.cohere.com/reference/errors",
+    "https://docs.cohere.com/reference/get-connector",
+    "https://docs.cohere.com/reference/get-dataset",
+    "https://docs.cohere.com/reference/get-dataset-usage",
+    "https://docs.cohere.com/reference/get-embed-job",
+    "https://docs.cohere.com/reference/get-model",
+    "https://docs.cohere.com/reference/getfinetunedmodel",
+    "https://docs.cohere.com/reference/list-connectors",
+    "https://docs.cohere.com/reference/list-datasets",
+    "https://docs.cohere.com/reference/list-embed-jobs",
+    "https://docs.cohere.com/reference/list-models",
+    "https://docs.cohere.com/reference/listevents",
+    "https://docs.cohere.com/reference/listfinetunedmodels",
+    "https://docs.cohere.com/reference/listtrainingstepmetrics",
+    "https://docs.cohere.com/reference/oauthauthorize-connector",
+    "https://docs.cohere.com/reference/rerank",
+    "https://docs.cohere.com/reference/teams-and-roles",
+    "https://docs.cohere.com/reference/tokenize",
+    "https://docs.cohere.com/reference/update-connector",
+    "https://docs.cohere.com/reference/updatefinetunedmodel",
+    "https://docs.cohere.com/reference/v-2/prompt",
+    "https://docs.cohere.com/release-notes",
+    "https://docs.cohere.com/v2/docs/chat-api",
+    "https://docs.cohere.com/v2/docs/migrating-v1-to-v2",
+    "https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes",
+    "https://events.cohere.com/on-demand/",
+    "https://github.com/cohere-ai/cohere-python",
+    "https://github.com/cohere-ai/cohere-typescript",
+    "https://heeki.medium.com/building-an-mcp-server-as-an-api-developer-cfc162d06a83",
+    "https://test.com",
+    "https://trustcenter.cohere.com/",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
+  ]
+}

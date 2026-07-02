@@ -144,12 +144,17 @@ export function checklist(
   // live on a sibling registrable domain (canva.com → canva.dev).
   const visitedDomains = new Set((visited ?? []).map((url) => registrable(url)).filter(Boolean));
   const groundingSet = new Set((grounding ?? []).map((url) => url.replace(/[.,;:]+$/, "")));
+  // The brand's own sibling TLDs count as home turf (clickhouse.com ↔
+  // clickhouse.cloud); template URLs ({yourDomain}/…) are placeholders, not claims.
+  const brandLabel = resultDomain ? resultDomain.split(".")[0] : null;
   const urlOffenders = [...collectUrls(result)].filter((url) => {
     if (corpusText !== undefined) return !corpusText.includes(url);
+    if (/[{}]/.test(url)) return false;
     const urlDomain = registrable(url);
     return (
       !evidenceUrls.has(url) &&
       !(resultDomain && urlDomain === resultDomain) &&
+      !(brandLabel && urlDomain && urlDomain.split(".")[0] === brandLabel) &&
       !detectedUrls.has(url) &&
       !(urlDomain && visitedDomains.has(urlDomain)) &&
       !groundingSet.has(url.replace(/[.,;:]+$/, ""))
