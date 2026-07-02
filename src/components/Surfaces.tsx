@@ -29,6 +29,8 @@ export interface CatalogItem {
   meta: string;
   url?: string;
   spec?: string;
+  /** CLI rows: the command name — their only identity (no url/spec). */
+  command?: string;
 }
 export interface CatalogSection {
   kind: string;
@@ -50,7 +52,7 @@ function surfaceIdentity(s: Surface): string | undefined {
     case "graphql":
       return s.url ?? s.spec;
     case "cli":
-      return undefined;
+      return s.command;
     default: // http (+ legacy openapi/rest)
       return s.spec ?? s.url;
   }
@@ -76,7 +78,7 @@ function surfaceMeta(s: Surface): string {
 function matches(s: Surface, it: CatalogItem): boolean {
   if (s.slug && s.slug === it.slug) return true;
   const id = surfaceIdentity(s);
-  if (id && (id === it.url || id === it.spec)) return true;
+  if (id && (id === it.url || id === it.spec || id === it.command)) return true;
   return norm(s.name) === norm(it.name);
 }
 
