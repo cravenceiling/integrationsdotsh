@@ -343,11 +343,11 @@ export function createExports(manifest: SSRManifest) {
     if (url.pathname === "/own-your-page" || url.pathname === "/own-your-page/") {
       return Response.redirect(new URL("/publishing/", url.origin).toString(), 301);
     }
-    // Our own owner declaration — served from the Worker because the assets
+    // Our own well-known documents — served from the Worker because the assets
     // layer skips dotfile paths. Content lives in public/.well-known/ for
-    // provenance; this route mirrors it.
-    if (url.pathname === "/.well-known/integrations.json") {
-      const res = await env.ASSETS.fetch(`${url.origin}/.well-known/integrations.json`);
+    // provenance; these routes mirror it.
+    if (["/.well-known/integrations.json", "/.well-known/mcp/server-card.json"].includes(url.pathname)) {
+      const res = await env.ASSETS.fetch(url.origin + url.pathname);
       if (res.ok) return res;
       return json({ error: "not found" }, 404);
     }
