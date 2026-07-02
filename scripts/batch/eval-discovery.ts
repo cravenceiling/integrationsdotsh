@@ -153,7 +153,12 @@ export function checklist(
       // URLs embedded in query params (auth.x.com/authorize?audience=https://api.y.com) ground too.
       let decoded = clean;
       try { decoded = decodeURIComponent(clean); } catch { /* malformed % sequences stay raw */ }
-      const embedded = decoded.match(/https?:\/\/[^\s"'<>),&\]`]+/g) ?? [];
+      // A greedy match swallows embedded URLs — start a match at EVERY scheme occurrence.
+      const embedded: string[] = [];
+      for (let i = decoded.indexOf("http", 1); i !== -1; i = decoded.indexOf("http", i + 1)) {
+        const m = /^https?:\/\/[^\s"'<>),&\]`]+/.exec(decoded.slice(i));
+        if (m) embedded.push(m[0]);
+      }
       return [clean, ...embedded];
     }),
   );
