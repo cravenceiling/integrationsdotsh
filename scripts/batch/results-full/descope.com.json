@@ -1,0 +1,415 @@
+{
+  "result": {
+    "version": 3,
+    "domain": "descope.com",
+    "detect": {
+      "domain": "descope.com",
+      "found": [
+        "llms.txt"
+      ],
+      "mcp": [],
+      "llmsTxt": true,
+      "errors": []
+    },
+    "usedLlm": true,
+    "discoveredAt": "2026-07-02T12:12:30.341Z",
+    "summary": "Descope exposes one public REST API (OpenAPI YAML), a CLI (`descope`), and MCP guidance; REST auth uses Project ID, refresh JWT, management key, or access key depending on endpoint, CLI uses Project ID + Management Key, and MCP uses Descope OAuth discovery via its well-known configuration.",
+    "credentials": {
+      "descope_project_id": {
+        "type": "bearer",
+        "label": "Descope Project ID",
+        "generateUrl": "https://app.descope.com/settings/project",
+        "setup": "Open [Project Settings](https://app.descope.com/settings/project) in the Descope console and copy your Project ID. Use it as the bearer token for public sign-up/sign-in style API calls. Keep it in an env var or config field you can send as `Authorization: Bearer <ProjectID>`.",
+        "acquisition": "manual"
+      },
+      "descope_refresh_jwt": {
+        "type": "bearer",
+        "label": "Descope refresh JWT",
+        "generateUrl": "https://app.descope.com/home",
+        "setup": "Obtain this by completing a Descope login flow in your app or via the Descope Console. It is the user-scoped refresh token used together with the Project ID for user-scoped API calls, sent as `Authorization: Bearer <ProjectID>:<RefreshJWT>`.",
+        "acquisition": "manual"
+      },
+      "descope_management_key": {
+        "type": "api_key",
+        "label": "Descope Management Key",
+        "generateUrl": "https://app.descope.com/settings/company/managementkeys",
+        "setup": "Go to [Company Settings → Management Keys](https://app.descope.com/settings/company/managementkeys) and generate a new Management Key for your project. Use this key for management API calls and the CLI. Store it securely; the docs say it can be exported as `DESCOPE_MANAGEMENT_KEY`.",
+        "acquisition": "manual"
+      },
+      "descope_access_key": {
+        "type": "api_key",
+        "label": "Descope Access Key",
+        "generateUrl": "https://app.descope.com/accesskeys",
+        "setup": "Create an access key from the Descope console or via the CLI. In the CLI docs, `descope access-key create ...` returns the secret in the `cleartext` field, and the newly created key appears under [Access Keys](https://app.descope.com/accesskeys). Use this for access-key-protected management endpoints and automation.",
+        "acquisition": "manual"
+      }
+    },
+    "surfaces": [
+      {
+        "slug": "descope-rest-api",
+        "name": "Descope REST API",
+        "type": "http",
+        "docs": "https://docs.descope.com/api",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.descope.com/api",
+            "https://docs.descope.com/api/openapi-spec"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "descope_project_id",
+                  "mechanics": {
+                    "source": "spec",
+                    "scheme": "bearerAuth"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.descope.com/api",
+                  "https://docs.descope.com/api/openapi-spec"
+                ]
+              }
+            },
+            {
+              "use": [
+                {
+                  "id": "descope_project_id",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Bearer"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.descope.com/api"
+                ]
+              }
+            },
+            {
+              "use": [
+                {
+                  "id": "descope_project_id",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Bearer"
+                  }
+                },
+                {
+                  "id": "descope_refresh_jwt",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Bearer"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.descope.com/api"
+                ]
+              }
+            },
+            {
+              "use": [
+                {
+                  "id": "descope_management_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Bearer"
+                  }
+                },
+                {
+                  "id": "descope_access_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Bearer"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.descope.com/api"
+                ]
+              }
+            }
+          ]
+        },
+        "spec": "https://docs.descope.com/examples/Descope_API.yaml"
+      },
+      {
+        "slug": "descope-cli",
+        "name": "Descope CLI",
+        "type": "cli",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.descope.com/cli/descope"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "descope_project_id",
+                  "mechanics": {
+                    "source": "cli",
+                    "command": "export DESCOPE_PROJECT_ID='<Your_Project_ID>'",
+                    "env": [
+                      "DESCOPE_PROJECT_ID"
+                    ]
+                  }
+                },
+                {
+                  "id": "descope_management_key",
+                  "mechanics": {
+                    "source": "cli",
+                    "command": "export DESCOPE_MANAGEMENT_KEY='<Your_Management_Key>'",
+                    "env": [
+                      "DESCOPE_MANAGEMENT_KEY"
+                    ]
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.descope.com/cli/descope"
+                ]
+              }
+            }
+          ]
+        },
+        "packages": [
+          {
+            "registryType": "github",
+            "identifier": "descope/descopecli"
+          }
+        ],
+        "command": "descope"
+      },
+      {
+        "slug": "descope-mcp",
+        "name": "Descope MCP",
+        "type": "mcp",
+        "docs": "https://docs.descope.com/mcp",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.descope.com/mcp"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "descope_project_id",
+                  "mechanics": {
+                    "source": "well-known"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.descope.com/mcp"
+                ]
+              }
+            }
+          ]
+        },
+        "url": "https://docs.descope.com/mcp",
+        "transports": [
+          "streamable-http",
+          "sse"
+        ]
+      }
+    ]
+  },
+  "discoveredAt": "2026-07-02T12:12:30.341Z",
+  "model": "loop-gpt-5.4-mini",
+  "usage": {
+    "prompt_tokens": 120887,
+    "completion_tokens": 1349,
+    "total_tokens": 122236
+  },
+  "visited": [
+    "https://docs.descope.com/",
+    "https://docs.descope.com/api",
+    "https://docs.descope.com/api/oauth",
+    "https://docs.descope.com/api/openapi-spec",
+    "https://docs.descope.com/api/otp",
+    "https://docs.descope.com/cli/descope",
+    "https://docs.descope.com/mcp",
+    "https://github.com/descope/mcp-express",
+    "https://www.descope.com/blog/post/mcp-auth-sdk"
+  ],
+  "grounding": [
+    "https://app.descope.com/accesskeys",
+    "https://app.descope.com/home",
+    "https://app.descope.com/settings/authentication/enchantedlink",
+    "https://app.descope.com/settings/company/managementkeys",
+    "https://app.descope.com/settings/project",
+    "https://app.descope.com/tenants",
+    "https://app.mycompany.com/enchantedlink/verify",
+    "https://app.mycompany.com/enchantedlink/verify?t=enchanted-link-token",
+    "https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1",
+    "https://docs.descope.com/",
+    "https://docs.descope.com/#1-oauth-21-authorization-for-mcp-servers",
+    "https://docs.descope.com/#2-secure-token--secret-management-for-mcp-tools",
+    "https://docs.descope.com/#3-granular-access-control--policy-enforcement",
+    "https://docs.descope.com/#about-mcp",
+    "https://docs.descope.com/#access-keys",
+    "https://docs.descope.com/#authentication",
+    "https://docs.descope.com/#authorize-sign-upsign-in",
+    "https://docs.descope.com/#basic-authentication-and-authorization-with-mcp",
+    "https://docs.descope.com/#calling-external-apis-from-tools",
+    "https://docs.descope.com/#creating-and-managing-project-entities",
+    "https://docs.descope.com/#descope",
+    "https://docs.descope.com/#example---update-users-phone-number",
+    "https://docs.descope.com/#example---user-sign-up-over-email",
+    "https://docs.descope.com/#example-mcp-servers",
+    "https://docs.descope.com/#examples",
+    "https://docs.descope.com/#exchange-code",
+    "https://docs.descope.com/#generating-clients",
+    "https://docs.descope.com/#how-descope-secures-mcp-servers",
+    "https://docs.descope.com/#implementing-oauth",
+    "https://docs.descope.com/#inbound-applications",
+    "https://docs.descope.com/#making-requests",
+    "https://docs.descope.com/#model-context-protocol-mcp--descope",
+    "https://docs.descope.com/#multi-tenant-calendar-mcp-server",
+    "https://docs.descope.com/#one-time-password-apis",
+    "https://docs.descope.com/#online-viewers",
+    "https://docs.descope.com/#openapi-specification",
+    "https://docs.descope.com/#overview",
+    "https://docs.descope.com/#policies-for-mcp-scope-authorization",
+    "https://docs.descope.com/#postman",
+    "https://docs.descope.com/#prerequisites",
+    "https://docs.descope.com/#python-mcp-sdk",
+    "https://docs.descope.com/#rate-limits",
+    "https://docs.descope.com/#rest-api-reference",
+    "https://docs.descope.com/#scoping-with-mcp-servers",
+    "https://docs.descope.com/#social-login-oauth-apis",
+    "https://docs.descope.com/#tenants",
+    "https://docs.descope.com/#test-users",
+    "https://docs.descope.com/#trying-the-apis",
+    "https://docs.descope.com/#use-cases",
+    "https://docs.descope.com/#user-passwords",
+    "https://docs.descope.com/#user-roles",
+    "https://docs.descope.com/#users",
+    "https://docs.descope.com/#using-the-spec",
+    "https://docs.descope.com/#whats-included",
+    "https://docs.descope.com/#why-use-descope-with-mcp",
+    "https://docs.descope.com/agentic-identity-hub",
+    "https://docs.descope.com/agentic-identity-hub/core-components/connections",
+    "https://docs.descope.com/agentic-identity-hub/core-components/mcp-servers",
+    "https://docs.descope.com/agentic-identity-hub/core-components/mcp-servers/registration-methods#client-id-metadata-documents-cimd",
+    "https://docs.descope.com/agentic-identity-hub/policies",
+    "https://docs.descope.com/ai-assistants",
+    "https://docs.descope.com/api",
+    "https://docs.descope.com/api/enchanted-link",
+    "https://docs.descope.com/api/enchanted-link/update-email",
+    "https://docs.descope.com/api/magic-link",
+    "https://docs.descope.com/api/notp",
+    "https://docs.descope.com/api/oauth",
+    "https://docs.descope.com/api/oauth/exchange-code",
+    "https://docs.descope.com/api/oauth/o-auth-native-finish",
+    "https://docs.descope.com/api/oauth/o-auth-native-start",
+    "https://docs.descope.com/api/oauth/redirect-sign-in",
+    "https://docs.descope.com/api/oauth/redirect-sign-up",
+    "https://docs.descope.com/api/oauth/redirect-update-user",
+    "https://docs.descope.com/api/oauth/sign-up-sign-in",
+    "https://docs.descope.com/api/openapi-spec",
+    "https://docs.descope.com/api/otp",
+    "https://docs.descope.com/api/otp/email",
+    "https://docs.descope.com/api/otp/email/sign-up",
+    "https://docs.descope.com/api/otp/email/verify-otp",
+    "https://docs.descope.com/api/otp/phone",
+    "https://docs.descope.com/api/otp/sms",
+    "https://docs.descope.com/api/otp/sms/update-phone",
+    "https://docs.descope.com/api/overview#the-user-object",
+    "https://docs.descope.com/api/passwords",
+    "https://docs.descope.com/api/sso",
+    "https://docs.descope.com/api/totp",
+    "https://docs.descope.com/auth-methods",
+    "https://docs.descope.com/authorization",
+    "https://docs.descope.com/b2b",
+    "https://docs.descope.com/cli",
+    "https://docs.descope.com/cli/create-descope-app",
+    "https://docs.descope.com/cli/descope",
+    "https://docs.descope.com/customize/auth/oauth#oauth-providers",
+    "https://docs.descope.com/examples/Descope_API.yaml",
+    "https://docs.descope.com/fingerprinting",
+    "https://docs.descope.com/flows",
+    "https://docs.descope.com/getting-started",
+    "https://docs.descope.com/healthcare/smart-fhir",
+    "https://docs.descope.com/how-to-deploy-to-production",
+    "https://docs.descope.com/identity-federation",
+    "https://docs.descope.com/identity-federation/inbound-apps",
+    "https://docs.descope.com/identity-federation/inbound-apps/creating-inbound-apps#method-2-dynamic-client-registration-dcr",
+    "https://docs.descope.com/identity-federation/resources",
+    "https://docs.descope.com/management",
+    "https://docs.descope.com/management/m2m-access-keys",
+    "https://docs.descope.com/management/tenant-management",
+    "https://docs.descope.com/management/user-management",
+    "https://docs.descope.com/managing-environments/manage-envs-in-github",
+    "https://docs.descope.com/mcp",
+    "https://docs.descope.com/mcp/bring-your-own-auth",
+    "https://docs.descope.com/mcp/calling-apis-from-mcp",
+    "https://docs.descope.com/mcp/examples",
+    "https://docs.descope.com/mcp/examples/multi-tenant-calendar",
+    "https://docs.descope.com/mcp/gateways",
+    "https://docs.descope.com/mcp/mcp-server",
+    "https://docs.descope.com/mcp/python-sdk",
+    "https://docs.descope.com/migrate",
+    "https://docs.descope.com/rate-limiting",
+    "https://docs.descope.com/sign-in",
+    "https://docs.descope.com/sso-integrations",
+    "https://docs.descope.com/support",
+    "https://docs.descope.com/test-users",
+    "https://docs.descope.com/user-impersonation",
+    "https://docs.descope.com/widgets",
+    "https://editor.swagger.io/",
+    "https://example.com",
+    "https://example.com/callback",
+    "https://github.com/descope/ai/tree/main/examples",
+    "https://github.com/descope/descopecli",
+    "https://github.com/descope/mcp-express",
+    "https://github.com/descope/project-cicd-template",
+    "https://gofastmcp.com/integrations/descope",
+    "https://modelcontextprotocol.io/docs/getting-started/intro",
+    "https://oauth.mycompany.com/shopping.htm",
+    "https://oauth.mycompany.com/shopping.htm?code=",
+    "https://openapi-generator.tech/",
+    "https://pypi.org/project/descope-mcp/",
+    "https://redocly.com/",
+    "https://stoplight.io/",
+    "https://swagger.io/tools/swagger-codegen/",
+    "https://www.descope.com/blog/post/mcp-auth-sdk",
+    "https://www.descope.com/community"
+  ]
+}

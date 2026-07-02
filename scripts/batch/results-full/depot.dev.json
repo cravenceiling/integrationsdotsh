@@ -1,0 +1,514 @@
+{
+  "result": {
+    "version": 3,
+    "domain": "depot.dev",
+    "detect": {
+      "domain": "depot.dev",
+      "found": [
+        "llms.txt"
+      ],
+      "mcp": [],
+      "llmsTxt": true,
+      "errors": []
+    },
+    "usedLlm": true,
+    "discoveredAt": "2026-07-02T12:11:49.242Z",
+    "summary": "Depot exposes one public HTTP API (Connect-based) and one CLI, both authenticated with Depot user, organization, or project bearer tokens; pull tokens are registry-only, and no MCP or GraphQL surface was identified.",
+    "credentials": {
+      "depot_org_token": {
+        "type": "bearer",
+        "label": "Organization API token",
+        "generateUrl": "https://depot.dev/orgs/_/settings",
+        "setup": "Go to your [Organization Settings](https://depot.dev/orgs/_/settings). In **API Tokens**, enter a description and click **Create token**. Copy the token and store it securely; you won't be able to view it again. Use the token as a `Bearer` token in the `Authorization` header.",
+        "acquisition": "manual"
+      },
+      "depot_user_token": {
+        "type": "bearer",
+        "label": "User access token",
+        "generateUrl": "https://depot.dev/settings",
+        "setup": "Go to your [Account settings](https://depot.dev/settings). In **API Tokens**, enter a description and click **Create token**. Copy the token and store it securely. Running `depot login` will authenticate your account and save a user access token locally for the CLI.",
+        "acquisition": "manual"
+      },
+      "depot_project_token": {
+        "type": "bearer",
+        "label": "Project token",
+        "generateUrl": "https://depot.dev/orgs/_/projects",
+        "setup": "Go to your [Projects page](https://depot.dev/orgs/_/projects), open a project, then open **Settings**. Under **Project Tokens**, enter a description and click **Create token**. Copy the token and store it securely; it is project-scoped and intended for CI when OIDC is unavailable.",
+        "acquisition": "manual"
+      },
+      "depot_pull_token": {
+        "type": "bearer",
+        "label": "Pull token",
+        "generateUrl": "https://depot.dev/docs/cli/authentication.md",
+        "setup": "Run `depot pull-token --project <project-id>` to mint a short-lived, read-only token for the Depot Registry. Use it only for image pulls; it cannot be used for pushing or other Depot services.",
+        "acquisition": "manual"
+      }
+    },
+    "surfaces": [
+      {
+        "slug": "depot-api",
+        "name": "Depot API",
+        "type": "http",
+        "docs": "https://depot.dev/docs/api/overview.md",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://depot.dev/docs/api/overview.md",
+            "https://depot.dev/docs/api/sdk-reference.md",
+            "https://depot.dev/docs/api/authentication.md"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "depot_org_token",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Bearer"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://depot.dev/docs/api/overview.md",
+                  "https://depot.dev/docs/api/authentication.md"
+                ]
+              }
+            },
+            {
+              "use": [
+                {
+                  "id": "depot_user_token",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Bearer"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://depot.dev/docs/api/overview.md",
+                  "https://depot.dev/docs/api/authentication.md"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "depot-cli",
+        "name": "Depot CLI",
+        "type": "cli",
+        "docs": "https://depot.dev/docs/cli/reference/overview.md",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://depot.dev/docs/cli/reference/overview.md",
+            "https://depot.dev/docs/cli/authentication.md",
+            "https://depot.dev/docs/cli/installation.md"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "depot_user_token",
+                  "mechanics": {
+                    "source": "cli",
+                    "command": "depot login",
+                    "env": [
+                      "DEPOT_TOKEN"
+                    ]
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://depot.dev/docs/cli/reference/overview.md",
+                  "https://depot.dev/docs/cli/authentication.md"
+                ]
+              }
+            },
+            {
+              "use": [
+                {
+                  "id": "depot_org_token",
+                  "mechanics": {
+                    "source": "cli",
+                    "env": [
+                      "DEPOT_TOKEN"
+                    ]
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://depot.dev/docs/cli/authentication.md"
+                ]
+              }
+            },
+            {
+              "use": [
+                {
+                  "id": "depot_project_token",
+                  "mechanics": {
+                    "source": "cli",
+                    "env": [
+                      "DEPOT_TOKEN"
+                    ]
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://depot.dev/docs/cli/authentication.md"
+                ]
+              }
+            }
+          ]
+        },
+        "packages": [
+          {
+            "registryType": "npm",
+            "identifier": "depot-cli",
+            "runtimeHint": "node"
+          },
+          {
+            "registryType": "brew",
+            "identifier": "depot/tap/depot",
+            "runtimeHint": "macOS"
+          }
+        ],
+        "command": "depot"
+      }
+    ]
+  },
+  "discoveredAt": "2026-07-02T12:11:49.242Z",
+  "model": "loop-gpt-5.4-mini",
+  "usage": {
+    "prompt_tokens": 184381,
+    "completion_tokens": 1375,
+    "total_tokens": 185756
+  },
+  "visited": [
+    "https://depot.dev/blog/now-available-depot-ci-api",
+    "https://depot.dev/docs/api/authentication.md",
+    "https://depot.dev/docs/api/ci/reference",
+    "https://depot.dev/docs/api/ci/reference.md",
+    "https://depot.dev/docs/api/overview",
+    "https://depot.dev/docs/api/overview.md",
+    "https://depot.dev/docs/api/sdk-reference.md",
+    "https://depot.dev/docs/cli/authentication.md",
+    "https://depot.dev/docs/cli/installation.md",
+    "https://depot.dev/docs/cli/reference/container-builds.md",
+    "https://depot.dev/docs/cli/reference/depot-ci",
+    "https://depot.dev/docs/cli/reference/depot-ci.md",
+    "https://depot.dev/docs/cli/reference/overview",
+    "https://depot.dev/docs/cli/reference/overview.md",
+    "https://depot.dev/llms.txt",
+    "https://github.com/depot/docs/blob/main/content/api/sdk-reference.mdx",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
+  ],
+  "grounding": [
+    "https://api.depot.dev",
+    "https://buf.build/depot/api/docs/main:depot.build.v1#depot.build.v1.BuildService",
+    "https://buf.build/depot/api/docs/main:depot.build.v1#depot.build.v1.RegistryService",
+    "https://buf.build/depot/api/docs/main:depot.buildkit.v1#depot.buildkit.v1.BuildKitService",
+    "https://buf.build/depot/api/docs/main:depot.core.v1#depot.core.v1.ProjectService",
+    "https://buf.build/depot/api/docs/main:depot.core.v1#depot.core.v1.UsageService",
+    "https://buildkite.com/docs/agent/v3/cli-oidc",
+    "https://circleci.com/docs/openid-connect-tokens/",
+    "https://connectrpc.com/docs/introduction#seamless-multi-protocol-support",
+    "https://depot.ai",
+    "https://depot.dev",
+    "https://depot.dev/",
+    "https://depot.dev/#artifacts",
+    "https://depot.dev/#attempts",
+    "https://depot.dev/#authentication",
+    "https://depot.dev/#ci-service-cancel-job",
+    "https://depot.dev/#ci-service-cancel-run",
+    "https://depot.dev/#ci-service-cancel-workflow",
+    "https://depot.dev/#ci-service-dispatch-workflow",
+    "https://depot.dev/#ci-service-export-job-attempt-logs",
+    "https://depot.dev/#ci-service-get-artifact-download-url",
+    "https://depot.dev/#ci-service-get-attempt",
+    "https://depot.dev/#ci-service-get-failure-diagnosis",
+    "https://depot.dev/#ci-service-get-job",
+    "https://depot.dev/#ci-service-get-job-attempt-logs",
+    "https://depot.dev/#ci-service-get-job-attempt-metrics",
+    "https://depot.dev/#ci-service-get-job-metrics",
+    "https://depot.dev/#ci-service-get-job-summary",
+    "https://depot.dev/#ci-service-get-run",
+    "https://depot.dev/#ci-service-get-run-metrics",
+    "https://depot.dev/#ci-service-get-run-status",
+    "https://depot.dev/#ci-service-get-workflow",
+    "https://depot.dev/#ci-service-list-artifacts",
+    "https://depot.dev/#ci-service-list-runs",
+    "https://depot.dev/#ci-service-list-workflows",
+    "https://depot.dev/#ci-service-rerun-workflow",
+    "https://depot.dev/#ci-service-retry-failed-jobs",
+    "https://depot.dev/#ci-service-retry-job",
+    "https://depot.dev/#ci-service-run",
+    "https://depot.dev/#ci-service-stream-job-attempt-logs",
+    "https://depot.dev/#container-builds-api",
+    "https://depot.dev/#depot-ci-api",
+    "https://depot.dev/#depot-login",
+    "https://depot.dev/#depot-logout",
+    "https://depot.dev/#depot-org",
+    "https://depot.dev/#depot-org-list",
+    "https://depot.dev/#depot-org-show",
+    "https://depot.dev/#depot-org-switch",
+    "https://depot.dev/#depot-tests",
+    "https://depot.dev/#diagnostics",
+    "https://depot.dev/#errors",
+    "https://depot.dev/#jobs",
+    "https://depot.dev/#logs",
+    "https://depot.dev/#runs",
+    "https://depot.dev/#sandbox-api",
+    "https://depot.dev/#security",
+    "https://depot.dev/#workflows",
+    "https://depot.dev/about",
+    "https://depot.dev/about/brand-assets",
+    "https://depot.dev/blog",
+    "https://depot.dev/blog/now-available-depot-ci-api",
+    "https://depot.dev/careers",
+    "https://depot.dev/changelog",
+    "https://depot.dev/cookies",
+    "https://depot.dev/customers",
+    "https://depot.dev/dockerfile-explorer",
+    "https://depot.dev/docs",
+    "https://depot.dev/docs.md",
+    "https://depot.dev/docs/account",
+    "https://depot.dev/docs/account.md",
+    "https://depot.dev/docs/agents/claude-code/quickstart",
+    "https://depot.dev/docs/agents/claude-code/quickstart.md",
+    "https://depot.dev/docs/agents/overview",
+    "https://depot.dev/docs/agents/overview.md",
+    "https://depot.dev/docs/ai-at-depot",
+    "https://depot.dev/docs/ai-at-depot.md",
+    "https://depot.dev/docs/api/api-container-builds-tutorial",
+    "https://depot.dev/docs/api/api-container-builds-tutorial.md",
+    "https://depot.dev/docs/api/authentication",
+    "https://depot.dev/docs/api/authentication.md",
+    "https://depot.dev/docs/api/ci/reference",
+    "https://depot.dev/docs/api/ci/reference.md",
+    "https://depot.dev/docs/api/overview",
+    "https://depot.dev/docs/api/overview.md",
+    "https://depot.dev/docs/api/sandbox-sdk-reference",
+    "https://depot.dev/docs/api/sandbox-sdk-reference.md",
+    "https://depot.dev/docs/api/sdk-reference",
+    "https://depot.dev/docs/api/sdk-reference.md",
+    "https://depot.dev/docs/cache/authentication",
+    "https://depot.dev/docs/cache/authentication.md",
+    "https://depot.dev/docs/cache/integrations/bazel",
+    "https://depot.dev/docs/cache/integrations/bazel.md",
+    "https://depot.dev/docs/cache/integrations/github-actions",
+    "https://depot.dev/docs/cache/integrations/github-actions.md",
+    "https://depot.dev/docs/cache/integrations/gocache",
+    "https://depot.dev/docs/cache/integrations/gocache.md",
+    "https://depot.dev/docs/cache/integrations/gradle",
+    "https://depot.dev/docs/cache/integrations/gradle.md",
+    "https://depot.dev/docs/cache/integrations/maven",
+    "https://depot.dev/docs/cache/integrations/maven.md",
+    "https://depot.dev/docs/cache/integrations/moonrepo",
+    "https://depot.dev/docs/cache/integrations/moonrepo.md",
+    "https://depot.dev/docs/cache/integrations/pants",
+    "https://depot.dev/docs/cache/integrations/pants.md",
+    "https://depot.dev/docs/cache/integrations/sccache",
+    "https://depot.dev/docs/cache/integrations/sccache.md",
+    "https://depot.dev/docs/cache/integrations/turbo",
+    "https://depot.dev/docs/cache/integrations/turbo.md",
+    "https://depot.dev/docs/cache/overview",
+    "https://depot.dev/docs/cache/overview.md",
+    "https://depot.dev/docs/ci/compatibility",
+    "https://depot.dev/docs/ci/compatibility.md",
+    "https://depot.dev/docs/ci/how-to-guides/cache-disks",
+    "https://depot.dev/docs/ci/how-to-guides/cache-disks.md",
+    "https://depot.dev/docs/ci/how-to-guides/coding-agents",
+    "https://depot.dev/docs/ci/how-to-guides/coding-agents.md",
+    "https://depot.dev/docs/ci/how-to-guides/custom-images",
+    "https://depot.dev/docs/ci/how-to-guides/custom-images.md",
+    "https://depot.dev/docs/ci/how-to-guides/debug-with-ssh",
+    "https://depot.dev/docs/ci/how-to-guides/debug-with-ssh.md",
+    "https://depot.dev/docs/ci/how-to-guides/manage-secrets-and-variables",
+    "https://depot.dev/docs/ci/how-to-guides/manage-secrets-and-variables.md",
+    "https://depot.dev/docs/ci/how-to-guides/manage-workflow-runs",
+    "https://depot.dev/docs/ci/how-to-guides/manage-workflow-runs.md",
+    "https://depot.dev/docs/ci/how-to-guides/parallel-steps",
+    "https://depot.dev/docs/ci/how-to-guides/parallel-steps.md",
+    "https://depot.dev/docs/ci/how-to-guides/retry-steps",
+    "https://depot.dev/docs/ci/how-to-guides/retry-steps.md",
+    "https://depot.dev/docs/ci/observability/depot-ci-logs",
+    "https://depot.dev/docs/ci/observability/depot-ci-logs.md",
+    "https://depot.dev/docs/ci/observability/depot-ci-metrics",
+    "https://depot.dev/docs/ci/observability/depot-ci-metrics.md",
+    "https://depot.dev/docs/ci/observability/depot-ci-test-results",
+    "https://depot.dev/docs/ci/observability/depot-ci-test-results.md",
+    "https://depot.dev/docs/ci/observability/github-checks",
+    "https://depot.dev/docs/ci/observability/github-checks.md",
+    "https://depot.dev/docs/ci/oidc",
+    "https://depot.dev/docs/ci/oidc.md",
+    "https://depot.dev/docs/ci/overview",
+    "https://depot.dev/docs/ci/overview.md",
+    "https://depot.dev/docs/ci/quickstart",
+    "https://depot.dev/docs/ci/quickstart.md",
+    "https://depot.dev/docs/cli.md",
+    "https://depot.dev/docs/cli/authentication",
+    "https://depot.dev/docs/cli/authentication.md",
+    "https://depot.dev/docs/cli/installation",
+    "https://depot.dev/docs/cli/installation.md",
+    "https://depot.dev/docs/cli/reference/agents",
+    "https://depot.dev/docs/cli/reference/agents.md",
+    "https://depot.dev/docs/cli/reference/container-builds",
+    "https://depot.dev/docs/cli/reference/container-builds.md",
+    "https://depot.dev/docs/cli/reference/depot-ci",
+    "https://depot.dev/docs/cli/reference/depot-ci.md",
+    "https://depot.dev/docs/cli/reference/overview",
+    "https://depot.dev/docs/cli/reference/overview.md",
+    "https://depot.dev/docs/container-builds/build-parallelism",
+    "https://depot.dev/docs/container-builds/build-parallelism.md",
+    "https://depot.dev/docs/container-builds/how-to-guides/arm-containers",
+    "https://depot.dev/docs/container-builds/how-to-guides/arm-containers.md",
+    "https://depot.dev/docs/container-builds/how-to-guides/autoscaling",
+    "https://depot.dev/docs/container-builds/how-to-guides/autoscaling.md",
+    "https://depot.dev/docs/container-builds/how-to-guides/continuous-integration",
+    "https://depot.dev/docs/container-builds/how-to-guides/continuous-integration.md",
+    "https://depot.dev/docs/container-builds/how-to-guides/devcontainers",
+    "https://depot.dev/docs/container-builds/how-to-guides/devcontainers.md",
+    "https://depot.dev/docs/container-builds/how-to-guides/docker-bake",
+    "https://depot.dev/docs/container-builds/how-to-guides/docker-bake.md",
+    "https://depot.dev/docs/container-builds/how-to-guides/docker-build",
+    "https://depot.dev/docs/container-builds/how-to-guides/docker-build.md",
+    "https://depot.dev/docs/container-builds/how-to-guides/docker-compose",
+    "https://depot.dev/docs/container-builds/how-to-guides/docker-compose.md",
+    "https://depot.dev/docs/container-builds/how-to-guides/local-development",
+    "https://depot.dev/docs/container-builds/how-to-guides/local-development.md",
+    "https://depot.dev/docs/container-builds/how-to-guides/private-registries",
+    "https://depot.dev/docs/container-builds/how-to-guides/private-registries.md",
+    "https://depot.dev/docs/container-builds/integrations/aws-codebuild",
+    "https://depot.dev/docs/container-builds/integrations/aws-codebuild.md",
+    "https://depot.dev/docs/container-builds/integrations/bitbucket-pipelines",
+    "https://depot.dev/docs/container-builds/integrations/bitbucket-pipelines.md",
+    "https://depot.dev/docs/container-builds/integrations/buildkite",
+    "https://depot.dev/docs/container-builds/integrations/buildkite.md",
+    "https://depot.dev/docs/container-builds/integrations/circleci",
+    "https://depot.dev/docs/container-builds/integrations/circleci.md",
+    "https://depot.dev/docs/container-builds/integrations/depot-ci",
+    "https://depot.dev/docs/container-builds/integrations/depot-ci.md",
+    "https://depot.dev/docs/container-builds/integrations/fly",
+    "https://depot.dev/docs/container-builds/integrations/fly.md",
+    "https://depot.dev/docs/container-builds/integrations/github-actions",
+    "https://depot.dev/docs/container-builds/integrations/github-actions.md",
+    "https://depot.dev/docs/container-builds/integrations/gitlab-ci",
+    "https://depot.dev/docs/container-builds/integrations/gitlab-ci.md",
+    "https://depot.dev/docs/container-builds/integrations/google-cloud-build",
+    "https://depot.dev/docs/container-builds/integrations/google-cloud-build.md",
+    "https://depot.dev/docs/container-builds/integrations/jenkins",
+    "https://depot.dev/docs/container-builds/integrations/jenkins.md",
+    "https://depot.dev/docs/container-builds/integrations/travis-ci",
+    "https://depot.dev/docs/container-builds/integrations/travis-ci.md",
+    "https://depot.dev/docs/container-builds/observability/container-build-logs",
+    "https://depot.dev/docs/container-builds/observability/container-build-logs.md",
+    "https://depot.dev/docs/container-builds/observability/container-build-metrics",
+    "https://depot.dev/docs/container-builds/observability/container-build-metrics.md",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/dotnet",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/dotnet-aspnetcore-dockerfile.md",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/dotnet-worker-dockerfile.md",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/dotnet.md",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/go-dockerfile",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/go-dockerfile.md",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/java",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/java-gradle-dockerfile.md",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/java-maven-dockerfile.md",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/java.md",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/node",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/node-npm-dockerfile.md",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/node-pnpm-dockerfile.md",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/node.md",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/overview",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/overview.md",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/php-composer-dockerfile",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/php-composer-dockerfile.md",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/python",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/python-pip-dockerfile.md",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/python-poetry-dockerfile.md",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/python-uv-dockerfile.md",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/python.md",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/ruby-bundler-dockerfile",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/ruby-bundler-dockerfile.md",
+    "https://depot.dev/docs/container-builds/optimal-dockerfiles/rust-dockerfile",
+    "https://depot.dev/docs/container-builds/overview",
+    "https://depot.dev/docs/container-builds/quickstart",
+    "https://depot.dev/docs/container-builds/troubleshooting",
+    "https://depot.dev/docs/environment-variables",
+    "https://depot.dev/docs/github-actions/how-to-guides/access-private-resources",
+    "https://depot.dev/docs/github-actions/how-to-guides/egress-filtering",
+    "https://depot.dev/docs/github-actions/integrations/dependabot",
+    "https://depot.dev/docs/github-actions/observability/github-actions-logs",
+    "https://depot.dev/docs/github-actions/observability/github-actions-metrics",
+    "https://depot.dev/docs/github-actions/observability/github-actions-test-results",
+    "https://depot.dev/docs/github-actions/overview",
+    "https://depot.dev/docs/github-actions/quickstart",
+    "https://depot.dev/docs/github-actions/runner-types",
+    "https://depot.dev/docs/github-actions/troubleshooting",
+    "https://depot.dev/docs/integrations/tailscale",
+    "https://depot.dev/docs/managed/on-aws",
+    "https://depot.dev/docs/managed/overview",
+    "https://depot.dev/docs/managed/using-gpus",
+    "https://depot.dev/docs/observability",
+    "https://depot.dev/docs/registry/overview",
+    "https://depot.dev/docs/registry/pull-through-cache",
+    "https://depot.dev/docs/registry/quickstart",
+    "https://depot.dev/docs/security",
+    "https://depot.dev/docs/troubleshooting",
+    "https://depot.dev/drop-week",
+    "https://depot.dev/events",
+    "https://depot.dev/github-actions-price-calculator",
+    "https://depot.dev/help",
+    "https://depot.dev/install-cli.sh",
+    "https://depot.dev/llms-all.txt",
+    "https://depot.dev/llms.txt",
+    "https://depot.dev/merch",
+    "https://depot.dev/openapi/depot-ci/v1.json",
+    "https://depot.dev/orgs/_/settings",
+    "https://depot.dev/pricing",
+    "https://depot.dev/privacy-policy",
+    "https://depot.dev/sign-in",
+    "https://depot.dev/sign-up",
+    "https://depot.dev/terms-of-service",
+    "https://discord.gg/MMPqYSgDCg",
+    "https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect",
+    "https://github.com/depot",
+    "https://github.com/depot/cli",
+    "https://github.com/depot/cli/releases",
+    "https://github.com/depot/depot-go",
+    "https://github.com/depot/docs/blob/main/content/api/overview.mdx",
+    "https://github.com/depot/docs/blob/main/content/api/sdk-reference.mdx",
+    "https://github.com/depot/docs/blob/main/content/cli/reference/overview.mdx",
+    "https://github.com/depot/sandbox-sdk",
+    "https://github.com/depot/sdk-node",
+    "https://github.com/depot/test-report-action",
+    "https://github.com/mxschmitt/action-tmate",
+    "https://status.depot.dev",
+    "https://twitter.com/depotdev",
+    "https://www.linkedin.com/company/depot-technologies",
+    "https://www.rwx.com/",
+    "https://www.rwx.com/docs/oidc-depot",
+    "https://www.ycombinator.com/companies/depot",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
+  ]
+}

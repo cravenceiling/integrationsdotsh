@@ -1,0 +1,319 @@
+{
+  "result": {
+    "version": 3,
+    "domain": "dbos.dev",
+    "detect": {
+      "domain": "dbos.dev",
+      "found": [],
+      "mcp": [],
+      "llmsTxt": false,
+      "errors": []
+    },
+    "usedLlm": true,
+    "discoveredAt": "2026-07-02T12:05:31.861Z",
+    "summary": "DBOS exposes a Conductor HTTP surface secured by a Bearer API key, plus an MCP server that uses its browser-based login flow; no public GraphQL or CLI integration surface was confirmed.",
+    "credentials": {
+      "dbos_conductor_key": {
+        "type": "api_key",
+        "label": "DBOS Conductor API key",
+        "generateUrl": "https://console.dbos.dev/settings/apikey",
+        "setup": "Go to the [DBOS console](https://console.dbos.dev), register your application name to match your DBOS app, then open the [API key settings page](https://console.dbos.dev/settings/apikey) and create a new key. Use it as `DBOS_CONDUCTOR_KEY` when connecting an app to Conductor, or as a Bearer token for Conductor HTTP calls.",
+        "acquisition": "manual"
+      },
+      "dbos_mcp_login": {
+        "type": "oauth2",
+        "label": "DBOS MCP login session",
+        "generateUrl": "https://docs.dbos.dev/integrations/mcp",
+        "setup": "Use the MCP server's built-in login flow. After adding the server, Claude Code will prompt you to open the login URL it returns and authenticate in the browser. The resulting credentials are stored locally at `~/.dbos-mcp/credentials`.",
+        "acquisition": "manual"
+      }
+    },
+    "surfaces": [
+      {
+        "slug": "dbos-conductor",
+        "name": "DBOS Conductor",
+        "type": "http",
+        "docs": "https://docs.dbos.dev/production/conductor",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.dbos.dev/production/conductor",
+            "https://docs.dbos.dev/production/permissions"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "dbos_conductor_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Bearer"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.dbos.dev/production/conductor",
+                  "https://docs.dbos.dev/production/permissions"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "dbos-mcp-server",
+        "name": "DBOS MCP Server",
+        "type": "mcp",
+        "docs": "https://docs.dbos.dev/integrations/mcp",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.dbos.dev/integrations/mcp"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "dbos_mcp_login",
+                  "mechanics": {
+                    "source": "well-known"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.dbos.dev/integrations/mcp"
+                ]
+              }
+            }
+          ]
+        },
+        "url": "https://docs.dbos.dev/integrations/mcp",
+        "transports": [
+          "streamable-http",
+          "sse"
+        ]
+      }
+    ]
+  },
+  "discoveredAt": "2026-07-02T12:05:31.861Z",
+  "model": "loop-gpt-5.4-mini",
+  "usage": {
+    "prompt_tokens": 128043,
+    "completion_tokens": 904,
+    "total_tokens": 128947
+  },
+  "visited": [
+    "https://docs.dbos.dev/",
+    "https://docs.dbos.dev/ai/ai-quickstart",
+    "https://docs.dbos.dev/integrations/mcp",
+    "https://docs.dbos.dev/production/conductor",
+    "https://docs.dbos.dev/production/permissions",
+    "https://docs.dbos.dev/production/workflow-management",
+    "https://docs.dbos.dev/python/integrating-dbos",
+    "https://docs.dbos.dev/python/tutorials/",
+    "https://docs.dbos.dev/python/tutorials/authentication-authorization",
+    "https://docs.dbos.dev/quickstart?language=python",
+    "https://github.com/blurrah/mcp-graphql",
+    "https://learn.microsoft.com/en-us/fabric/data-engineering/api-graphql-local-model-context-protocol",
+    "https://www.apollographql.com/docs/graphos/platform/graphos-mcp-tools",
+    "https://www.mcpbundles.com/skills/graphos-mcp-tools-mcp",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
+  ],
+  "grounding": [
+    "http://localhost:3000/",
+    "http://localhost:7070/",
+    "http://localhost:8000/",
+    "http://localhost:8080/",
+    "https://adk.dev/integrations/dbos",
+    "https://adk.dev/integrations/dbos/",
+    "https://ai.pydantic.dev/durable_execution/dbos",
+    "https://bsky.app/profile/dbos.dev",
+    "https://console.dbos.dev",
+    "https://console.dbos.dev/login-redirect",
+    "https://console.dbos.dev/settings/apikey",
+    "https://console.dbos.dev/settings/organization",
+    "https://developers.llamaindex.ai/python/llamaagents/workflows/dbos/",
+    "https://discord.gg/fMwQjeW5zg",
+    "https://docs.astral.sh/uv/getting-started/installation/",
+    "https://docs.dbos.dev/",
+    "https://docs.dbos.dev/#",
+    "https://docs.dbos.dev/#1-create-a-virtual-environment",
+    "https://docs.dbos.dev/#1-download-an-application",
+    "https://docs.dbos.dev/#1-initialize-an-application",
+    "https://docs.dbos.dev/#1-initialize-an-application-1",
+    "https://docs.dbos.dev/#1-install-dbos",
+    "https://docs.dbos.dev/#1-install-dbos-1",
+    "https://docs.dbos.dev/#1-install-dbos-and-the-google-adk-integration",
+    "https://docs.dbos.dev/#1-install-dbos-and-the-openai-agents-integration",
+    "https://docs.dbos.dev/#1-install-llamaindex-with-dbos",
+    "https://docs.dbos.dev/#1-install-pydantic-ai-with-dbos",
+    "https://docs.dbos.dev/#2-add-the-dbos-initializer",
+    "https://docs.dbos.dev/#2-build-your-application",
+    "https://docs.dbos.dev/#2-configure-and-launch-dbos",
+    "https://docs.dbos.dev/#2-configure-and-launch-dbos-1",
+    "https://docs.dbos.dev/#2-configure-dbos-and-use-the-dbos-runtime",
+    "https://docs.dbos.dev/#2-configure-dbos-and-wrap-your-agent",
+    "https://docs.dbos.dev/#2-configure-dbos-and-wrap-your-agent-1",
+    "https://docs.dbos.dev/#2-configure-dbos-and-wrap-your-agent-2",
+    "https://docs.dbos.dev/#2-install-and-initialize-dbos",
+    "https://docs.dbos.dev/#2-launch-postgres",
+    "https://docs.dbos.dev/#2-launch-postgres-1",
+    "https://docs.dbos.dev/#3-annotate-workflows-and-steps",
+    "https://docs.dbos.dev/#3-register-workflows-and-steps",
+    "https://docs.dbos.dev/#3-start-your-app",
+    "https://docs.dbos.dev/#3-start-your-app-1",
+    "https://docs.dbos.dev/#3-start-your-app-2",
+    "https://docs.dbos.dev/#3-start-your-app-3",
+    "https://docs.dbos.dev/#3-start-your-application",
+    "https://docs.dbos.dev/#4-connect-to-dbos-conductor",
+    "https://docs.dbos.dev/#4-connect-to-dbos-conductor-1",
+    "https://docs.dbos.dev/#4-connect-to-dbos-conductor-2",
+    "https://docs.dbos.dev/#4-connect-to-dbos-conductor-3",
+    "https://docs.dbos.dev/#4-start-building-with-dbos",
+    "https://docs.dbos.dev/#__docusaurus_skipToContent_fallback",
+    "https://docs.dbos.dev/#api-keys",
+    "https://docs.dbos.dev/#application-introspection",
+    "https://docs.dbos.dev/#assigning-roles-to-members",
+    "https://docs.dbos.dev/#authentication",
+    "https://docs.dbos.dev/#authentication-middleware",
+    "https://docs.dbos.dev/#authorization-decorators",
+    "https://docs.dbos.dev/#built-in-roles",
+    "https://docs.dbos.dev/#cancelling-workflows",
+    "https://docs.dbos.dev/#connecting-to-conductor",
+    "https://docs.dbos.dev/#custom-roles",
+    "https://docs.dbos.dev/#example",
+    "https://docs.dbos.dev/#example-applications",
+    "https://docs.dbos.dev/#exporting-workflows",
+    "https://docs.dbos.dev/#features",
+    "https://docs.dbos.dev/#forking-workflows",
+    "https://docs.dbos.dev/#get-started",
+    "https://docs.dbos.dev/#install-uv",
+    "https://docs.dbos.dev/#join-the-community",
+    "https://docs.dbos.dev/#managing-conductor-applications",
+    "https://docs.dbos.dev/#metadata-only-mode",
+    "https://docs.dbos.dev/#permissions",
+    "https://docs.dbos.dev/#permissions-and-application-scope",
+    "https://docs.dbos.dev/#resuming-workflows",
+    "https://docs.dbos.dev/#roles",
+    "https://docs.dbos.dev/#setup",
+    "https://docs.dbos.dev/#setup-with-claude-code",
+    "https://docs.dbos.dev/#tools",
+    "https://docs.dbos.dev/#using-an-api-key",
+    "https://docs.dbos.dev/#using-coding-agents",
+    "https://docs.dbos.dev/#viewing-workflows",
+    "https://docs.dbos.dev/#workflow-introspection",
+    "https://docs.dbos.dev/#workflow-management",
+    "https://docs.dbos.dev/ai/ai-quickstart",
+    "https://docs.dbos.dev/ai/debugging",
+    "https://docs.dbos.dev/ai/distributing-agents",
+    "https://docs.dbos.dev/ai/hitl",
+    "https://docs.dbos.dev/ai/streaming",
+    "https://docs.dbos.dev/architecture",
+    "https://docs.dbos.dev/examples",
+    "https://docs.dbos.dev/faq",
+    "https://docs.dbos.dev/gol",
+    "https://docs.dbos.dev/golang/examples/widget-store",
+    "https://docs.dbos.dev/golang/integrating-dbos",
+    "https://docs.dbos.dev/golang/programming-guide",
+    "https://docs.dbos.dev/golang/prompting",
+    "https://docs.dbos.dev/integrations/cockroachdb",
+    "https://docs.dbos.dev/integrations/django",
+    "https://docs.dbos.dev/integrations/google-adk",
+    "https://docs.dbos.dev/integrations/lakebase",
+    "https://docs.dbos.dev/integrations/llamaindex",
+    "https://docs.dbos.dev/integrations/logfire",
+    "https://docs.dbos.dev/integrations/mcp",
+    "https://docs.dbos.dev/integrations/neon",
+    "https://docs.dbos.dev/integrations/nestjs",
+    "https://docs.dbos.dev/integrations/nextjs",
+    "https://docs.dbos.dev/integrations/openai-agents",
+    "https://docs.dbos.dev/integrations/parseable",
+    "https://docs.dbos.dev/integrations/pydantic-ai",
+    "https://docs.dbos.dev/integrations/supabase",
+    "https://docs.dbos.dev/integrations/tigerdata",
+    "https://docs.dbos.dev/integrations/vercel",
+    "https://docs.dbos.dev/java/examples/widget-store",
+    "https://docs.dbos.dev/java/integrating-dbos",
+    "https://docs.dbos.dev/java/programming-guide",
+    "https://docs.dbos.dev/java/prompting",
+    "https://docs.dbos.dev/production/alerting",
+    "https://docs.dbos.dev/production/checklist",
+    "https://docs.dbos.dev/production/conductor",
+    "https://docs.dbos.dev/production/conductor#connecting-to-conductor",
+    "https://docs.dbos.dev/production/hosting-conductor",
+    "https://docs.dbos.dev/production/hosting-conductor-with-kubernetes",
+    "https://docs.dbos.dev/production/hosting-with-cloud-run",
+    "https://docs.dbos.dev/production/hosting-with-kubernetes",
+    "https://docs.dbos.dev/production/metrics",
+    "https://docs.dbos.dev/production/permissions",
+    "https://docs.dbos.dev/production/retention",
+    "https://docs.dbos.dev/production/workflow-management",
+    "https://docs.dbos.dev/production/workflow-recovery",
+    "https://docs.dbos.dev/python/examples/document-detective",
+    "https://docs.dbos.dev/python/examples/hacker-news-agent",
+    "https://docs.dbos.dev/python/examples/widget-store",
+    "https://docs.dbos.dev/python/integrating-dbos",
+    "https://docs.dbos.dev/python/programming-guide",
+    "https://docs.dbos.dev/python/prompting",
+    "https://docs.dbos.dev/python/reference/contexts#set_authentication",
+    "https://docs.dbos.dev/python/reference/decorators",
+    "https://docs.dbos.dev/python/reference/decorators#default_required_roles",
+    "https://docs.dbos.dev/python/reference/decorators#required_roles",
+    "https://docs.dbos.dev/python/tutorials/",
+    "https://docs.dbos.dev/python/tutorials/authentication-authorization",
+    "https://docs.dbos.dev/python/tutorials/classes",
+    "https://docs.dbos.dev/python/tutorials/database-connection",
+    "https://docs.dbos.dev/python/tutorials/kafka-integration",
+    "https://docs.dbos.dev/python/tutorials/logging-and-tracing",
+    "https://docs.dbos.dev/python/tutorials/queue-tutorial",
+    "https://docs.dbos.dev/python/tutorials/scheduled-workflows",
+    "https://docs.dbos.dev/python/tutorials/step-tutorial",
+    "https://docs.dbos.dev/python/tutorials/testing",
+    "https://docs.dbos.dev/python/tutorials/transaction-tutorial",
+    "https://docs.dbos.dev/python/tutorials/upgrading-workflows",
+    "https://docs.dbos.dev/python/tutorials/workflow-communication",
+    "https://docs.dbos.dev/python/tutorials/workflow-management",
+    "https://docs.dbos.dev/python/tutorials/workflow-tutorial",
+    "https://docs.dbos.dev/quickstart",
+    "https://docs.dbos.dev/quickstart?language=golang",
+    "https://docs.dbos.dev/quickstart?language=java",
+    "https://docs.dbos.dev/quickstart?language=python",
+    "https://docs.dbos.dev/quickstart?language=typescript",
+    "https://docs.dbos.dev/typescript/examples/checkout-tutorial",
+    "https://docs.dbos.dev/typescript/examples/hacker-news-agent",
+    "https://docs.dbos.dev/typescript/integrating-dbos",
+    "https://docs.dbos.dev/typescript/programming-guide",
+    "https://docs.dbos.dev/typescript/prompting",
+    "https://docs.dbos.dev/why-dbos",
+    "https://github.com/blurrah/mcp-graphql",
+    "https://github.com/dbos-inc/dbos-demo-apps.gitcd",
+    "https://github.com/dbos-inc/dbos-google-adk",
+    "https://github.com/dbos-inc/dbos-mcp",
+    "https://github.com/dbos-inc/dbos-openai-agents",
+    "https://github.com/dbos-inc/dbos-transact-py",
+    "https://github.com/run-llama/workflows-py/tree/main/packages/llama-agents-dbos",
+    "https://learn.microsoft.com/en-us/fabric/data-engineering/api-graphql-local-model-context-protocol",
+    "https://openai.github.io/openai-agents-python/running_agents/#dbos",
+    "https://www.apollographql.com/docs/graphos/platform/graphos-mcp-tools",
+    "https://www.dbos.dev/about",
+    "https://www.dbos.dev/blog",
+    "https://www.dbos.dev/dbos-pricing",
+    "https://www.dbos.dev/privacy",
+    "https://www.linkedin.com/company/dbos-inc/",
+    "https://www.mcpbundles.com/skills/graphos-mcp-tools-mcp",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo",
+    "https://x.com/DBOS_Inc"
+  ]
+}

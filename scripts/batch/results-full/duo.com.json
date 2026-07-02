@@ -1,0 +1,661 @@
+{
+  "result": {
+    "version": 3,
+    "domain": "duo.com",
+    "detect": {
+      "domain": "duo.com",
+      "found": [
+        "llms.txt"
+      ],
+      "mcp": [],
+      "llmsTxt": true,
+      "errors": []
+    },
+    "usedLlm": true,
+    "discoveredAt": "2026-07-02T12:24:13.545Z",
+    "summary": "Duo exposes four public developer surfaces: Auth API, Admin API, OIDC Auth API/Universal Prompt, and Web SDK v4; the legacy Accounts API is deprecated and no longer mintable.",
+    "credentials": {
+      "duo_sig": {
+        "type": "signature",
+        "label": "Duo Admin/Auth API integration key + secret",
+        "generateUrl": "https://admin.duosecurity.com/",
+        "setup": "In the Duo Admin Panel, go to the application / API integration you created and copy the integration's `integration key` (`ikey`) and `secret key` (`skey`). For new integrations, use the [Duo Admin Panel](https://admin.duosecurity.com/) and create the appropriate Auth API or Admin API application. Keep the `hostname` too, since Duo requests are scoped to your tenant host.",
+        "acquisition": "manual"
+      },
+      "duo_ox_auth": {
+        "type": "oauth2",
+        "label": "Duo Universal Prompt OIDC client credentials",
+        "generateUrl": "https://duo.com/docs/oauthapi",
+        "setup": "Create a Duo Web SDK / Universal Prompt application and copy the `Client ID` and `Client Secret` from the app settings. Configure the redirect URI in your app, then use the OIDC flow described in the [OIDC Auth API docs](https://duo.com/docs/oauthapi) to obtain tokens for the Duo Universal Prompt integration.",
+        "acquisition": "manual"
+      },
+      "duo_accounts_api_legacy": {
+        "type": "signature",
+        "label": "Legacy Duo Accounts API integration key + secret",
+        "generateUrl": "https://duo.com/docs/accountsapi",
+        "setup": "Legacy only: existing Accounts API integrations were deprecated and converted to Admin API. New Accounts API integrations can no longer be created, so there is no supported path to mint new credentials. If you already have an old integration, its `integration key` / `secret key` pair is the same Duo-style signed-request credential shape used by the legacy Accounts API.",
+        "acquisition": "manual"
+      }
+    },
+    "surfaces": [
+      {
+        "slug": "duo-auth-api",
+        "name": "Duo Auth API",
+        "type": "http",
+        "docs": "https://duo.com/docs/authapi",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://duo.com/docs/authapi"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "duo_sig",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Duo"
+                  }
+                },
+                {
+                  "id": "duo_sig",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "X-Duo-Signature",
+                    "scheme": "HMAC-SHA1"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://duo.com/docs/authapi"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "duo-admin-api",
+        "name": "Duo Admin API",
+        "type": "http",
+        "docs": "https://duo.com/docs/adminapi",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://duo.com/docs/adminapi"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "duo_sig",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Duo"
+                  }
+                },
+                {
+                  "id": "duo_sig",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "X-Duo-Signature",
+                    "scheme": "HMAC-SHA1"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://duo.com/docs/adminapi"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "duo-oidc-auth-api-duo-universal-prompt",
+        "name": "Duo OIDC Auth API - Duo Universal Prompt",
+        "type": "http",
+        "docs": "https://duo.com/docs/oauthapi",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://duo.com/docs/oauthapi"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "duo_ox_auth",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "body",
+                    "scheme": "client_id",
+                    "paramName": "client_id"
+                  }
+                },
+                {
+                  "id": "duo_ox_auth",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "body",
+                    "scheme": "client_secret",
+                    "paramName": "client_secret"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://duo.com/docs/oauthapi"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "duo-web-sdk-v4",
+        "name": "Duo Web SDK v4",
+        "type": "http",
+        "docs": "https://duo.com/docs/duoweb",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://duo.com/docs/duoweb"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "duo_ox_auth",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "body",
+                    "scheme": "client_id",
+                    "paramName": "client_id"
+                  }
+                },
+                {
+                  "id": "duo_ox_auth",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "body",
+                    "scheme": "client_secret",
+                    "paramName": "client_secret"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://duo.com/docs/duoweb"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "duo-accounts-api",
+        "name": "Duo Accounts API",
+        "type": "http",
+        "docs": "https://duo.com/docs/accountsapi",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://duo.com/docs/accountsapi"
+          ]
+        },
+        "auth": {
+          "status": "unknown"
+        }
+      }
+    ]
+  },
+  "discoveredAt": "2026-07-02T12:24:13.546Z",
+  "model": "loop-gpt-5.4-mini",
+  "usage": {
+    "prompt_tokens": 257258,
+    "completion_tokens": 1363,
+    "total_tokens": 258621
+  },
+  "visited": [
+    "https://developer.cisco.com/codeexchange/github/repo/it-jonjon/Duo-API-Playground/",
+    "https://duo.com/docs/accountsapi",
+    "https://duo.com/docs/accountsapi#authentication",
+    "https://duo.com/docs/adminapi",
+    "https://duo.com/docs/adminapi#authentication",
+    "https://duo.com/docs/authapi",
+    "https://duo.com/docs/authapi#authentication",
+    "https://duo.com/docs/duoweb",
+    "https://duo.com/docs/oauthapi",
+    "https://duo.com/docs/oauthapi#first-steps",
+    "https://duo.com/llms.txt"
+  ],
+  "grounding": [
+    "http://www.ntp.org/",
+    "https://admin.duosecurity.com",
+    "https://admin.duosecurity.com/",
+    "https://apps.apple.com/us/app/duo-mobile/id422663827",
+    "https://careers.cisco.com/global/en/home",
+    "https://developer.cisco.com/codeexchange/github/repo/it-jonjon/Duo-API-Playground/",
+    "https://duo.com/",
+    "https://duo.com/#about-the-admin-api",
+    "https://duo.com/#about-the-auth-api",
+    "https://duo.com/#access-token",
+    "https://duo.com/#activate-universal-prompt",
+    "https://duo.com/#add-ownership-and-risk-information",
+    "https://duo.com/#add-the-duo-universal-dependency-to-your-project",
+    "https://duo.com/#anonymous-networks",
+    "https://duo.com/#api-clients",
+    "https://duo.com/#api-details",
+    "https://duo.com/#associate-group-with-user",
+    "https://duo.com/#associate-hardware-token-with-user",
+    "https://duo.com/#associate-phone-with-user",
+    "https://duo.com/#auth",
+    "https://duo.com/#auth-status",
+    "https://duo.com/#authentication",
+    "https://duo.com/#authentication-methods",
+    "https://duo.com/#authentication-policy",
+    "https://duo.com/#authorization-request",
+    "https://duo.com/#authorized-networks",
+    "https://duo.com/#base-url",
+    "https://duo.com/#browsers",
+    "https://duo.com/#bulk-operations",
+    "https://duo.com/#bulk-user-operations",
+    "https://duo.com/#bypass-codes",
+    "https://duo.com/#c-net",
+    "https://duo.com/#call-create-auth-url",
+    "https://duo.com/#call-exchange-authorization-code-for-2fa-result",
+    "https://duo.com/#call-generate-state",
+    "https://duo.com/#call-health-check",
+    "https://duo.com/#cancel-identity-verification",
+    "https://duo.com/#check",
+    "https://duo.com/#copy-policy",
+    "https://duo.com/#create-a-client-object",
+    "https://duo.com/#create-activation-code",
+    "https://duo.com/#create-bypass-codes-for-user",
+    "https://duo.com/#create-group",
+    "https://duo.com/#create-hardware-token",
+    "https://duo.com/#create-integration",
+    "https://duo.com/#create-integration-legacy-v2",
+    "https://duo.com/#create-multiple-users",
+    "https://duo.com/#create-phone",
+    "https://duo.com/#create-policy",
+    "https://duo.com/#create-shared-device-authentication-configuration",
+    "https://duo.com/#create-subaccounts",
+    "https://duo.com/#create-user",
+    "https://duo.com/#delete-bypass-code",
+    "https://duo.com/#delete-desktop-authenticator",
+    "https://duo.com/#delete-group",
+    "https://duo.com/#delete-hardware-token",
+    "https://duo.com/#delete-integration",
+    "https://duo.com/#delete-integration-legacy-v2",
+    "https://duo.com/#delete-phone",
+    "https://duo.com/#delete-policy",
+    "https://duo.com/#delete-shared-device-authentication-configuration",
+    "https://duo.com/#delete-subaccounts",
+    "https://duo.com/#delete-user",
+    "https://duo.com/#delete-webauthn-credential",
+    "https://duo.com/#desktop-authenticators",
+    "https://duo.com/#detailed-sdk-workflow",
+    "https://duo.com/#disassociate-group-from-user",
+    "https://duo.com/#disassociate-hardware-token-from-user",
+    "https://duo.com/#disassociate-phone-from-user",
+    "https://duo.com/#duo-desktop",
+    "https://duo.com/#duo-mobile-app",
+    "https://duo.com/#duo-web-sdk-and-third-party-integrations",
+    "https://duo.com/#duo-web-sdks",
+    "https://duo.com/#endpoints",
+    "https://duo.com/#enroll",
+    "https://duo.com/#enroll-status",
+    "https://duo.com/#enroll-user",
+    "https://duo.com/#example-response",
+    "https://duo.com/#existing-web-sdk-applications",
+    "https://duo.com/#first-steps",
+    "https://duo.com/#full-disk-encryption",
+    "https://duo.com/#get-group-info",
+    "https://duo.com/#get-group-members",
+    "https://duo.com/#get-identity-verification-status",
+    "https://duo.com/#get-subaccount-edition",
+    "https://duo.com/#get-subaccount-telephony-credits",
+    "https://duo.com/#go",
+    "https://duo.com/#gradle",
+    "https://duo.com/#grant-access-to-users",
+    "https://duo.com/#groups",
+    "https://duo.com/#health-check",
+    "https://duo.com/#health-checks",
+    "https://duo.com/#identity-verification",
+    "https://duo.com/#integration-types",
+    "https://duo.com/#integrations",
+    "https://duo.com/#integrations-legacy-v2",
+    "https://duo.com/#java",
+    "https://duo.com/#json-web-tokens",
+    "https://duo.com/#list-external-directory-syncs",
+    "https://duo.com/#logo",
+    "https://duo.com/#main-content",
+    "https://duo.com/#manual",
+    "https://duo.com/#maven",
+    "https://duo.com/#modify-integration",
+    "https://duo.com/#modify-integration-legacy-v2",
+    "https://duo.com/#modify-phone",
+    "https://duo.com/#modify-user",
+    "https://duo.com/#new-web-sdk-applications",
+    "https://duo.com/#node-js",
+    "https://duo.com/#oauth-parameters",
+    "https://duo.com/#oidc-parameters",
+    "https://duo.com/#overview",
+    "https://duo.com/#per-administrator-token-operations",
+    "https://duo.com/#per-user-bypass-code-operations",
+    "https://duo.com/#per-user-desktop-authenticators-operations",
+    "https://duo.com/#per-user-group-operations",
+    "https://duo.com/#per-user-phone-operations",
+    "https://duo.com/#per-user-token-operations",
+    "https://duo.com/#per-user-u2f-token-operations",
+    "https://duo.com/#per-user-webauthn-credential-operations",
+    "https://duo.com/#phones",
+    "https://duo.com/#php",
+    "https://duo.com/#ping",
+    "https://duo.com/#policies",
+    "https://duo.com/#policy-section-data",
+    "https://duo.com/#preauth",
+    "https://duo.com/#python",
+    "https://duo.com/#python-example",
+    "https://duo.com/#python-example-1",
+    "https://duo.com/#python-example-2",
+    "https://duo.com/#python-example-3",
+    "https://duo.com/#python-example-4",
+    "https://duo.com/#python-example-5",
+    "https://duo.com/#python-example-using-flask",
+    "https://duo.com/#python-example-using-flask-1",
+    "https://duo.com/#redirect-the-client",
+    "https://duo.com/#request-format",
+    "https://duo.com/#reset-client-secret-for-an-oauth-integration",
+    "https://duo.com/#reset-client-secret-for-an-oauth-integration-legacy-v2",
+    "https://duo.com/#reset-client-secret-for-an-oidc-integration",
+    "https://duo.com/#reset-client-secret-for-an-oidc-integration-legacy-v2",
+    "https://duo.com/#response-format",
+    "https://duo.com/#response-paging",
+    "https://duo.com/#restore-multiple-users-from-trash",
+    "https://duo.com/#resulting-policy",
+    "https://duo.com/#resync-hardware-token",
+    "https://duo.com/#retrieve-bypass-code-by-id",
+    "https://duo.com/#retrieve-bypass-codes",
+    "https://duo.com/#retrieve-bypass-codes-by-user-id",
+    "https://duo.com/#retrieve-client-secret-for-an-oauth-integration",
+    "https://duo.com/#retrieve-client-secret-for-an-oauth-integration-legacy-v2",
+    "https://duo.com/#retrieve-client-secret-for-an-oidc-integration",
+    "https://duo.com/#retrieve-client-secret-for-an-oidc-integration-legacy-v2",
+    "https://duo.com/#retrieve-desktop-authenticator-by-key",
+    "https://duo.com/#retrieve-desktop-authenticators",
+    "https://duo.com/#retrieve-desktop-authenticators-by-user-id",
+    "https://duo.com/#retrieve-groups",
+    "https://duo.com/#retrieve-groups-by-user-id",
+    "https://duo.com/#retrieve-hardware-token-by-id",
+    "https://duo.com/#retrieve-hardware-tokens",
+    "https://duo.com/#retrieve-hardware-tokens-by-user-id",
+    "https://duo.com/#retrieve-integration-by-integration-key",
+    "https://duo.com/#retrieve-integration-by-integration-key-legacy-v2",
+    "https://duo.com/#retrieve-integrations",
+    "https://duo.com/#retrieve-integrations-legacy-v2",
+    "https://duo.com/#retrieve-phone-by-id",
+    "https://duo.com/#retrieve-phones",
+    "https://duo.com/#retrieve-phones-by-user-id",
+    "https://duo.com/#retrieve-policies",
+    "https://duo.com/#retrieve-policy-by-id",
+    "https://duo.com/#retrieve-secret-key",
+    "https://duo.com/#retrieve-shared-device-authentication-configuration-by-key",
+    "https://duo.com/#retrieve-shared-device-authentication-configurations",
+    "https://duo.com/#retrieve-subaccounts",
+    "https://duo.com/#retrieve-u2f-tokens-by-user-id",
+    "https://duo.com/#retrieve-user-by-id",
+    "https://duo.com/#retrieve-users",
+    "https://duo.com/#retrieve-verification-push-response",
+    "https://duo.com/#retrieve-webauthn-credentials",
+    "https://duo.com/#retrieve-webauthn-credentials-by-key",
+    "https://duo.com/#retrieve-webauthn-credentials-by-user-id",
+    "https://duo.com/#saml-parameters",
+    "https://duo.com/#send-activation-code-via-sms",
+    "https://duo.com/#send-installation-url-via-sms",
+    "https://duo.com/#send-multiple-users-to-trash",
+    "https://duo.com/#send-passcodes-via-sms",
+    "https://duo.com/#send-verification-push",
+    "https://duo.com/#set-subaccount-edition",
+    "https://duo.com/#set-subaccount-telephony-credits",
+    "https://duo.com/#shared-device-authentication",
+    "https://duo.com/#sms-size-limits",
+    "https://duo.com/#sms-size-limits-1",
+    "https://duo.com/#sso-parameters",
+    "https://duo.com/#sso-parameters-legacy-v2",
+    "https://duo.com/#start-identity-verification",
+    "https://duo.com/#subaccount-management",
+    "https://duo.com/#subaccounts",
+    "https://duo.com/#summarize-policies",
+    "https://duo.com/#synchronize-user-from-external-directory",
+    "https://duo.com/#tokens",
+    "https://duo.com/#troubleshooting",
+    "https://duo.com/#u2f-tokens",
+    "https://duo.com/#universal-prompt",
+    "https://duo.com/#universal-update-progress",
+    "https://duo.com/#unsupported-oidc-endpoints",
+    "https://duo.com/#update-group",
+    "https://duo.com/#update-policies",
+    "https://duo.com/#update-policy",
+    "https://duo.com/#update-shared-device-authentication-configuration",
+    "https://duo.com/#upgrading-from-web-sdk-2",
+    "https://duo.com/#use-admin-api-with-subaccounts",
+    "https://duo.com/#users",
+    "https://duo.com/#validate-the-state-parameter",
+    "https://duo.com/#wait-for-the-redirect-from-duo-back-to-your-redirect-uri",
+    "https://duo.com/#webauthn-credentials",
+    "https://duo.com/#what-should-i-use-as-the-redirect-uri",
+    "https://duo.com/about",
+    "https://duo.com/about.md",
+    "https://duo.com/about/contact",
+    "https://duo.com/about/contact-chat-not-available.md",
+    "https://duo.com/about/contact.md",
+    "https://duo.com/about/duo-security-explainer.md",
+    "https://duo.com/blog",
+    "https://duo.com/blog.md",
+    "https://duo.com/blog/easier-more-effective-mfa-for-all-the-duo-universal-prompt-project",
+    "https://duo.com/ciso",
+    "https://duo.com/ciso.md",
+    "https://duo.com/demos",
+    "https://duo.com/demos.md",
+    "https://duo.com/demos/cisco-secure-endpoint.md",
+    "https://duo.com/demos/device-health-access-policy.md",
+    "https://duo.com/demos/download-and-install-duo-desktop.md",
+    "https://duo.com/demos/duo-desktop-authentication.md",
+    "https://duo.com/demos/duo-for-windows-logon.md",
+    "https://duo.com/demos/duo-mfa-for-cisco-anyconnect.md",
+    "https://duo.com/demos/duo-mobile-as-trusted.md",
+    "https://duo.com/demos/duo-universal-prompt.md",
+    "https://duo.com/demos/log-in-with-duo-desktop.md",
+    "https://duo.com/demos/multi-factor-authentication-mfa-with-duo-push.md",
+    "https://duo.com/demos/setting-up-cloud-based-sso.md",
+    "https://duo.com/demos/system-self-remediation.md",
+    "https://duo.com/demos/trusted-endpoints.md",
+    "https://duo.com/demos/user-self-remediation.md",
+    "https://duo.com/docs",
+    "https://duo.com/docs-and-resources",
+    "https://duo.com/docs-and-resources.md",
+    "https://duo.com/docs.md",
+    "https://duo.com/docs/accountsapi",
+    "https://duo.com/docs/accountsapi#authentication",
+    "https://duo.com/docs/adminapi",
+    "https://duo.com/docs/adminapi#authentication",
+    "https://duo.com/docs/adminapi#subaccounts",
+    "https://duo.com/docs/administration-reporting#universal-prompt-progress",
+    "https://duo.com/docs/authapi",
+    "https://duo.com/docs/authapi#/auth",
+    "https://duo.com/docs/authapi#/check",
+    "https://duo.com/docs/authapi#/enroll_status",
+    "https://duo.com/docs/authapi#/ping",
+    "https://duo.com/docs/authapi#/preauth",
+    "https://duo.com/docs/authapi#authentication",
+    "https://duo.com/docs/authapi-guide",
+    "https://duo.com/docs/authapi-v1",
+    "https://duo.com/docs/duoweb",
+    "https://duo.com/docs/duoweb-v2",
+    "https://duo.com/docs/getting-started",
+    "https://duo.com/docs/oauthapi",
+    "https://duo.com/docs/oauthapi#first-steps",
+    "https://duo.com/docs/policy#authentication-policy",
+    "https://duo.com/docs/policy#new-user-policy",
+    "https://duo.com/docs/protecting-applications",
+    "https://duo.com/docs/protecting-applications#user-access",
+    "https://duo.com/docs/sso-oidc-generic",
+    "https://duo.com/docs/universal-prompt-update-guide",
+    "https://duo.com/editions-and-pricing",
+    "https://duo.com/editions-and-pricing.md",
+    "https://duo.com/editions-and-pricing/duo-advantage",
+    "https://duo.com/editions-and-pricing/duo-advantage.md",
+    "https://duo.com/editions-and-pricing/duo-essentials",
+    "https://duo.com/editions-and-pricing/duo-essentials.md",
+    "https://duo.com/editions-and-pricing/duo-federal-editions",
+    "https://duo.com/editions-and-pricing/duo-federal-editions.md",
+    "https://duo.com/editions-and-pricing/duo-federal-editions/federal-free-trial.md",
+    "https://duo.com/editions-and-pricing/duo-free",
+    "https://duo.com/editions-and-pricing/duo-free.md",
+    "https://duo.com/editions-and-pricing/duo-premier",
+    "https://duo.com/editions-and-pricing/duo-premier.md",
+    "https://duo.com/editions-and-pricing/ready-to-buy-now",
+    "https://duo.com/editions-and-pricing/ready-to-buy-now.md",
+    "https://duo.com/events",
+    "https://duo.com/events.md",
+    "https://duo.com/index.md",
+    "https://duo.com/integrations",
+    "https://duo.com/integrations.md",
+    "https://duo.com/integrations/amazon-web-services.md",
+    "https://duo.com/integrations/cisco.md",
+    "https://duo.com/integrations/google.md",
+    "https://duo.com/integrations/microsoft.md",
+    "https://duo.com/integrations/vmware.md",
+    "https://duo.com/learn",
+    "https://duo.com/learn.md",
+    "https://duo.com/learn/adaptive-authentication.md",
+    "https://duo.com/learn/authentication-vs-authorization.md",
+    "https://duo.com/learn/benefits-of-passwordless-authentication.md",
+    "https://duo.com/learn/benefits-of-single-sign-on.md",
+    "https://duo.com/learn/federated-identity-management-vs-sso.md",
+    "https://duo.com/learn/how-does-sso-work.md",
+    "https://duo.com/learn/how-identity-authentication-works.md",
+    "https://duo.com/learn/how-to-build-an-incident-management-policy.md",
+    "https://duo.com/learn/how-to-implement-passwordless-authentication.md",
+    "https://duo.com/learn/iam-automation.md",
+    "https://duo.com/learn/iam-compliance.md",
+    "https://duo.com/learn/identity-access-management-software.md",
+    "https://duo.com/learn/implement-single-sign-on.md",
+    "https://duo.com/learn/ldap-vs-active-directory.md",
+    "https://duo.com/learn/mfa-compliance.md",
+    "https://duo.com/learn/mfa-policy-enforcement.md",
+    "https://duo.com/learn/mfa-troubleshooting.md",
+    "https://duo.com/learn/passkeys-vs-passwords.md",
+    "https://duo.com/learn/passwordless-authentication-best-practices.md",
+    "https://duo.com/learn/phishing-resistant-mfa.md",
+    "https://duo.com/learn/privileged-access-management-best-practices.md",
+    "https://duo.com/learn/privileged-access-management-risks.md",
+    "https://duo.com/learn/privileged-access-management.md",
+    "https://duo.com/learn/psa.md",
+    "https://duo.com/learn/saml-vs-oauth-vs-oidc.md",
+    "https://duo.com/learn/saml-vs-sso.md",
+    "https://duo.com/learn/sso-vs-mfa.md",
+    "https://duo.com/legal/cisco-online-privacy-statement",
+    "https://duo.com/legal/sla",
+    "https://duo.com/legal/terms",
+    "https://duo.com/llms.txt",
+    "https://duo.com/partnerships",
+    "https://duo.com/partnerships/managed-service-providers",
+    "https://duo.com/partnerships/technology-partners",
+    "https://duo.com/product",
+    "https://duo.com/product/adaptive-access-policies",
+    "https://duo.com/product/cisco-identity-intelligence",
+    "https://duo.com/product/device-trust",
+    "https://duo.com/product/duo-directory",
+    "https://duo.com/product/identity-security-posture-management-ispm",
+    "https://duo.com/product/identity-threat-detection-and-response-itdr",
+    "https://duo.com/product/multi-factor-authentication-mfa",
+    "https://duo.com/product/multi-factor-authentication-mfa/two-factor-authentication-2fa",
+    "https://duo.com/product/passport",
+    "https://duo.com/product/passwordless",
+    "https://duo.com/product/remote-access",
+    "https://duo.com/product/single-sign-on-sso",
+    "https://duo.com/search",
+    "https://duo.com/solutions",
+    "https://duo.com/solutions/access-management",
+    "https://duo.com/solutions/active-directory-defense",
+    "https://duo.com/solutions/agentic-ai-security",
+    "https://duo.com/solutions/compliance",
+    "https://duo.com/solutions/enterprise",
+    "https://duo.com/solutions/financial",
+    "https://duo.com/solutions/government",
+    "https://duo.com/solutions/healthcare",
+    "https://duo.com/solutions/higher-ed",
+    "https://duo.com/solutions/k-12",
+    "https://duo.com/solutions/legal",
+    "https://duo.com/solutions/phishing-prevention",
+    "https://duo.com/solutions/retail",
+    "https://duo.com/solutions/security-first-iam",
+    "https://duo.com/solutions/small-to-medium-business",
+    "https://duo.com/solutions/technology",
+    "https://duo.com/solutions/zero-trust-security",
+    "https://duo.com/support",
+    "https://duo.com/support#admins",
+    "https://duo.com/support#users",
+    "https://duo.com/support/free-trial-onboarding-guide",
+    "https://duo.com/support/security-and-reliability/security-response",
+    "https://duo.com/why-duo",
+    "https://ecosystem.duo.com/en-US/home",
+    "https://github.com/duosecurity/duo_api_csharp",
+    "https://github.com/duosecurity/duo_api_golang",
+    "https://github.com/duosecurity/duo_api_nodejs",
+    "https://github.com/duosecurity/duo_api_perl",
+    "https://github.com/duosecurity/duo_api_php",
+    "https://github.com/duosecurity/duo_api_ruby",
+    "https://github.com/duosecurity/duo_client_java",
+    "https://github.com/duosecurity/duo_client_python",
+    "https://github.com/duosecurity/duo_postman_collection",
+    "https://github.com/duosecurity/duo_universal_csharp",
+    "https://github.com/duosecurity/duo_universal_golang",
+    "https://github.com/duosecurity/duo_universal_java",
+    "https://github.com/duosecurity/duo_universal_nodejs",
+    "https://github.com/duosecurity/duo_universal_php",
+    "https://github.com/duosecurity/duo_universal_python",
+    "https://help.duo.com/s/article/1337",
+    "https://help.duo.com/s/article/7546",
+    "https://help.duo.com/s/article/9451",
+    "https://jwt.io",
+    "https://play.google.com/store/apps/details/Duo_Mobile?id=com.duosecurity.duomobile&hl=en_NZ",
+    "https://resources.duo.com/",
+    "https://resources.duo.com/?contentType=case-study",
+    "https://resources.duo.com/?contentType=ebook",
+    "https://signup.duo.com",
+    "https://signup.duo.com/",
+    "https://tools.ietf.org/html/rfc7519",
+    "https://www.cisco.com/c/en/us/about/legal/privacy-full.html",
+    "https://www.cisco.com/c/en/us/about/legal/terms-conditions.html"
+  ]
+}

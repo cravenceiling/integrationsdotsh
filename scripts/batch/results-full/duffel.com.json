@@ -1,0 +1,219 @@
+{
+  "result": {
+    "version": 3,
+    "domain": "duffel.com",
+    "detect": {
+      "domain": "duffel.com",
+      "found": [],
+      "mcp": [],
+      "llmsTxt": false,
+      "errors": []
+    },
+    "usedLlm": true,
+    "discoveredAt": "2026-07-02T12:22:49.059Z",
+    "summary": "Duffel exposes one public integration surface: the Duffel API over HTTP, authenticated with a Duffel access token; the JavaScript client library is an SDK wrapper over the same token-based API.",
+    "credentials": {
+      "duffel_access_token": {
+        "type": "bearer",
+        "label": "Duffel access token",
+        "generateUrl": "https://app.duffel.com",
+        "setup": "Go to the [Duffel dashboard](https://app.duffel.com), sign in or create an account at [Join](https://app.duffel.com/join), then open **More → Developers → Access tokens** and create a test or live access token. Use the token as a Bearer token in `Authorization: Bearer <token>`.",
+        "acquisition": "manual"
+      }
+    },
+    "surfaces": [
+      {
+        "slug": "duffel-api",
+        "name": "Duffel API",
+        "type": "http",
+        "docs": "https://duffel.com/docs/api/overview/welcome",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://duffel.com/docs",
+            "https://duffel.com/docs/api/overview/welcome"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "duffel_access_token",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Bearer"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://duffel.com/docs/guides/getting-started-with-flights",
+                  "https://duffel.com/docs/guides/receiving-webhooks"
+                ]
+              }
+            }
+          ]
+        },
+        "requiredHeaders": [
+          {
+            "name": "Duffel-Version",
+            "source": {
+              "kind": "static",
+              "value": "v2"
+            },
+            "description": "API version header shown in examples"
+          },
+          {
+            "name": "Accept",
+            "source": {
+              "kind": "static",
+              "value": "application/json"
+            },
+            "description": "Example requests set JSON accept header"
+          }
+        ]
+      },
+      {
+        "slug": "duffel-javascript-client-library",
+        "name": "Duffel JavaScript client library",
+        "type": "cli",
+        "docs": "https://duffel.com/docs/guides/javascript-client-library",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://duffel.com/docs/guides/javascript-client-library"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "duffel_access_token",
+                  "mechanics": {
+                    "source": "cli",
+                    "command": "run your app with `token: YOUR_ACCESS_TOKEN` in the Duffel client constructor"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://duffel.com/docs/guides/javascript-client-library"
+                ]
+              }
+            }
+          ]
+        },
+        "packages": [
+          {
+            "registryType": "npm",
+            "identifier": "@duffel/api",
+            "runtimeHint": "node"
+          }
+        ],
+        "command": "duffel"
+      }
+    ]
+  },
+  "discoveredAt": "2026-07-02T12:22:49.060Z",
+  "model": "loop-gpt-5.4-mini",
+  "usage": {
+    "prompt_tokens": 80677,
+    "completion_tokens": 918,
+    "total_tokens": 81595
+  },
+  "visited": [
+    "https://duffel.com/docs",
+    "https://duffel.com/docs/api",
+    "https://duffel.com/docs/api/basics/authentication",
+    "https://duffel.com/docs/api/overview/welcome",
+    "https://duffel.com/docs/guides/getting-started-with-flights",
+    "https://duffel.com/docs/guides/javascript-client-library",
+    "https://duffel.com/docs/guides/receiving-webhooks",
+    "https://glama.ai/mcp/servers/naren8642/duffel-mcp",
+    "https://lobehub.com/mcp/naren8642-duffel-mcp",
+    "https://www.speakeasy.com/docs/mcp/secure/adding-oauth-servers",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
+  ],
+  "grounding": [
+    "http://be3baxdc.ngrok.io",
+    "http://be3baxdc.ngrok.io/webhooks",
+    "https://api.duffel.com/air/webhooks",
+    "https://api.duffel.com/air/webhooks/id/$WEBHOOK",
+    "https://app.duffel.com",
+    "https://app.duffel.com/join",
+    "https://app.duffel.com/sign-in",
+    "https://app.getpostman.com/run-collection/15595862-cce09558-a1c8-44f9-bde8-8a18715936c1?action=collection%2Ffork&collection-url=entityId%3D15595862-cce09558-a1c8-44f9-bde8-8a18715936c1%26entityType%3Dcollection%26workspaceId%3D03431b8a-0e9e-49c3-afe5-e2ba9ca63fbc",
+    "https://changelog.duffel.com",
+    "https://duffel.com/cookies-policy",
+    "https://duffel.com/docs",
+    "https://duffel.com/docs/api",
+    "https://duffel.com/docs/api/basics/authentication",
+    "https://duffel.com/docs/api/offers",
+    "https://duffel.com/docs/api/orders/create-order",
+    "https://duffel.com/docs/api/overview/welcome",
+    "https://duffel.com/docs/api/v2/batch-offer-requests/create-batch-offer-request",
+    "https://duffel.com/docs/api/v2/offer-requests/create-offer-request",
+    "https://duffel.com/docs/api/v2/offer-requests/get-offer-request-by-id",
+    "https://duffel.com/docs/api/webhooks/create-webhook",
+    "https://duffel.com/docs/api/webhooks/ping-webhook",
+    "https://duffel.com/docs/api/webhooks/update-webhook",
+    "https://duffel.com/docs/guides/adding-extra-bags",
+    "https://duffel.com/docs/guides/adding-loyalty-programme-accounts",
+    "https://duffel.com/docs/guides/adding-post-booking-bags",
+    "https://duffel.com/docs/guides/adding-seats",
+    "https://duffel.com/docs/guides/ancillaries-component",
+    "https://duffel.com/docs/guides/cancelling-an-order",
+    "https://duffel.com/docs/guides/changing-an-order",
+    "https://duffel.com/docs/guides/collecting-customer-card-payments",
+    "https://duffel.com/docs/guides/getting-started-with-flights",
+    "https://duffel.com/docs/guides/getting-started-with-flights#creating-a-booking-using-the-selected-offer",
+    "https://duffel.com/docs/guides/getting-started-with-flights#keep-learning",
+    "https://duffel.com/docs/guides/getting-started-with-flights#overview",
+    "https://duffel.com/docs/guides/getting-started-with-flights#searching-for-flights",
+    "https://duffel.com/docs/guides/getting-started-with-flights#selecting-an-offer-from-the-search-results",
+    "https://duffel.com/docs/guides/getting-started-with-stays",
+    "https://duffel.com/docs/guides/holding-orders-and-paying-later",
+    "https://duffel.com/docs/guides/javascript-client-library",
+    "https://duffel.com/docs/guides/javascript-client-library#getting-started",
+    "https://duffel.com/docs/guides/migrating-api-version-from-v1-to-v2",
+    "https://duffel.com/docs/guides/modelling-customers-in-duffel",
+    "https://duffel.com/docs/guides/offer-and-order-conditions",
+    "https://duffel.com/docs/guides/receiving-webhooks",
+    "https://duffel.com/docs/guides/receiving-webhooks#building-a-simple-webhook-receiver-in-python",
+    "https://duffel.com/docs/guides/receiving-webhooks#creating-a-webhook",
+    "https://duffel.com/docs/guides/receiving-webhooks#overview",
+    "https://duffel.com/docs/guides/receiving-webhooks#sending-a-test-event-to-our-webhook",
+    "https://duffel.com/docs/guides/receiving-webhooks#whats-next",
+    "https://duffel.com/docs/guides/search-best-practices",
+    "https://duffel.com/docs/guides/using-airline-credits",
+    "https://duffel.com/privacy-policy",
+    "https://duffel.com/security",
+    "https://duffel.com/services-agreement",
+    "https://duffel.com/terms",
+    "https://en.wikipedia.org/wiki/ISO_4217",
+    "https://flask.palletsprojects.com/en/1.1.x/",
+    "https://github.com/duffelhq/duffel-api-javascript",
+    "https://glama.ai/mcp/servers/naren8642/duffel-mcp",
+    "https://help.duffel.com",
+    "https://help.duffel.com/",
+    "https://help.duffel.com/hc/en-gb/articles/360021056640",
+    "https://lobehub.com/mcp/naren8642-duffel-mcp",
+    "https://ngrok.com/download",
+    "https://pypi.org/project/pip/",
+    "https://www.duffelstatus.com",
+    "https://www.duffelstatus.com/",
+    "https://www.example.com:4000/webhooks",
+    "https://www.npmjs.com/package/@duffel/api",
+    "https://www.postman.com/",
+    "https://www.speakeasy.com/docs/mcp/secure/adding-oauth-servers",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
+  ]
+}

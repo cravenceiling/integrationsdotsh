@@ -1,0 +1,474 @@
+{
+  "result": {
+    "version": 3,
+    "domain": "customer.io",
+    "detect": {
+      "domain": "customer.io",
+      "found": [
+        "api-catalog",
+        "agent-skills",
+        "llms.txt"
+      ],
+      "apiCatalog": {
+        "rest": [
+          "https://docs.customer.io/integrations/api/customerio-apis",
+          "https://docs.customer.io/ai/mcp/"
+        ],
+        "openapi": [],
+        "docs": [
+          "https://docs.customer.io/integrations/api/customerio-apis",
+          "https://docs.customer.io/ai/mcp/"
+        ],
+        "status": [],
+        "mcp": []
+      },
+      "mcp": [],
+      "agentSkills": {
+        "count": 1,
+        "names": [
+          "using-customer-io"
+        ]
+      },
+      "llmsTxt": true,
+      "errors": []
+    },
+    "usedLlm": true,
+    "discoveredAt": "2026-07-02T12:00:30.924Z",
+    "summary": "Customer.io exposes three public integration surfaces: HTTP APIs (Customer.io APIs, Track API, App API, Pipelines API), an MCP server, and a CLI; auth is via API key for HTTP APIs and service account token for MCP/CLI.",
+    "credentials": {
+      "cio_api_key": {
+        "type": "api_key",
+        "label": "Customer.io API key",
+        "generateUrl": "https://docs.customer.io/accounts/settings/managing-credentials/",
+        "setup": "Go to [Account Settings > API Credentials](https://docs.customer.io/accounts/settings/managing-credentials/) in Customer.io, then create or copy an API key for the workspace you want to integrate with. Use this key for API requests that require the `api_key` credential.",
+        "acquisition": "manual"
+      },
+      "cio_service_account_token": {
+        "type": "bearer",
+        "label": "Customer.io service account token",
+        "generateUrl": "https://docs.customer.io/ai/cli/get-started/",
+        "setup": "Go to [Account Settings > API Credentials](https://docs.customer.io/accounts/settings/managing-credentials/) and open the **Service Accounts** tab. Create a service account and copy the token it mints; the CLI uses this token for authenticated operations.",
+        "acquisition": "manual"
+      },
+      "cio_workspace_site_id": {
+        "type": "api_key",
+        "label": "Customer.io workspace site ID",
+        "generateUrl": "https://docs.customer.io/integrations/sdk/ios/getting-started/auth/",
+        "setup": "Find the site ID in [Workspace Settings > API and Webhook Credentials](https://docs.customer.io/integrations/sdk/ios/getting-started/auth/). This is typically used alongside a workspace API key for client-side SDK-style integrations.",
+        "acquisition": "manual"
+      }
+    },
+    "surfaces": [
+      {
+        "slug": "customer-io-apis",
+        "name": "Customer.io APIs",
+        "type": "http",
+        "docs": "https://docs.customer.io/integrations/api/customerio-apis/",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.customer.io/integrations/api/customerio-apis/"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "cio_api_key",
+                  "mechanics": {
+                    "source": "spec",
+                    "scheme": "api_key"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.customer.io/integrations/api/customerio-apis/"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "customer-io-track-api",
+        "name": "Customer.io Track API",
+        "type": "http",
+        "docs": "https://docs.customer.io/integrations/api/track/",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.customer.io/integrations/api/track/"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "cio_api_key",
+                  "mechanics": {
+                    "source": "unknown"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.customer.io/integrations/api/track/"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "customer-io-app-api",
+        "name": "Customer.io App API",
+        "type": "http",
+        "docs": "https://docs.customer.io/integrations/api/app/",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.customer.io/integrations/api/app/"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "cio_api_key",
+                  "mechanics": {
+                    "source": "unknown"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.customer.io/integrations/api/app/"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "customer-io-pipelines-api",
+        "name": "Customer.io Pipelines API",
+        "type": "http",
+        "docs": "https://docs.customer.io/integrations/api/cdp/",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.customer.io/integrations/api/cdp/"
+          ]
+        },
+        "auth": {
+          "status": "unknown"
+        }
+      },
+      {
+        "slug": "customer-io-mcp",
+        "name": "Customer.io MCP",
+        "type": "mcp",
+        "docs": "https://docs.customer.io/ai/mcp/",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.customer.io/ai/mcp/",
+            "https://docs.customer.io/ai/mcp/get-started/"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "cio_service_account_token",
+                  "mechanics": {
+                    "source": "well-known"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.customer.io/ai/mcp/",
+                  "https://docs.customer.io/ai/mcp/get-started/"
+                ]
+              }
+            }
+          ]
+        },
+        "url": "https://docs.customer.io/ai/mcp/",
+        "transports": [
+          "streamable-http"
+        ]
+      },
+      {
+        "slug": "customer-io-cli",
+        "name": "Customer.io CLI",
+        "type": "cli",
+        "docs": "https://docs.customer.io/ai/cli/get-started/",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.customer.io/ai/cli/get-started/"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "cio_service_account_token",
+                  "mechanics": {
+                    "source": "cli",
+                    "command": "customerio login"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.customer.io/ai/cli/get-started/"
+                ]
+              }
+            }
+          ]
+        },
+        "command": "customerio"
+      }
+    ]
+  },
+  "discoveredAt": "2026-07-02T12:00:30.924Z",
+  "model": "loop-gpt-5.4-mini",
+  "usage": {
+    "prompt_tokens": 323524,
+    "completion_tokens": 1434,
+    "total_tokens": 324958
+  },
+  "visited": [
+    "https://buildwithfern.com/post/mcp-vs-cli-api-access",
+    "https://customer.io/learn/product-led-growth/customerio-cli",
+    "https://docs.customer.io/accounts/settings/managing-credentials/",
+    "https://docs.customer.io/ai/cli/get-started/",
+    "https://docs.customer.io/ai/mcp/",
+    "https://docs.customer.io/ai/mcp/get-started/",
+    "https://docs.customer.io/integrations/api/app/",
+    "https://docs.customer.io/integrations/api/cdp/",
+    "https://docs.customer.io/integrations/api/customerio-apis/",
+    "https://docs.customer.io/integrations/api/track/",
+    "https://docs.customer.io/integrations/sdk/expo/getting-started/auth/",
+    "https://docs.customer.io/integrations/sdk/ios/getting-started/auth/",
+    "https://docs.customer.io/journeys/line-get-started/",
+    "https://docs.customer.io/journeys/people/find/filter-search/",
+    "https://www.reddit.com/r/mcp/comments/1mb92i9/directly_converting_rest_apis_to_mcp_is/",
+    "https://www.scalekit.com/connectors/customerio"
+  ],
+  "grounding": [
+    "https://buildwithfern.com/post/mcp-vs-cli-api-access",
+    "https://customer.io/",
+    "https://customer.io/customers/",
+    "https://customer.io/demo/",
+    "https://customer.io/features/",
+    "https://customer.io/learn/product-led-growth/customerio-cli",
+    "https://customer.io/legal/cookies/",
+    "https://customer.io/legal/privacy-policy/",
+    "https://customer.io/pricing/",
+    "https://customer.io/signup/",
+    "https://docs.custo",
+    "https://docs.customer.i",
+    "https://docs.customer.io",
+    "https://docs.customer.io/accounts-and-workspaces/account-verification",
+    "https://docs.customer.io/accounts-and-workspaces/billing/",
+    "https://docs.customer.io/accounts-and-workspaces/privacy-and-security",
+    "https://docs.customer.io/accounts-and-workspaces/workspaces",
+    "https://docs.customer.io/accounts-and-workspaces/your-account",
+    "https://docs.customer.io/accounts/account-verification",
+    "https://docs.customer.io/accounts/audit-logs",
+    "https://docs.customer.io/accounts/billing/",
+    "https://docs.customer.io/accounts/security/",
+    "https://docs.customer.io/accounts/settings/",
+    "https://docs.customer.io/accounts/settings/managing-credentials/",
+    "https://docs.customer.io/accounts/troubleshooting/",
+    "https://docs.customer.io/accounts/workspaces/",
+    "https://docs.customer.io/ai/",
+    "https://docs.customer.io/ai/agent/",
+    "https://docs.customer.io/ai/cio-with-llms/",
+    "https://docs.customer.io/ai/cli/",
+    "https://docs.customer.io/ai/cli/get-started/",
+    "https://docs.customer.io/ai/content-analysis/",
+    "https://docs.customer.io/ai/in-app-suggestions/",
+    "https://docs.customer.io/ai/in-app-survey-analysis/",
+    "https://docs.customer.io/ai/mcp/",
+    "https://docs.customer.io/ai/mcp/get-started/",
+    "https://docs.customer.io/ai/use-docs-with-ai/",
+    "https://docs.customer.io/get-started",
+    "https://docs.customer.io/get-started/",
+    "https://docs.customer.io/get-started/add-people",
+    "https://docs.customer.io/get-started/add-people/",
+    "https://docs.customer.io/get-started/create-workspace",
+    "https://docs.customer.io/get-started/create-workspace/",
+    "https://docs.customer.io/get-started/get-started-academy/",
+    "https://docs.customer.io/get-started/integrate",
+    "https://docs.customer.io/get-started/integrate/",
+    "https://docs.customer.io/get-started/quick-start-guide",
+    "https://docs.customer.io/get-started/quick-start-guide/",
+    "https://docs.customer.io/get-started/segments-and-people-data",
+    "https://docs.customer.io/get-started/segments-and-people-data/",
+    "https://docs.customer.io/get-started/send-messages",
+    "https://docs.customer.io/get-started/send-messages/",
+    "https://docs.customer.io/get-started/set-up-messages",
+    "https://docs.customer.io/get-started/set-up-messages/",
+    "https://docs.customer.io/get-started/welcome",
+    "https://docs.customer.io/get-started/welcome/",
+    "https://docs.customer.io/integrations/api/",
+    "https://docs.customer.io/integrations/api/app/",
+    "https://docs.customer.io/integrations/api/cdp/",
+    "https://docs.customer.io/integrations/api/customerio-apis/",
+    "https://docs.customer.io/integrations/api/track-vs-cdp-api/",
+    "https://docs.customer.io/integrations/api/track/",
+    "https://docs.customer.io/integrations/api/webhooks/",
+    "https://docs.customer.io/integrations/data-in/",
+    "https://docs.customer.io/integrations/data-out/",
+    "https://docs.customer.io/integrations/directory/",
+    "https://docs.customer.io/integrations/getting-started/",
+    "https://docs.customer.io/integrations/sdk/",
+    "https://docs.customer.io/integrations/sdk/android/quick-start-guide/",
+    "https://docs.customer.io/integrations/sdk/expo/getting-started/auth/",
+    "https://docs.customer.io/integrations/sdk/expo/quick-start-guide/",
+    "https://docs.customer.io/integrations/sdk/flutter/quick-start-guide/",
+    "https://docs.customer.io/integrations/sdk/ios/getting-started/auth/",
+    "https://docs.customer.io/integrations/sdk/ios/quick-start-guide/",
+    "https://docs.customer.io/integrations/sdk/react-native/quick-start-guide/",
+    "https://docs.customer.io/javascript:void(0",
+    "https://docs.customer.io/journeys/campaigns-and-workflows",
+    "https://docs.customer.io/journeys/channels/",
+    "https://docs.customer.io/journeys/design-studio/",
+    "https://docs.customer.io/journeys/design-studio/coll",
+    "https://docs.customer.io/journeys/design-studio/collaboration/collaborate/",
+    "https://docs.customer.io/journeys/design-studio/emails/code-editor/developer-tools/",
+    "https://docs.customer.io/journeys/design-studio/emails/code-editor/emmet/",
+    "https://docs.customer.io/journeys/design-studio/emails/code-editor/mso/",
+    "https://docs.customer.io/journeys/design-studio/emails/code-editor/overview/",
+    "https://docs.customer.io/journeys/design-studio/emails/code-editor/transformers/accessibility-fixes/",
+    "https://docs.customer.io/journeys/design-studio/emails/code-editor/transformers/css-cleanup/",
+    "https://docs.customer.io/journeys/design-studio/emails/code-editor/transformers/css-inlining/",
+    "https://docs.customer.io/journeys/design-studio/emails/code-editor/transformers/css-variables/",
+    "https://docs.customer.io/journeys/design-studio/emails/code-editor/transformers/formatting/",
+    "https://docs.customer.io/journeys/design-studio/emails/code-editor/transformers/mjml/",
+    "https://docs.customer.io/journeys/design-studio/emails/code-editor/transformers/url-parameters/",
+    "https://docs.customer.io/journeys/design-studio/emails/connected/add-email-to-automation/",
+    "https://docs.customer.io/journeys/design-studio/emails/connected/disconnect-from-automation/",
+    "https://docs.customer.io/journeys/design-studio/emails/connected/publish-changes/",
+    "https://docs.customer.io/journeys/design-studio/emails/keyboard-shortcuts/",
+    "https://docs.customer.io/journeys/design-studio/emails/preview-email-in-design-studio/",
+    "https://docs.customer.io/journeys/design-studio/emails/styles/assign-styles/",
+    "https://docs.customer.io/journeys/design-studio/emails/styles/dark-mode/",
+    "https://docs.customer.io/journeys/design-studio/emails/styles/responsive-styles/",
+    "https://docs.customer.io/journeys/design-studio/emails/styles/set-styles/",
+    "https://docs.customer.io/journeys/design-studio/emails/visual-editor/ds-conditional-display/",
+    "https://docs.customer.io/journeys/design-studio/emails/visual-editor/liquid-visual-editor/",
+    "https://docs.customer.io/journeys/design-studio/emails/visual-editor/overview/",
+    "https://docs.customer.io/journeys/design-studio/emails/visual-editor/properties-menu/",
+    "https://docs.customer.io/journeys/design-studio/file-manager/",
+    "https://docs.customer.io/journeys/design-studio/migrate-dnd-to-ds/",
+    "https://docs.customer.io/journeys/design-studio/overview/",
+    "https://docs.customer.io/journeys/design-studio/reusable/components-overview/",
+    "https://docs.customer.io/journeys/design-studio/reusable/components/code-custom-component/",
+    "https://docs.customer.io/journeys/design-studio/reusable/components/create-custom-component/",
+    "https://docs.customer.io/journeys/design-studio/reusable/components/delete-component/",
+    "https://docs.customer.io/journeys/design-studio/reusable/components/migrate-comp-from-parcel/",
+    "https://docs.customer.io/journeys/design-studio/reusable/components/properties/",
+    "https://docs.customer.io/journeys/design-studio/reusable/components/slots/",
+    "https://docs.customer.io/journeys/design-studio/reusable/components/syntax/custom-comp-syntax/",
+    "https://docs.customer.io/journeys/design-studio/reusable/components/syntax/directives/",
+    "https://docs.customer.io/journeys/design-studio/reusable/components/syntax/loops/",
+    "https://docs.customer.io/journeys/design-studio/reusable/components/syntax/styling/",
+    "https://docs.customer.io/journeys/design-studio/reusable/insert-components/",
+    "https://docs.customer.io/journeys/design-studio/reusable/standard-components/",
+    "https://docs.customer.io/journeys/getting-started",
+    "https://docs.customer.io/journeys/getting-started-objects-collections",
+    "https://docs.customer.io/journeys/journeys-overview",
+    "https://docs.customer.io/journeys/journeys-overview/",
+    "https://docs.customer.io/journeys/line-get-started/",
+    "https://docs.customer.io/journeys/liquid",
+    "https://docs.customer.io/journeys/liquid/",
+    "https://docs.customer.io/journeys/messages-and-webhooks/",
+    "https://docs.customer.io/journeys/metrics",
+    "https://docs.customer.io/journeys/metrics/",
+    "https://docs.customer.io/journeys/objects-data/",
+    "https://docs.customer.io/journeys/objects-data/collections/",
+    "https://docs.customer.io/journeys/objects-data/getting-started-objects-collections/",
+    "https://docs.customer.io/journeys/objects-data/objects/create/",
+    "https://docs.customer.io/journeys/objects-data/objects/export-many/",
+    "https://docs.customer.io/journeys/objects-data/objects/import-objects/",
+    "https://docs.customer.io/journeys/objects-data/objects/in-liquid/",
+    "https://docs.customer.io/journeys/objects-data/objects/relationships-in-campaigns/",
+    "https://docs.customer.io/journeys/objects-data/objects/relationships/",
+    "https://docs.customer.io/journeys/objects-data/objects/start/",
+    "https://docs.customer.io/journeys/objects-data/objects/types/",
+    "https://docs.customer.io/journeys/objects-data/objects/video-tutorials/",
+    "https://docs.customer.io/journeys/objects-data/use-cases/awareness-announce-events/",
+    "https://docs.customer.io/journeys/objects-data/use-cases/conversion-activate-waitlist/",
+    "https://docs.customer.io/journeys/objects-data/use-cases/feature-adoption/",
+    "https://docs.customer.io/journeys/objects-data/use-cases/upsell-users/",
+    "https://docs.customer.io/journeys/people",
+    "https://docs.customer.io/journeys/people/",
+    "https://docs.customer.io/journeys/people/anonymous/about-anonymous/",
+    "https://docs.customer.io/journeys/people/anonymous/activity/",
+    "https://docs.customer.io/journeys/people/anonymous/events/",
+    "https://docs.customer.io/journeys/people/anonymous/merge-anonymous/",
+    "https://docs.customer.io/journeys/people/events/",
+    "https://docs.customer.io/journeys/people/find/data-availability/",
+    "https://docs.customer.io/journeys/people/find/filter-search/",
+    "https://docs.customer.io/journeys/people/find/filtering-logs/",
+    "https://docs.customer.io/journeys/people/find/using-data-index/",
+    "https://docs.customer.io/journeys/people/getting-started-with-json/",
+    "https://docs.customer.io/journeys/people/manage/attributes/",
+    "https://docs.customer.io/journeys/people/manage/deleting-users/",
+    "https://docs.customer.io/journeys/people/manage/exporting-users/",
+    "https://docs.customer.io/journeys/people/manage/identifying-people/",
+    "https://docs.customer.io/journeys/people/manage/last-visited/",
+    "https://docs.customer.io/journeys/people/manage/managing-customer-mobile-devices/",
+    "https://docs.customer.io/journeys/people/manage/manually-adding-or-updating-people/",
+    "https://docs.customer.io/journeys/people/manage/merge-people/",
+    "https://docs.customer.io/journeys/people/manage/overview/",
+    "https://docs.customer.io/journeys/people/manage/single-user-export/",
+    "https://docs.customer.io/journeys/people/multiple-subscription-types/",
+    "https://docs.customer.io/journeys/people/shortcuts/",
+    "https://docs.customer.io/journeys/people/uploading-people/",
+    "https://docs.customer.io/journeys/segmentation",
+    "https://docs.customer.io/journeys/segmentation/",
+    "https://docs.customer.io/journeys/segmentation/ad-audiences-sync/",
+    "https://docs.customer.io/journeys/segmentation/creating-segments/",
+    "https://docs.customer.io/journeys/segmentation/data-driven-segments/",
+    "https://docs.customer.io/journeys/segmentation/device-segments/",
+    "https://docs.customer.io/journeys/segmentation/faq-timestamps/",
+    "https://docs.customer.io/journeys/segmentation/json-in-segments/",
+    "https://docs.customer.io/journeys/segmentation/manual-segments/",
+    "https://docs.customer.io/journeys/segmentation/past-x-days-help/",
+    "https://docs.customer.io/journeys/segmentation/segment-builder/",
+    "https://docs.customer.io/journeys/segmentation/segments/",
+    "https://docs.customer.io/journeys/segmentation/timestamp-conditions/",
+    "https://docs.customer.io/journeys/segmentation/timestamp-rules/",
+    "https://docs.customer.io/journeys/send/",
+    "https://docs.customer.io/release-notes",
+    "https://docs.customer.io/release-notes/#2026-06-23-notification-inbox-design-studio",
+    "https://docs.customer.io/release-notes/#2026-06-29-migrate-to-ds",
+    "https://docs.customer.io/release-notes/#2026-06-30-auto-archive-segments",
+    "https://fly.customer.io/login",
+    "https://www.reddit.com/r/mcp/comments/1mb92i9/directly_converting_rest_apis_to_mcp_is/",
+    "https://www.scalekit.com/connectors/customerio"
+  ]
+}

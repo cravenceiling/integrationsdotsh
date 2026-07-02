@@ -1,0 +1,411 @@
+{
+  "result": {
+    "version": 3,
+    "domain": "devzero.io",
+    "detect": {
+      "domain": "devzero.io",
+      "found": [
+        "llms.txt"
+      ],
+      "mcp": [],
+      "llmsTxt": true,
+      "errors": []
+    },
+    "usedLlm": true,
+    "discoveredAt": "2026-07-02T12:14:36.981Z",
+    "summary": "DevZero exposes a token+team-id authenticated platform API plus Terraform and Pulumi provider integrations; no GraphQL, MCP, or standalone CLI surface was confirmed.",
+    "credentials": {
+      "devzero_pat": {
+        "type": "bearer",
+        "label": "DevZero personal access token",
+        "generateUrl": "https://www.devzero.io/settings/user-settings/general",
+        "setup": "Go to [User Settings](https://www.devzero.io/settings/user-settings/general) and create or copy your personal access token. The docs for the Terraform and Pulumi providers both call for a `token`, and the provider docs note it is sensitive. Save it as `DEVZERO_TOKEN` or the equivalent Pulumi secret config value.",
+        "acquisition": "manual"
+      },
+      "devzero_team_id": {
+        "type": "basic",
+        "label": "DevZero team/organization ID",
+        "generateUrl": "https://www.devzero.io/settings/organization-settings/account",
+        "setup": "Open [Organization Settings](https://www.devzero.io/settings/organization-settings/account) and copy your team/organization ID. The Terraform and Pulumi provider docs both require `team_id` / `teamId`; set it as `DEVZERO_TEAM_ID` or the matching Pulumi config key.",
+        "acquisition": "manual"
+      }
+    },
+    "surfaces": [
+      {
+        "slug": "devzero-platform-api",
+        "name": "DevZero platform API",
+        "type": "http",
+        "docs": "https://www.devzero.io/docs/providers/terraform/overview",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://www.devzero.io/docs/providers/terraform/overview",
+            "https://www.devzero.io/docs/providers/pulumi/overview",
+            "https://registry.terraform.io/providers/devzero-inc/devzero/latest/docs",
+            "https://www.devzero.io/docs/reference/architecture"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "devzero_team_id",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "team_id"
+                  }
+                },
+                {
+                  "id": "devzero_pat",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "token",
+                    "scheme": "Bearer"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://www.devzero.io/docs/providers/terraform/overview",
+                  "https://www.devzero.io/docs/providers/pulumi/overview",
+                  "https://registry.terraform.io/providers/devzero-inc/devzero/latest/docs"
+                ]
+              }
+            }
+          ]
+        },
+        "url": "https://dakr.devzero.io"
+      },
+      {
+        "slug": "devzero-pulumi-provider",
+        "name": "DevZero Pulumi provider",
+        "type": "cli",
+        "docs": "https://www.devzero.io/docs/providers/pulumi/overview",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://www.devzero.io/docs/providers/pulumi/overview"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "devzero_team_id",
+                  "mechanics": {
+                    "source": "cli",
+                    "env": [
+                      "PULUMI_CONFIG_PASSPHRASE"
+                    ]
+                  }
+                },
+                {
+                  "id": "devzero_pat",
+                  "mechanics": {
+                    "source": "cli",
+                    "env": [
+                      "PULUMI_CONFIG_PASSPHRASE"
+                    ]
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://www.devzero.io/docs/providers/pulumi/overview"
+                ]
+              }
+            }
+          ]
+        },
+        "packages": [
+          {
+            "registryType": "npm",
+            "identifier": "@devzero/pulumi-devzero",
+            "runtimeHint": "typescript"
+          },
+          {
+            "registryType": "pypi",
+            "identifier": "pulumi-devzero",
+            "runtimeHint": "python"
+          },
+          {
+            "registryType": "go",
+            "identifier": "github.com/devzero-inc/pulumi-provider-devzero/sdk/go/devzero",
+            "runtimeHint": "go"
+          }
+        ],
+        "command": "pulumi"
+      },
+      {
+        "slug": "devzero-terraform-provider",
+        "name": "DevZero Terraform provider",
+        "type": "cli",
+        "docs": "https://www.devzero.io/docs/providers/terraform/overview",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://www.devzero.io/docs/providers/terraform/overview",
+            "https://registry.terraform.io/providers/devzero-inc/devzero/latest/docs"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "devzero_team_id",
+                  "mechanics": {
+                    "source": "cli",
+                    "env": [
+                      "DEVZERO_TEAM_ID"
+                    ]
+                  }
+                },
+                {
+                  "id": "devzero_pat",
+                  "mechanics": {
+                    "source": "cli",
+                    "env": [
+                      "DEVZERO_TOKEN"
+                    ]
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://www.devzero.io/docs/providers/terraform/overview",
+                  "https://registry.terraform.io/providers/devzero-inc/devzero/latest/docs"
+                ]
+              }
+            }
+          ]
+        },
+        "packages": [
+          {
+            "registryType": "terraform",
+            "identifier": "devzero-inc/devzero",
+            "runtimeHint": "hcl"
+          }
+        ],
+        "command": "terraform"
+      }
+    ]
+  },
+  "discoveredAt": "2026-07-02T12:14:36.982Z",
+  "model": "loop-gpt-5.4-mini",
+  "usage": {
+    "prompt_tokens": 132666,
+    "completion_tokens": 1313,
+    "total_tokens": 133979
+  },
+  "visited": [
+    "https://auth0.com/blog/secure-and-deploy-remote-mcp-servers-with-auth0-and-cloudflare/",
+    "https://devzero.io/llms.txt",
+    "https://docs.cloudzero.com/docs/ai-mcp-api-key-auth",
+    "https://github.com/knowsuchagency/mcp2cli",
+    "https://mcpservers.org/servers/ctkadvisors/graphql-mcp",
+    "https://registry.terraform.io/providers/devzero-inc/devzero/latest/docs",
+    "https://www.apollographql.com/docs/apollo-mcp-server/guides/auth-auth0",
+    "https://www.devzero.io/docs",
+    "https://www.devzero.io/docs/getting-started/quickstart",
+    "https://www.devzero.io/docs/guides/alerts-and-notifications",
+    "https://www.devzero.io/docs/guides/policies-and-rules",
+    "https://www.devzero.io/docs/introduction/how-it-works",
+    "https://www.devzero.io/docs/introduction/key-concepts",
+    "https://www.devzero.io/docs/introduction/what-is-devzero",
+    "https://www.devzero.io/docs/operators/network-operator/configuration",
+    "https://www.devzero.io/docs/operators/network-operator/cost-model",
+    "https://www.devzero.io/docs/operators/network-operator/overview",
+    "https://www.devzero.io/docs/operators/node-operator/aws/setup",
+    "https://www.devzero.io/docs/operators/node-operator/azure/setup",
+    "https://www.devzero.io/docs/operators/node-operator/gcp/setup",
+    "https://www.devzero.io/docs/operators/node-operator/migration",
+    "https://www.devzero.io/docs/operators/node-operator/oci/setup",
+    "https://www.devzero.io/docs/operators/node-operator/overview",
+    "https://www.devzero.io/docs/operators/read-operator/configuration",
+    "https://www.devzero.io/docs/operators/read-operator/migration",
+    "https://www.devzero.io/docs/operators/read-operator/overview",
+    "https://www.devzero.io/docs/operators/read-operator/troubleshooting",
+    "https://www.devzero.io/docs/operators/scheduler/configuration",
+    "https://www.devzero.io/docs/operators/scheduler/overview",
+    "https://www.devzero.io/docs/operators/security-operator/compliance-reporting",
+    "https://www.devzero.io/docs/operators/security-operator/configuration",
+    "https://www.devzero.io/docs/operators/security-operator/overview",
+    "https://www.devzero.io/docs/operators/security-operator/vulnerability-scanning",
+    "https://www.devzero.io/docs/operators/write-operator/configuration",
+    "https://www.devzero.io/docs/operators/write-operator/overview",
+    "https://www.devzero.io/docs/operators/write-operator/troubleshooting",
+    "https://www.devzero.io/docs/operators/write-operator/workload-optimization",
+    "https://www.devzero.io/docs/operators/write-operator/workload-optimization/in-place-vertical-scaling",
+    "https://www.devzero.io/docs/operators/write-operator/workload-optimization/live-migration",
+    "https://www.devzero.io/docs/providers/pulumi/clusters",
+    "https://www.devzero.io/docs/providers/pulumi/data-sources",
+    "https://www.devzero.io/docs/providers/pulumi/node-policies",
+    "https://www.devzero.io/docs/providers/pulumi/overview",
+    "https://www.devzero.io/docs/providers/pulumi/terraform-bridge",
+    "https://www.devzero.io/docs/providers/pulumi/workload-policies",
+    "https://www.devzero.io/docs/providers/pulumi/workload-rules",
+    "https://www.devzero.io/docs/providers/terraform/clusters",
+    "https://www.devzero.io/docs/providers/terraform/data-sources",
+    "https://www.devzero.io/docs/providers/terraform/node-policies",
+    "https://www.devzero.io/docs/providers/terraform/overview",
+    "https://www.devzero.io/docs/providers/terraform/workload-policies",
+    "https://www.devzero.io/docs/providers/terraform/workload-rule",
+    "https://www.devzero.io/docs/reference/architecture",
+    "https://www.devzero.io/docs/security/data-and-privacy",
+    "https://www.devzero.io/docs/security/rbac-and-permissions",
+    "https://www.devzero.io/settings/organization-settings/account",
+    "https://www.devzero.io/settings/user-settings/general",
+    "https://www.devzero.io/videos/cut-developer-onboarding-cdes",
+    "https://www.devzero.io/videos/developer-marketplace-model-at-thoughtful-ai",
+    "https://www.devzero.io/videos/how-uber-increased-developer-productivity",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
+  ],
+  "grounding": [
+    "http://$NODEMON_IP:6061/gpu/metrics",
+    "https://auth0.com/blog/secure-and-deploy-remote-mcp-servers-with-auth0-and-cloudflare/",
+    "https://dakr.devzero.io",
+    "https://devzero.io/llms.txt",
+    "https://docs.cloudzero.com/docs/ai-mcp-api-key-auth",
+    "https://github.com/NVIDIA/gpu-operator",
+    "https://github.com/NVIDIA/k8s-device-plugin",
+    "https://github.com/devzero-inc/terraform-provider-devzero",
+    "https://github.com/devzero-inc/terraform-provider-devzero/issues",
+    "https://github.com/knowsuchagency/mcp2cli",
+    "https://learn.hashicorp.com/terraform",
+    "https://mcpservers.org/servers/ctkadvisors/graphql-mcp",
+    "https://pkg.go.dev/github.com/devzero-inc/pulumi-provider-devzero/sdk/go/devzero",
+    "https://pypi.org/project/pulumi-devzero/",
+    "https://registry.terraform.io/",
+    "https://registry.terraform.io/#example-usage",
+    "https://registry.terraform.io/#hds-main",
+    "https://registry.terraform.io/#optional",
+    "https://registry.terraform.io/#schema",
+    "https://registry.terraform.io/#team_id-1",
+    "https://registry.terraform.io/#token-1",
+    "https://registry.terraform.io/#url-1",
+    "https://registry.terraform.io/browse/providers",
+    "https://registry.terraform.io/browse/providers?category=cloud-automation",
+    "https://registry.terraform.io/modules/devzero-inc/cluster/devzero/latest",
+    "https://registry.terraform.io/namespaces/devzero-inc",
+    "https://registry.terraform.io/providers/devzero-inc/devzero",
+    "https://registry.terraform.io/providers/devzero-inc/devzero/latest/docs",
+    "https://registry.terraform.io/sign-in",
+    "https://registry.terraform.io/terms",
+    "https://status.hashicorp.com",
+    "https://www.apollographql.com/docs/apollo-mcp-server/guides/auth-auth0",
+    "https://www.devzero.io/#architecture-deep-dive",
+    "https://www.devzero.io/#auditing-permissions",
+    "https://www.devzero.io/#authentication",
+    "https://www.devzero.io/#check-gpu-nodes-are-visible",
+    "https://www.devzero.io/#check-if-a-dcgm-exporter-already-exists",
+    "https://www.devzero.io/#cluster-module",
+    "https://www.devzero.io/#collect-gpu-metrics",
+    "https://www.devzero.io/#configuration",
+    "https://www.devzero.io/#connect-your-kubernetes-cluster",
+    "https://www.devzero.io/#get-the-helm-command-from-the-dashboard",
+    "https://www.devzero.io/#gpu-metrics-collected",
+    "https://www.devzero.io/#install-the-operator",
+    "https://www.devzero.io/#install-via-helm-recommended",
+    "https://www.devzero.io/#installation",
+    "https://www.devzero.io/#log-into-the-devzero-console",
+    "https://www.devzero.io/#node-operator",
+    "https://www.devzero.io/#provider-configuration",
+    "https://www.devzero.io/#pulumi-provider",
+    "https://www.devzero.io/#quick-example",
+    "https://www.devzero.io/#rbac--permissions",
+    "https://www.devzero.io/#read-operator-zxporter",
+    "https://www.devzero.io/#resources",
+    "https://www.devzero.io/#scheduler-dz-scheduler",
+    "https://www.devzero.io/#security-operator",
+    "https://www.devzero.io/#terraform-provider",
+    "https://www.devzero.io/#validating-the-connection",
+    "https://www.devzero.io/#verify-gpu-metrics-are-flowing",
+    "https://www.devzero.io/#verify-the-installation",
+    "https://www.devzero.io/#view-dashboard",
+    "https://www.devzero.io/#view-gpu-workloads-on-the-dashboard",
+    "https://www.devzero.io/#workflow",
+    "https://www.devzero.io/#write-operator-dakr-op",
+    "https://www.devzero.io/#your-k8s-provider",
+    "https://www.devzero.io/auth/signup",
+    "https://www.devzero.io/book-a-meeting",
+    "https://www.devzero.io/case-studies",
+    "https://www.devzero.io/dashboard",
+    "https://www.devzero.io/docs",
+    "https://www.devzero.io/docs/getting-started/quickstart",
+    "https://www.devzero.io/docs/guides/alerts-and-notifications",
+    "https://www.devzero.io/docs/guides/policies-and-rules",
+    "https://www.devzero.io/docs/introduction/how-it-works",
+    "https://www.devzero.io/docs/introduction/key-concepts",
+    "https://www.devzero.io/docs/introduction/what-is-devzero",
+    "https://www.devzero.io/docs/operators/network-operator/configuration",
+    "https://www.devzero.io/docs/operators/network-operator/cost-model",
+    "https://www.devzero.io/docs/operators/network-operator/overview",
+    "https://www.devzero.io/docs/operators/node-operator/aws/setup",
+    "https://www.devzero.io/docs/operators/node-operator/azure/setup",
+    "https://www.devzero.io/docs/operators/node-operator/gcp/setup",
+    "https://www.devzero.io/docs/operators/node-operator/migration",
+    "https://www.devzero.io/docs/operators/node-operator/oci/setup",
+    "https://www.devzero.io/docs/operators/node-operator/overview",
+    "https://www.devzero.io/docs/operators/read-operator/configuration",
+    "https://www.devzero.io/docs/operators/read-operator/migration",
+    "https://www.devzero.io/docs/operators/read-operator/overview",
+    "https://www.devzero.io/docs/operators/read-operator/troubleshooting",
+    "https://www.devzero.io/docs/operators/scheduler/configuration",
+    "https://www.devzero.io/docs/operators/scheduler/overview",
+    "https://www.devzero.io/docs/operators/security-operator/compliance-reporting",
+    "https://www.devzero.io/docs/operators/security-operator/configuration",
+    "https://www.devzero.io/docs/operators/security-operator/overview",
+    "https://www.devzero.io/docs/operators/security-operator/vulnerability-scanning",
+    "https://www.devzero.io/docs/operators/write-operator/configuration",
+    "https://www.devzero.io/docs/operators/write-operator/overview",
+    "https://www.devzero.io/docs/operators/write-operator/troubleshooting",
+    "https://www.devzero.io/docs/operators/write-operator/workload-optimization",
+    "https://www.devzero.io/docs/operators/write-operator/workload-optimization/in-place-vertical-scaling",
+    "https://www.devzero.io/docs/operators/write-operator/workload-optimization/live-migration",
+    "https://www.devzero.io/docs/platform/admin/personal-access-tokens",
+    "https://www.devzero.io/docs/providers/pulumi/clusters",
+    "https://www.devzero.io/docs/providers/pulumi/data-sources",
+    "https://www.devzero.io/docs/providers/pulumi/node-policies",
+    "https://www.devzero.io/docs/providers/pulumi/overview",
+    "https://www.devzero.io/docs/providers/pulumi/terraform-bridge",
+    "https://www.devzero.io/docs/providers/pulumi/workload-policies",
+    "https://www.devzero.io/docs/providers/pulumi/workload-rules",
+    "https://www.devzero.io/docs/providers/terraform/clusters",
+    "https://www.devzero.io/docs/providers/terraform/data-sources",
+    "https://www.devzero.io/docs/providers/terraform/node-policies",
+    "https://www.devzero.io/docs/providers/terraform/overview",
+    "https://www.devzero.io/docs/providers/terraform/workload-policies",
+    "https://www.devzero.io/docs/providers/terraform/workload-rule",
+    "https://www.devzero.io/docs/reference/architecture",
+    "https://www.devzero.io/docs/security/data-and-privacy",
+    "https://www.devzero.io/docs/security/rbac-and-permissions",
+    "https://www.devzero.io/instances",
+    "https://www.devzero.io/organization-settings/account",
+    "https://www.devzero.io/pricing",
+    "https://www.devzero.io/settings/organization-settings/account",
+    "https://www.devzero.io/settings/user-settings/general",
+    "https://www.devzero.io/videos/cut-developer-onboarding-cdes",
+    "https://www.devzero.io/videos/developer-marketplace-model-at-thoughtful-ai",
+    "https://www.devzero.io/videos/how-uber-increased-developer-productivity",
+    "https://www.hashicorp.com/privacy",
+    "https://www.npmjs.com/package/@devzero/pulumi-devzero",
+    "https://www.terraform.io/assets/files/press-kit.zip",
+    "https://www.terraform.io/community.html",
+    "https://www.terraform.io/docs/extend/index.html",
+    "https://www.terraform.io/docs/registry/",
+    "https://www.terraform.io/intro/index.html",
+    "https://www.terraform.io/security.html",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
+  ]
+}

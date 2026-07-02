@@ -1,0 +1,356 @@
+{
+  "result": {
+    "version": 3,
+    "domain": "datadoghq.com",
+    "detect": {
+      "domain": "datadoghq.com",
+      "found": [
+        "llms.txt"
+      ],
+      "mcp": [],
+      "llmsTxt": true,
+      "errors": []
+    },
+    "usedLlm": true,
+    "discoveredAt": "2026-07-02T12:02:38.530Z",
+    "summary": "Datadog exposes a REST HTTP API and a remote MCP server; both require Datadog API key + application key authentication.",
+    "credentials": {
+      "dd_api_key": {
+        "type": "api_key",
+        "label": "Datadog API key",
+        "generateUrl": "https://app.datadoghq.com/organization-settings/api-keys",
+        "setup": "Go to [Organization Settings > API Keys](https://app.datadoghq.com/organization-settings/api-keys) and create a new API key. Copy the key value once; Datadog notes API keys are unique to your organization and are used by the Agent and APIs.",
+        "acquisition": "manual"
+      },
+      "dd_app_key": {
+        "type": "bearer",
+        "label": "Datadog application key",
+        "generateUrl": "https://app.datadoghq.com/organization-settings/application-keys",
+        "setup": "Go to [Organization Settings > Application Keys](https://app.datadoghq.com/organization-settings/application-keys) and create an application key. Datadog says application keys are associated with the user who created them and, by default, inherit that user's permissions. If you need Actions APIs, enable **Actions API access** on the key during or after creation.",
+        "acquisition": "manual"
+      }
+    },
+    "surfaces": [
+      {
+        "slug": "datadog-http-api",
+        "name": "Datadog HTTP API",
+        "type": "http",
+        "docs": "https://docs.datadoghq.com/api/latest/",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.datadoghq.com/api/latest/",
+            "https://docs.datadoghq.com/api/latest/authentication/",
+            "https://docs.datadoghq.com/api/latest/using-the-api/"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "dd_api_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "DD-API-KEY"
+                  }
+                },
+                {
+                  "id": "dd_app_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "DD-APPLICATION-KEY"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.datadoghq.com/api/latest/authentication/",
+                  "https://docs.datadoghq.com/api/latest/using-the-api/"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "datadog-mcp-server",
+        "name": "Datadog MCP Server",
+        "type": "mcp",
+        "docs": "https://docs.datadoghq.com/mcp_server/",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.datadoghq.com/mcp_server/",
+            "https://docs.datadoghq.com/mcp_server/setup.md"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "dd_api_key",
+                  "mechanics": {
+                    "source": "well-known"
+                  }
+                },
+                {
+                  "id": "dd_app_key",
+                  "mechanics": {
+                    "source": "well-known"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.datadoghq.com/mcp_server/",
+                  "https://docs.datadoghq.com/mcp_server/setup.md"
+                ]
+              }
+            }
+          ]
+        },
+        "url": "https://docs.datadoghq.com/mcp_server/",
+        "transports": [
+          "streamable-http"
+        ]
+      }
+    ]
+  },
+  "discoveredAt": "2026-07-02T12:02:38.530Z",
+  "model": "loop-gpt-5.4-mini",
+  "usage": {
+    "prompt_tokens": 165951,
+    "completion_tokens": 1208,
+    "total_tokens": 167159
+  },
+  "visited": [
+    "https://docs.datadoghq.com/account_management/api-app-keys.md",
+    "https://docs.datadoghq.com/account_management/api-app-keys/",
+    "https://docs.datadoghq.com/api/latest/",
+    "https://docs.datadoghq.com/api/latest/authentication/",
+    "https://docs.datadoghq.com/api/latest/using-the-api/",
+    "https://docs.datadoghq.com/mcp_server.md",
+    "https://docs.datadoghq.com/mcp_server/",
+    "https://www.datadoghq.com/blog/datadog-api-authentication/"
+  ],
+  "grounding": [
+    "https://app.datadoghq.com/",
+    "https://app.datadoghq.com/organization-settings/api-keys",
+    "https://app.datadoghq.com/organization-settings/application-keys",
+    "https://app.datadoghq.com/organization-settings/client-tokens",
+    "https://careers.datadoghq.com/",
+    "https://docs.datadoghq.com/",
+    "https://docs.datadoghq.com/#",
+    "https://docs.datadoghq.com/account",
+    "https://docs.datadoghq.com/account_management/api-app-keys.md",
+    "https://docs.datadoghq.com/account_management/api-app-keys/",
+    "https://docs.datadoghq.com/account_management/audit_trail.md",
+    "https://docs.datadoghq.com/account_management/audit_trail.md#setup",
+    "https://docs.datadoghq.com/account_management/org_settings/service_accounts.md",
+    "https://docs.datadoghq.com/account_management/rbac/?tab=datadogapplication",
+    "https://docs.datadoghq.com/account_management/rbac/permissions.md",
+    "https://docs.datadoghq.com/account_management/rbac/permissions.md#compliance",
+    "https://docs.datadoghq.com/account_management/teams/",
+    "https://docs.datadoghq.com/api/",
+    "https://docs.datadoghq.com/api/latest/",
+    "https://docs.datadoghq.com/api/latest/action-connection.md",
+    "https://docs.datadoghq.com/api/latest/action-connection.md#register-a-new-app-key",
+    "https://docs.datadoghq.com/api/latest/app-builder.md",
+    "https://docs.datadoghq.com/api/latest/authentication.md#validate-api-key",
+    "https://docs.datadoghq.com/api/latest/authentication/",
+    "https://docs.datadoghq.com/api/latest/key-management.md",
+    "https://docs.datadoghq.com/api/latest/key-management.md#create-an-application-key-for-current-user",
+    "https://docs.datadoghq.com/api/latest/service-accounts.md",
+    "https://docs.datadoghq.com/api/latest/using-the-api/",
+    "https://docs.datadoghq.com/api/latest/workflow-automation.md",
+    "https://docs.datadoghq.com/bits_ai.md",
+    "https://docs.datadoghq.com/getting_started/",
+    "https://docs.datadoghq.com/getting_started/agent/",
+    "https://docs.datadoghq.com/getting_started/api/",
+    "https://docs.datadoghq.com/getting_started/containers/",
+    "https://docs.datadoghq.com/getting_started/containers/autodiscovery",
+    "https://docs.datadoghq.com/getting_started/containers/dat",
+    "https://docs.datadoghq.com/getting_started/containers/datadog_operator",
+    "https://docs.datadoghq.com/getting_started/dashboards/",
+    "https://docs.datadoghq.com/getting_started/database_monitoring/",
+    "https://docs.datadoghq.com/getting_started/site.md",
+    "https://docs.datadoghq.com/getting_started/tracing/",
+    "https://docs.datadoghq.com/help/",
+    "https://docs.datadoghq.com/ide_plugins/vscode.md?tab=cursor",
+    "https://docs.datadoghq.com/logs/log_collection/android.md",
+    "https://docs.datadoghq.com/logs/log_collection/flutter.md",
+    "https://docs.datadoghq.com/logs/log_collection/ios.md",
+    "https://docs.datadoghq.com/logs/log_collection/javascript.md",
+    "https://docs.datadoghq.com/logs/log_collection/reactnative.md",
+    "https://docs.datadoghq.com/logs/log_collection/roku.md",
+    "https://docs.datadoghq.com/mcp",
+    "https://docs.datadoghq.com/mcp_server.md",
+    "https://docs.datadoghq.com/mcp_server/",
+    "https://docs.datadoghq.com/mcp_server/setup.md",
+    "https://docs.datadoghq.com/mcp_server/setup.md#toolsets",
+    "https://docs.datadoghq.com/mcp_server/tools.md",
+    "https://docs.datadoghq.com/notebooks/",
+    "https://docs.datadoghq.com/real_user_monitoring.md",
+    "https://docs.datadoghq.com/security/code_security/dev_tool_int/mcp_server.md",
+    "https://docs.datadoghq.com/service_management/mobile/?tab=ios",
+    "https://docs.dd-static.net/images/account_management/api-key.60abd3d42408607da509794034239f28.png?auto=format&fit=max&w=850",
+    "https://docs.dd-static.net/images/account_management/api-key.60abd3d42408607da509794034239f28.png?auto=format&fit=max&w=850&dpr=2",
+    "https://docs.dd-static.net/images/account_management/app-key.539846c4c574bf013a47dc86ccfc0f52.png?auto=format&fit=max&w=850",
+    "https://docs.dd-static.net/images/account_management/app-key.539846c4c574bf013a47dc86ccfc0f52.png?auto=format&fit=max&w=850&dpr=2",
+    "https://docs.dd-static.net/images/account_management/click-enable-actions-api-access.ce8aca33ad7331b7e5af3cf0517b0957.png?auto=format&fit=max&w=850",
+    "https://docs.dd-static.net/images/account_management/click-enable-actions-api-access.ce8aca33ad7331b7e5af3cf0517b0957.png?auto=format&fit=max&w=850&dpr=2",
+    "https://docs.dd-static.net/images/mcp_server/mcp_cursor_demo_3.mp4",
+    "https://docs.google.com/forms/d/e/1FAIpQLSeorvIrML3F4v74Zm5IIaQ_DyCMGqquIp7hXcycnCafx4htcg/viewform",
+    "https://help.datadoghq.com/hc/en-us/requests/new",
+    "https://investors.datadoghq.com/",
+    "https://modelcontextprotocol.io/",
+    "https://opensource.datadoghq.com/",
+    "https://securitylabs.datadoghq.com/",
+    "https://www.datadoghq.com",
+    "https://www.datadoghq.com/",
+    "https://www.datadoghq.com/#",
+    "https://www.datadoghq.com/about/analyst/",
+    "https://www.datadoghq.com/about/contact/",
+    "https://www.datadoghq.com/about/latest-news/press-releases/",
+    "https://www.datadoghq.com/about/leadership/",
+    "https://www.datadoghq.com/blog/",
+    "https://www.datadoghq.com/blog/ai/",
+    "https://www.datadoghq.com/blog/datadog-api-authentication/",
+    "https://www.datadoghq.com/blog/datadog-cursor-extension/",
+    "https://www.datadoghq.com/blog/datadog-mcp-server-use-cases",
+    "https://www.datadoghq.com/blog/datadog-remote-mcp-server/",
+    "https://www.datadoghq.com/blog/engineering/",
+    "https://www.datadoghq.com/blog/openai-datadog-ai-devops-agent/",
+    "https://www.datadoghq.com/customers/",
+    "https://www.datadoghq.com/esg-report/",
+    "https://www.datadoghq.com/events-webinars/",
+    "https://www.datadoghq.com/marketplacepartners/",
+    "https://www.datadoghq.com/partner/network/",
+    "https://www.datadoghq.com/pricing/",
+    "https://www.datadoghq.com/product/",
+    "https://www.datadoghq.com/product/ai/agent-directory/",
+    "https://www.datadoghq.com/product/ai/bits-agent-builder/",
+    "https://www.datadoghq.com/product/ai/bits-ai-agents/",
+    "https://www.datadoghq.com/product/ai/bits-chat/",
+    "https://www.datadoghq.com/product/ai/bits-code/",
+    "https://www.datadoghq.com/product/ai/bits-investigation/",
+    "https://www.datadoghq.com/product/ai/bits-security-analyst/",
+    "https://www.datadoghq.com/product/ai/mcp-server/",
+    "https://www.datadoghq.com/product/apm/",
+    "https://www.datadoghq.com/product/app-and-api-protection/",
+    "https://www.datadoghq.com/product/app-builder/",
+    "https://www.datadoghq.com/product/audit-trail/",
+    "https://www.datadoghq.com/product/byoc-logs/",
+    "https://www.datadoghq.com/product/case-management/",
+    "https://www.datadoghq.com/product/ci-cd-monitoring/",
+    "https://www.datadoghq.com/product/cloud-cost-management/",
+    "https://www.datadoghq.com/product/cloud-security/",
+    "https://www.datadoghq.com/product/cloud-security/#compliance",
+    "https://www.datadoghq.com/product/cloud-security/#entitlement-management",
+    "https://www.datadoghq.com/product/cloud-security/#posture-management",
+    "https://www.datadoghq.com/product/cloud-security/#vulnerability-management",
+    "https://www.datadoghq.com/product/cloud-siem/",
+    "https://www.datadoghq.com/product/cloudcraft/",
+    "https://www.datadoghq.com/product/code-coverage/",
+    "https://www.datadoghq.com/product/code-profiling/",
+    "https://www.datadoghq.com/product/code-security/",
+    "https://www.datadoghq.com/product/container-monitoring/",
+    "https://www.datadoghq.com/product/continuous-testing/",
+    "https://www.datadoghq.com/product/coscreen/",
+    "https://www.datadoghq.com/product/data-observability/jobs-monitoring/",
+    "https://www.datadoghq.com/product/data-observability/quality-monitoring/",
+    "https://www.datadoghq.com/product/data-streams-monitoring/",
+    "https://www.datadoghq.com/product/database-monitoring/",
+    "https://www.datadoghq.com/product/dynamic-instrumentation/",
+    "https://www.datadoghq.com/product/error-tracking/",
+    "https://www.datadoghq.com/product/event-management/",
+    "https://www.datadoghq.com/product/experiments/",
+    "https://www.datadoghq.com/product/feature-flags/",
+    "https://www.datadoghq.com/product/fleet-automation/",
+    "https://www.datadoghq.com/product/governance-console/",
+    "https://www.datadoghq.com/product/gpu-monitoring/",
+    "https://www.datadoghq.com/product/iac-security",
+    "https://www.datadoghq.com/product/iast/",
+    "https://www.datadoghq.com/product/incident-response/",
+    "https://www.datadoghq.com/product/infrastructure-monitoring/",
+    "https://www.datadoghq.com/product/internal-developer-portal/",
+    "https://www.datadoghq.com/product/kubernetes-autoscaling/",
+    "https://www.datadoghq.com/product/log-management/",
+    "https://www.datadoghq.com/product/metrics/",
+    "https://www.datadoghq.com/product/mobile-app-testing/",
+    "https://www.datadoghq.com/product/network-monitoring/",
+    "https://www.datadoghq.com/product/observability-pipelines/",
+    "https://www.datadoghq.com/product/platform/alerts/",
+    "https://www.datadoghq.com/product/platform/dashboards/",
+    "https://www.datadoghq.com/product/platform/dora-metrics/",
+    "https://www.datadoghq.com/product/platform/ides/",
+    "https://www.datadoghq.com/product/platform/integrations/",
+    "https://www.datadoghq.com/product/platform/integrations/#cat-aiml",
+    "https://www.datadoghq.com/product/platform/watchdog/",
+    "https://www.datadoghq.com/product/product-analytics/",
+    "https://www.datadoghq.com/product/real-user-monitoring/",
+    "https://www.datadoghq.com/product/real-user-monitoring/mobile-rum/",
+    "https://www.datadoghq.com/product/real-user-monitoring/session-replay/",
+    "https://www.datadoghq.com/product/sast/",
+    "https://www.datadoghq.com/product/secret-scanning/",
+    "https://www.datadoghq.com/product/sensitive-data-scanner/",
+    "https://www.datadoghq.com/product/serverless-monitoring/",
+    "https://www.datadoghq.com/product/service-level-objectives/",
+    "https://www.datadoghq.com/product/software-catalog/",
+    "https://www.datadoghq.com/product/software-composition-analysis/",
+    "https://www.datadoghq.com/product/software-delivery/ai-impact/",
+    "https://www.datadoghq.com/product/storage-management/",
+    "https://www.datadoghq.com/product/synthetic-monitoring/",
+    "https://www.datadoghq.com/product/test-optimization/",
+    "https://www.datadoghq.com/product/universal-service-monitoring/",
+    "https://www.datadoghq.com/product/workflow-automation/",
+    "https://www.datadoghq.com/product/workload-protection/",
+    "https://www.datadoghq.com/products/ai/agent-observability/",
+    "https://www.datadoghq.com/products/security/",
+    "https://www.datadoghq.com/solutions/application-security/",
+    "https://www.datadoghq.com/solutions/aws/",
+    "https://www.datadoghq.com/solutions/azure/",
+    "https://www.datadoghq.com/solutions/cloud-migration/",
+    "https://www.datadoghq.com/solutions/cnapp/",
+    "https://www.datadoghq.com/solutions/devops/",
+    "https://www.datadoghq.com/solutions/digital-experience-monitoring/",
+    "https://www.datadoghq.com/solutions/education/",
+    "https://www.datadoghq.com/solutions/financial-services/",
+    "https://www.datadoghq.com/solutions/finops/",
+    "https://www.datadoghq.com/solutions/gaming/",
+    "https://www.datadoghq.com/solutions/googlecloud/",
+    "https://www.datadoghq.com/solutions/government/",
+    "https://www.datadoghq.com/solutions/healthcare/",
+    "https://www.datadoghq.com/solutions/hybrid-cloud-monitoring/",
+    "https://www.datadoghq.com/solutions/iot-monitoring/",
+    "https://www.datadoghq.com/solutions/kubernetes/",
+    "https://www.datadoghq.com/solutions/log-analysis-and-correlation/",
+    "https://www.datadoghq.com/solutions/manufacturing-logistics/",
+    "https://www.datadoghq.com/solutions/media-entertainment/",
+    "https://www.datadoghq.com/solutions/monitoring-consolidation/",
+    "https://www.datadoghq.com/solutions/oci-monitoring/",
+    "https://www.datadoghq.com/solutions/on-premises-monitoring/",
+    "https://www.datadoghq.com/solutions/openai/",
+    "https://www.datadoghq.com/solutions/openshift/",
+    "https://www.datadoghq.com/solutions/opentelemetry/",
+    "https://www.datadoghq.com/solutions/pivotal-platform/",
+    "https://www.datadoghq.com/solutions/real-time-business-intelligence/",
+    "https://www.datadoghq.com/solutions/retail-ecommerce/",
+    "https://www.datadoghq.com/solutions/sap-monitoring/",
+    "https://www.datadoghq.com/solutions/security-analytics/",
+    "https://www.datadoghq.com/solutions/security/cis-benchmarks/aws/",
+    "https://www.datadoghq.com/solutions/shift-left-testing/",
+    "https://www.datadoghq.com/solutions/soar/",
+    "https://www.datadoghq.com/solutions/technology/",
+    "https://www.datadoghq.com/solutions/unified-commerce-monitoring/",
+    "https://www.datadoghq.com/trust/"
+  ]
+}

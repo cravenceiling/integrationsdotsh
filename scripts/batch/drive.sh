@@ -47,4 +47,27 @@ for f in $(ls scripts/batch/batches/batch-*.txt | sort); do
     fi
   fi
 done
+
+# Sweep: re-run every domain that exhausted in-loop retries (rate-limit spikes
+# mostly). Result files exist for successes, so --force is NOT passed: only the
+# still-missing domains actually run. Up to 3 sweeps, serial to minimize TPM
+# contention; a domain that fails all sweeps is genuinely broken.
+for sweep in 1 2 3; do
+  [ -s "$OUT/_failures.jsonl" ] || break
+  missing=$(python3 - "$OUT" <<'PY'
+import json, os, sys
+out = sys.argv[1]
+seen = set()
+for line in open(os.path.join(out, "_failures.jsonl")):
+    seen.add(json.loads(line)["domain"])
+missing = [d for d in sorted(seen) if not os.path.exists(os.path.join(out, d + ".json"))]
+print(",".join(missing))
+PY
+)
+  [ -n "$missing" ] || break
+  n=$(echo "$missing" | tr ',' '\n' | grep -c .)
+  echo "=== sweep $sweep: retrying $n failed domains $(date '+%H:%M') ==="
+  bun scripts/batch/run-loop.ts --domains "$missing" --model "$MODEL" --concurrency 1 --out "$OUT" 2>&1 |
+    grep -vE '^dedup:' | tail -3
+done
 echo "=== all batches complete $(date '+%H:%M') ==="

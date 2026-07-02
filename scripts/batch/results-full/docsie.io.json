@@ -1,0 +1,169 @@
+{
+  "result": {
+    "version": 3,
+    "domain": "docsie.io",
+    "detect": {
+      "domain": "docsie.io",
+      "found": [],
+      "mcp": [],
+      "llmsTxt": false,
+      "errors": []
+    },
+    "usedLlm": true,
+    "discoveredAt": "2026-07-02T12:19:38.249Z",
+    "summary": "Docsie.io exposes one documented public developer surface: the Docsie Partner REST API, authenticated with a Partner API key via `Authorization: Api-Key <partner_api_key>`.",
+    "credentials": {
+      "docsie_partner_api_key": {
+        "type": "api_key",
+        "label": "Docsie Partner API key",
+        "generateUrl": "https://app.docsie.io/",
+        "setup": "Sign in to the Docsie app, then create or retrieve your Partner API key for the partner-facing API. The docs state requests are authenticated with `Authorization: Api-Key <partner_api_key>`. Use the key in your client or tools that call the Partner API.",
+        "acquisition": "manual"
+      }
+    },
+    "surfaces": [
+      {
+        "slug": "docsie-partner-api",
+        "name": "Docsie Partner API",
+        "type": "http",
+        "docs": "https://app.docsie.io/schema/redoc/",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://app.docsie.io/schema/redoc/"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "docsie_partner_api_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Api-Key"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://app.docsie.io/schema/redoc/"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "discoveredAt": "2026-07-02T12:19:38.250Z",
+  "model": "loop-gpt-5.4-mini",
+  "usage": {
+    "prompt_tokens": 45056,
+    "completion_tokens": 548,
+    "total_tokens": 45604
+  },
+  "visited": [
+    "https://app.docsie.io/schema/redoc/",
+    "https://docs.apollo.io/",
+    "https://docs.readme.com/main/docs/your-projects-mcp-server",
+    "https://help.docsie.io/?doc=/external-integrations-and-api-usage/how-to-authenticate-and-use-api-keys-in-your-application/",
+    "https://www.apollographql.com/docs/apollo-mcp-server",
+    "https://www.docsie.io/blog/glossary/authentication-flow/",
+    "https://www.docsie.io/blog/glossary/developer-portal/",
+    "https://www.docsie.io/blog/glossary/jwt-tokens/",
+    "https://www.docsie.io/solutions/api-documentation-mcp-server/",
+    "https://www.docsie.io/solutions/api-documentation/",
+    "https://www.docsie.io/solutions/secure-mcp-documentation-access/?docsie_jid=dj_8d44868498e64ae884e463103e22d055&journey_id=dj_8d44868498e64ae884e463103e22d055&landing_path=%2Fsolutions%2Fall%2F&page_path=%2Fsolutions%2Fall%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fall%2F&first_landing_path=%2Fsolutions%2Fall%2F&first_page_path=%2Fsolutions%2Fall%2F",
+    "https://www.docsie.io/solutions/templates/technical/api-reference-guide/",
+    "https://www.docsie.io/vs/docsie-vs-archbee/",
+    "https://www.docsie.io/vs/docsie-vs-document360/",
+    "https://www.docsie.io/vs/document360-vs-gitbook/",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
+  ],
+  "grounding": [
+    "https://app.docsie.io/",
+    "https://app.docsie.io/login?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://app.docsie.io/login?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://app.docsie.io/onboarding/v3-1/video-to-docs/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://app.docsie.io/onboarding/v3-1/video-to-docs/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://app.docsie.io/schema/redoc/",
+    "https://app.docsie.io/schema/redoc/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://app.docsie.io/schema/redoc/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://docs.apollo.io/",
+    "https://docs.readme.com/main/docs/your-projects-mcp-server",
+    "https://help.docsie.io",
+    "https://help.docsie.io/?doc=/external-integrations-and-api-usage/how-to-authenticate-and-use-api-keys-in-your-application/",
+    "https://help.docsie.io/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://help.docsie.io/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://www.apollographql.com/docs/apollo-mcp-server",
+    "https://www.docsie.io",
+    "https://www.docsie.io/#main",
+    "https://www.docsie.io/blog/",
+    "https://www.docsie.io/blog/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://www.docsie.io/blog/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://www.docsie.io/blog/glossary/authentication-flow/",
+    "https://www.docsie.io/blog/glossary/developer-portal/",
+    "https://www.docsie.io/blog/glossary/jwt-tokens/",
+    "https://www.docsie.io/pricing/",
+    "https://www.docsie.io/pricing/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://www.docsie.io/pricing/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://www.docsie.io/solutions/ai-chatbot/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://www.docsie.io/solutions/ai-chatbot/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://www.docsie.io/solutions/ai-technical-writer/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://www.docsie.io/solutions/ai-technical-writer/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://www.docsie.io/solutions/ai/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://www.docsie.io/solutions/ai/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://www.docsie.io/solutions/all/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://www.docsie.io/solutions/all/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://www.docsie.io/solutions/api-documentation-mcp-server/",
+    "https://www.docsie.io/solutions/api-documentation/",
+    "https://www.docsie.io/solutions/confluence-training-video-to-guides/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://www.docsie.io/solutions/confluence-training-video-to-guides/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://www.docsie.io/solutions/documentation-from-video/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://www.docsie.io/solutions/documentation-from-video/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://www.docsie.io/solutions/industries/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://www.docsie.io/solutions/industries/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://www.docsie.io/solutions/knowledge-base/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://www.docsie.io/solutions/knowledge-base/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://www.docsie.io/solutions/loom-recordings-to-process-documentation/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://www.docsie.io/solutions/loom-recordings-to-process-documentation/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://www.docsie.io/solutions/microsoft-teams-recordings-to-sops/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://www.docsie.io/solutions/microsoft-teams-recordings-to-sops/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://www.docsie.io/solutions/salesforce-training-video-to-guides/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://www.docsie.io/solutions/salesforce-training-video-to-guides/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://www.docsie.io/solutions/screen-recordings-to-how-to-guides/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://www.docsie.io/solutions/screen-recordings-to-how-to-guides/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://www.docsie.io/solutions/secure-mcp-documentation-access/?docsie_jid=dj_8d44868498e64ae884e463103e22d055&journey_id=dj_8d44868498e64ae884e463103e22d055&landing_path=%2Fsolutions%2Fall%2F&page_path=%2Fsolutions%2Fall%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fall%2F&first_landing_path=%2Fsolutions%2Fall%2F&first_page_path=%2Fsolutions%2Fall%2F",
+    "https://www.docsie.io/solutions/sops/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://www.docsie.io/solutions/sops/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://www.docsie.io/solutions/technical-documentation/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://www.docsie.io/solutions/technical-documentation/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://www.docsie.io/solutions/templates/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://www.docsie.io/solutions/templates/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fap",
+    "https://www.docsie.io/solutions/templates/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://www.docsie.io/solutions/templates/technical/api-reference-guide/",
+    "https://www.docsie.io/solutions/training-documentation/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://www.docsie.io/solutions/training-documentation/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://www.docsie.io/solutions/training-videos-to-documentation/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://www.docsie.io/solutions/training-videos-to-documentation/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://www.docsie.io/solutions/workday-training-video-to-guides/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://www.docsie.io/solutions/workday-training-video-to-guides/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://www.docsie.io/solutions/zoom-recordings-to-training-documentation/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://www.docsie.io/solutions/zoom-recordings-to-training-documentation/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://www.docsie.io/tools/free-screen-recorder/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://www.docsie.io/tools/free-screen-recorder/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://www.docsie.io/video-to-docs/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documen",
+    "https://www.docsie.io/video-to-docs/?docsie_jid=dj_07dc5919bbe145dd868810d1a7f62c11&journey_id=dj_07dc5919bbe145dd868810d1a7f62c11&landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_landing_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F&first_page_path=%2Fsolutions%2Fapi-documentation-mcp-server%2F",
+    "https://www.docsie.io/video-to-docs/?docsie_jid=dj_49cde3bd368441b68043074d9f56d5d7&journey_id=dj_49cde3bd368441b68043074d9f56d5d7&landing_path=%2Fsolutions%2Fapi-documentation%2F&page_path=%2Fsolutions%2Fapi-documentation%2F&source_url=https%3A%2F%2Fwww.docsie.io%2Fsolutions%2Fapi-documentation%2F&first_landing_path=%2Fsolutions%2Fapi-documentation%2F&first_page_path=%2Fsolutions%2Fapi-documentation%2F",
+    "https://www.docsie.io/vs/docsie-vs-archbee/",
+    "https://www.docsie.io/vs/docsie-vs-document360/",
+    "https://www.docsie.io/vs/document360-vs-gitbook/",
+    "https://www.scalar.com",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
+  ]
+}
