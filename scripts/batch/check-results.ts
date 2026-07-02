@@ -44,14 +44,18 @@ async function main(): Promise<void> {
     if (hasFlag(args, "probe") && checks.checks.outputUrlsGrounded && !checks.checks.outputUrlsGrounded.passed) {
       const still: string[] = [];
       for (const url of checks.checks.outputUrlsGrounded.offenders ?? []) {
-        try {
-          const res = await fetch(url, { method: "GET", redirect: "manual", signal: AbortSignal.timeout(8000) });
-          // Any HTTP response proves the host is real — invented hosts fail DNS.
-          // Bare API bases 404 by design (real routes live under paths).
-          if (res.status >= 500) still.push(url);
-        } catch {
-          still.push(url);
+        let ok = false;
+        for (let attempt = 0; attempt < 2 && !ok; attempt++) {
+          try {
+            const res = await fetch(url, { method: "GET", redirect: "manual", signal: AbortSignal.timeout(8000) });
+            // Any HTTP response proves the host is real — invented hosts fail
+            // DNS. Bare API bases 404 by design (routes live under paths).
+            ok = res.status < 500;
+          } catch {
+            /* transient network flake — retry once */
+          }
         }
+        if (!ok) still.push(url);
       }
       checks.checks.outputUrlsGrounded = { passed: still.length === 0, offenders: still };
       checks.passed = Object.values(checks.checks).every((check) => check.passed);
