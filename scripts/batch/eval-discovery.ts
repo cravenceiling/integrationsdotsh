@@ -224,6 +224,30 @@ export function checklist(
       return auth?.status === "required" && (!Array.isArray(auth.entries) || auth.entries.length === 0);
     })
     .map((surface) => String((surface as { name?: unknown }).name ?? "surface"));
+  // Drift: a result whose surfaces all point at ONE other company's domain
+  // (and never at the subject) mapped the wrong company.
+  const surfaceDomains = new Set(
+    (result.surfaces ?? [])
+      .flatMap((surface) => {
+        if (!surface || typeof surface !== "object") return [];
+        const { url, spec, docs } = surface as { url?: unknown; spec?: unknown; docs?: unknown };
+        return [url, spec, docs].filter((value): value is string => typeof value === "string");
+      })
+      .map((url) => registrable(url))
+      .filter(Boolean),
+  );
+  // Rebrands/acquisitions mention the subject somewhere (summaries say
+  // "formerly Twitter", names carry the brand); true drift never does —
+  // producthunt's result mentions Buffer everywhere and the subject only in
+  // the domain/detect fields and a ?ref= param.
+  const { domain: _d, detect: _det, ...body } = result as Record<string, unknown>;
+  const bodyText = JSON.stringify(body).toLowerCase().replace(/[?&]ref=[a-z0-9_-]+/g, "");
+  const drifted =
+    (result.surfaces ?? []).length > 0 &&
+    resultDomain !== null &&
+    !surfaceDomains.has(resultDomain) &&
+    surfaceDomains.size === 1 &&
+    !(brandLabel && brandLabel.length >= 2 && bodyText.includes(brandLabel));
   const checks = {
     noDefaultCredentialSetup: { passed: defaultCredentialOffenders.length === 0, offenders: defaultCredentialOffenders },
     outputUrlsGrounded: { passed: urlOffenders.length === 0, offenders: urlOffenders },
@@ -231,6 +255,9 @@ export function checklist(
     cliMechanicsSetupHasNoOauthPath: { passed: cliOauthOffenders.length === 0, offenders: cliOauthOffenders },
     specUrlsLookMachineReadable: { passed: specOffenders.length === 0, offenders: specOffenders },
     noDuplicateSurfaceKeys: { passed: duplicateKeys.length === 0, offenders: duplicateKeys },
+    // Advisory: needs human judgment (hard rebrands like twitter→x look
+    // identical to true drift). Reported but never fails the checklist.
+    noDomainDrift: { passed: true, offenders: drifted ? [...surfaceDomains] : [] },
     noRequiredAuthWithEmptyEntries: { passed: requiredEmpty.length === 0, offenders: requiredEmpty },
   };
   return { passed: Object.values(checks).every((check) => check.passed), checks };

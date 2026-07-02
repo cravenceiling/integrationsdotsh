@@ -57,6 +57,8 @@ async function main(): Promise<void> {
       checks.passed = Object.values(checks.checks).every((check) => check.passed);
     }
     const bad = Object.entries(checks.checks).filter(([, check]) => !check.passed).map(([name]) => name);
+    const driftAdvisory = checks.checks.noDomainDrift?.offenders ?? [];
+    if (driftAdvisory.length) console.log(`${domain}\tADVISORY\tpossible domain drift -> ${driftAdvisory.join(",")}`);
     if (!checks.passed) failed++;
     console.log(`${domain}\t${checks.passed ? "pass" : "fail"}${bad.length ? `\t${bad.join(",")}` : ""}`);
   }
