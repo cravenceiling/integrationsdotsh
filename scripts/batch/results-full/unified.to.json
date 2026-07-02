@@ -128,7 +128,8 @@
             }
           ]
         },
-        "url": "https://api.unified.to"
+        "url": "https://api.unified.to",
+        "spec": "https://api.unified.to/openapi.yaml"
       }
     ]
   },

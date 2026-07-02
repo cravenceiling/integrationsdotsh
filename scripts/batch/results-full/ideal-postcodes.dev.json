@@ -74,7 +74,8 @@
             },
             "description": "REST API returns JSON"
           }
-        ]
+        ],
+        "spec": "https://api.ideal-postcodes.co.uk/openapi.yaml"
       },
       {
         "slug": "ideal-postcodes-cli",

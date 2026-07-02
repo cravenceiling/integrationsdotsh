@@ -64,7 +64,8 @@
             }
           ]
         },
-        "url": "https://api.weather.gov"
+        "url": "https://api.weather.gov",
+        "spec": "https://api.weather.gov/openapi.yaml"
       },
       {
         "slug": "noaa-ncei-climate-data-online-web-services-v2",

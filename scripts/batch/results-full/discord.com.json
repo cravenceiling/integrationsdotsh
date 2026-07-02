@@ -158,43 +158,6 @@
         "url": "wss://gateway.discord.gg"
       },
       {
-        "slug": "discord-oauth2",
-        "name": "Discord OAuth2",
-        "type": "http",
-        "docs": "https://docs.discord.com/developers/topics/oauth2",
-        "basis": {
-          "via": "discovered",
-          "evidence": [
-            "https://docs.discord.com/developers/topics/oauth2"
-          ]
-        },
-        "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "discord_client_app",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "query",
-                    "scheme": "oauth2",
-                    "paramName": "client_id"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://docs.discord.com/developers/topics/oauth2"
-                ]
-              }
-            }
-          ]
-        },
-        "url": "https://discord.com/oauth2/authorize"
-      },
-      {
         "slug": "discord-rpc-over-ipc",
         "name": "Discord RPC over IPC",
         "type": "http",

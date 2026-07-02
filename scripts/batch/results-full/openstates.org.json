@@ -56,7 +56,8 @@
             }
           ]
         },
-        "url": "https://v3.openstates.org/"
+        "url": "https://v3.openstates.org/",
+        "spec": "https://v3.openstates.org/openapi.json"
       },
       {
         "slug": "open-states-graphql-api-deprecated-v2",

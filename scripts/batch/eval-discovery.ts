@@ -211,11 +211,15 @@ export function checklist(
     .filter((surface) => (surface as { type?: string })?.type === "http")
     .flatMap(specPointers)
     .filter((spec): spec is string => typeof spec === "string" && spec !== "introspection")
-    .filter((spec) => !/\.(json|ya?ml)(?:[?#].*)?$/i.test(spec) && !/openapi|swagger/i.test(spec));
+    .filter((spec) => !/\.(json|ya?ml)(?:[?#].*)?$/i.test(spec) && !/openapi|swagger|\/api\/schema\/?|\/api-docs(\/|$)/i.test(spec));
   const seenKeys = new Set<string>();
   const duplicateKeys: string[] = [];
   for (const surface of result.surfaces ?? []) {
-    const key = surfaceDedupKey(surface as Record<string, unknown>);
+    // Same qualification the dedup collision pass applies: distinct docs on a
+    // shared spec = distinct product APIs (edmunds), not duplicates.
+    const s = surface as { spec?: unknown; docs?: unknown };
+    const docsQualifier = typeof s.spec === "string" && typeof s.docs === "string" ? `|${s.docs.toLowerCase()}` : "";
+    const key = surfaceDedupKey(surface as Record<string, unknown>) + docsQualifier;
     if (seenKeys.has(key)) duplicateKeys.push(key);
     seenKeys.add(key);
   }

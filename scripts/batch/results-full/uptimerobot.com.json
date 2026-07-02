@@ -114,7 +114,8 @@
             }
           ]
         },
-        "url": "https://api.uptimerobot.com/v3"
+        "url": "https://api.uptimerobot.com/v3",
+        "spec": "https://api.uptimerobot.com/openapi.yaml"
       },
       {
         "slug": "uptimerobot-quick-monitor-setup",
@@ -160,7 +161,8 @@
             }
           ]
         },
-        "url": "https://api.uptimerobot.com"
+        "url": "https://api.uptimerobot.com",
+        "spec": "https://api.uptimerobot.com/openapi.yaml"
       },
       {
         "slug": "uptimerobot-mcp",

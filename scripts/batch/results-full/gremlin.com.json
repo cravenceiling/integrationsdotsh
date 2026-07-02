@@ -120,7 +120,8 @@
             }
           ]
         },
-        "url": "https://api.gremlin.com/v1"
+        "url": "https://api.gremlin.com/v1",
+        "spec": "https://api.gremlin.com/v1/openapi.yaml"
       },
       {
         "slug": "gremlin-mcp-server",

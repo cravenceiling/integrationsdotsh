@@ -57,7 +57,8 @@
             }
           ]
         },
-        "url": "https://cough-radar-api.sdk.sleepcycle.com"
+        "url": "https://cough-radar-api.sdk.sleepcycle.com",
+        "spec": "https://cough-radar-api.sdk.sleepcycle.com/openapi.json"
       },
       {
         "slug": "sleep-cycle-android-sdk",

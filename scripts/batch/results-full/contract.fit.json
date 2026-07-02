@@ -61,7 +61,8 @@
             }
           ]
         },
-        "url": "https://api.parble.com/v1"
+        "url": "https://api.parble.com/v1",
+        "spec": "https://api.parble.com/swagger.json"
       },
       {
         "slug": "parble-webhooks",

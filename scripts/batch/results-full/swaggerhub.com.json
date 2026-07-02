@@ -57,7 +57,8 @@
             }
           ]
         },
-        "url": "https://api.portal.swaggerhub.com/v1"
+        "url": "https://api.portal.swaggerhub.com/v1",
+        "spec": "https://api.portal.swaggerhub.com/v1/openapi.yaml"
       }
     ]
   },

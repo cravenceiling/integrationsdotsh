@@ -82,7 +82,8 @@
             ]
           }
         },
-        "url": "https://www.speakeasy.com/openapi"
+        "url": "https://www.speakeasy.com/openapi",
+        "spec": "https://www.speakeasy.com/openapi.yaml"
       },
       {
         "slug": "speakeasy-docs-mcp",

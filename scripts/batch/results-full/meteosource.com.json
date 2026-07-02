@@ -68,7 +68,8 @@
             }
           ]
         },
-        "url": "https://www.meteosource.com"
+        "url": "https://www.meteosource.com",
+        "spec": "https://www.meteosource.com/.well-known/openapi.json"
       }
     ]
   },

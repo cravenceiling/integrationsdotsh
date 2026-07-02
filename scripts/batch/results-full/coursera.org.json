@@ -36,7 +36,8 @@
             ]
           }
         },
-        "url": "https://www.coursera.org"
+        "url": "https://www.coursera.org",
+        "spec": "https://www.coursera.org/openapi.yaml"
       }
     ]
   },

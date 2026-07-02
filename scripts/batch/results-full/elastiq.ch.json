@@ -36,7 +36,11 @@
             ]
           }
         },
-        "url": "https://api.color.pizza/v1"
+        "url": "https://api.color.pizza/v1",
+        "spec": "https://api.color.pizza/openapi.json",
+        "specAlternates": [
+          "https://api.color.pizza/openapi.yaml"
+        ]
       }
     ]
   },

@@ -166,59 +166,6 @@
     },
     "surfaces": [
       {
-        "slug": "telnyx-oauth-2-0",
-        "name": "Telnyx OAuth 2.0",
-        "type": "http",
-        "docs": "https://developers.telnyx.com/api-reference/overview",
-        "basis": {
-          "via": "discovered",
-          "evidence": [
-            "https://developers.telnyx.com/api-reference/overview",
-            "https://telnyx.com/llms.txt"
-          ]
-        },
-        "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "telnyx_oauth_client",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "query",
-                    "paramName": "client_id"
-                  }
-                },
-                {
-                  "id": "telnyx_oauth_client",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "query",
-                    "paramName": "response_type"
-                  }
-                },
-                {
-                  "id": "telnyx_oauth_client",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "query",
-                    "paramName": "redirect_uri"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://telnyx.com/llms.txt"
-                ]
-              }
-            }
-          ]
-        },
-        "url": "https://portal.telnyx.com/oauth/authorize"
-      },
-      {
         "slug": "telnyx-cli",
         "name": "Telnyx CLI",
         "type": "cli",
@@ -385,61 +332,6 @@
           ]
         },
         "url": "https://api.telnyx.com/v2"
-      },
-      {
-        "slug": "telnyx-oauth-token-endpoint",
-        "name": "Telnyx OAuth Token Endpoint",
-        "type": "http",
-        "docs": "https://telnyx.com/.well-known/oauth-authorization-server",
-        "basis": {
-          "via": "discovered",
-          "evidence": [
-            "https://telnyx.com/.well-known/oauth-authorization-server"
-          ]
-        },
-        "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "telnyx_oauth_client",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "header",
-                    "headerName": "Authorization",
-                    "scheme": "Basic"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://telnyx.com/.well-known/oauth-authorization-server"
-                ]
-              }
-            },
-            {
-              "use": [
-                {
-                  "id": "telnyx_oauth_client",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "body",
-                    "paramName": "client_id"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://telnyx.com/.well-known/oauth-authorization-server"
-                ]
-              }
-            }
-          ]
-        },
-        "url": "https://api.telnyx.com/oauth/token"
       }
     ]
   },

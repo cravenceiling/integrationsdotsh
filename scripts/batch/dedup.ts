@@ -50,6 +50,7 @@ export function surfaceDedupKey(surface: SurfaceLike): string {
   if ((type === "http" || type === "graphql") && !surface.spec && surface.url) {
     return `${type}|${normalizeLocator(surface.url)}|${normalizeLocator(surface.name)}`;
   }
+
   return `${type}|${normalizeLocator(locator) || normalizeLocator(surface.name)}`;
 }
 
@@ -188,6 +189,21 @@ export function dedupSurfacesWithReport<T>(result: T, domain = (result as { doma
       continue;
     }
     const existing = deduped[existingIndex]!;
+    // Multiple product APIs can share ONE spec document (edmunds ships four
+    // APIs in one openapi.yaml, each with its own docs page). Both sides
+    // carrying DIFFERENT docs pages means distinct products — keep both. A
+    // missing docs on either side means the same API described twice
+    // (mintlify/resend twins) and merges as usual.
+    if (
+      (surface.type === "http" || surface.type === "graphql") &&
+      surface.spec && existing.spec &&
+      surface.docs && existing.docs &&
+      normalizeLocator(surface.docs) !== normalizeLocator(existing.docs)
+    ) {
+      byKey.set(`${key}|${normalizeLocator(surface.docs)}`, deduped.length);
+      deduped.push(surface);
+      continue;
+    }
     const preferDropped = shouldPrefer(surface, existing);
     const keptBeforeMerge = preferDropped ? surface : existing;
     const droppedBeforeMerge = preferDropped ? existing : surface;

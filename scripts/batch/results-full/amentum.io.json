@@ -163,7 +163,8 @@
         "auth": {
           "status": "unknown"
         },
-        "url": "https://atmosphere.amentum.io"
+        "url": "https://atmosphere.amentum.io",
+        "spec": "https://atmosphere.amentum.io/openapi.json"
       },
       {
         "slug": "amentum-cli",

@@ -56,32 +56,6 @@
     },
     "surfaces": [
       {
-        "slug": "kraken-oauth",
-        "name": "Kraken OAuth",
-        "type": "http",
-        "docs": "https://www.kraken.com/oauth/authorize",
-        "basis": {
-          "via": "discovered",
-          "evidence": [
-            "https://www.kraken.com/oauth/authorize",
-            "https://api.kraken.com/oauth/token",
-            "https://api.kraken.com/oauth/client"
-          ]
-        },
-        "auth": {
-          "status": "none",
-          "basis": {
-            "via": "discovered",
-            "evidence": [
-              "https://www.kraken.com/oauth/authorize",
-              "https://api.kraken.com/oauth/token",
-              "https://api.kraken.com/oauth/client"
-            ]
-          }
-        },
-        "url": "https://www.kraken.com/oauth/authorize"
-      },
-      {
         "slug": "kraken-exchange-spot-rest-api",
         "name": "Kraken Exchange Spot REST API",
         "type": "http",

@@ -62,7 +62,8 @@
             }
           ]
         },
-        "url": "https://api.meetcampfire.com"
+        "url": "https://api.meetcampfire.com",
+        "spec": "https://api.meetcampfire.com/api/schema/"
       },
       {
         "slug": "campfire-mcp-server",

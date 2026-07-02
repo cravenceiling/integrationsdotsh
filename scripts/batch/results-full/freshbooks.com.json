@@ -58,41 +58,6 @@
           ]
         },
         "url": "https://api.freshbooks.com"
-      },
-      {
-        "slug": "freshbooks-oauth-token-endpoint",
-        "name": "FreshBooks OAuth token endpoint",
-        "type": "http",
-        "docs": "https://www.freshbooks.com/api/authentication",
-        "basis": {
-          "via": "discovered",
-          "evidence": [
-            "https://www.freshbooks.com/api/authentication"
-          ]
-        },
-        "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "fb_oauth_app",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "body"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://www.freshbooks.com/api/authentication"
-                ]
-              }
-            }
-          ]
-        },
-        "url": "https://api.freshbooks.com/auth/oauth/token"
       }
     ]
   },

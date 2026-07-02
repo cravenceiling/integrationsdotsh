@@ -114,7 +114,8 @@
             }
           ]
         },
-        "url": "https://api.novu.co"
+        "url": "https://api.novu.co",
+        "spec": "https://api.novu.co/openapi.yaml"
       },
       {
         "slug": "novu-mcp-server",

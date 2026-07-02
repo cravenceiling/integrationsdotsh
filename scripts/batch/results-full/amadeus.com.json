@@ -64,49 +64,6 @@
         "url": "https://test.api.amadeus.com"
       },
       {
-        "slug": "amadeus-api-token-endpoint",
-        "name": "Amadeus API token endpoint",
-        "type": "http",
-        "basis": {
-          "via": "discovered",
-          "evidence": [
-            "https://developers.amadeus.com/self-service/apis-docs/guides/developer-guides/API-Keys/authorization/"
-          ]
-        },
-        "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "amadeus_api_key",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "body",
-                    "paramName": "client_id"
-                  }
-                },
-                {
-                  "id": "amadeus_api_key",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "body",
-                    "paramName": "client_secret"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://developers.amadeus.com/self-service/apis-docs/guides/developer-guides/API-Keys/authorization/"
-                ]
-              }
-            }
-          ]
-        },
-        "url": "https://test.api.amadeus.com/v1/security/oauth2/token"
-      },
-      {
         "slug": "amadeus-for-developers-postman-collection",
         "name": "Amadeus for Developers Postman Collection",
         "type": "http",

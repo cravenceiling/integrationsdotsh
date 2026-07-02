@@ -185,21 +185,6 @@
           ]
         },
         "url": "https://consent.iubenda.com/public/consent"
-      },
-      {
-        "slug": "iubenda-oauth-2-0",
-        "name": "iubenda OAuth 2.0",
-        "type": "http",
-        "basis": {
-          "via": "discovered",
-          "evidence": [
-            "https://www.iubenda.com/llms.txt"
-          ]
-        },
-        "auth": {
-          "status": "unknown"
-        },
-        "url": "https://www.iubenda.com/oauth/authorize"
       }
     ]
   },

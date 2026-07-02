@@ -124,7 +124,8 @@
             }
           ]
         },
-        "url": "https://tango.makegov.com"
+        "url": "https://tango.makegov.com",
+        "spec": "https://tango.makegov.com/api/schema/"
       },
       {
         "slug": "tango-mcp",
