@@ -4,8 +4,8 @@
  * The static catalog expressed in the discovery format, one file per domain,
  * plus the domain page's catalog seed. The worker reads this for surface
  * detail pages and for SSR'ing the domain page when a stored discovery exists
- * (merged with the live KV result), so every surface — catalog or discovered —
- * derives from the same format. Emitted at build via getStaticPaths.
+ * (merged with the live KV result). Discovered-feed shims are list-only and do
+ * not produce baseline surfaces here. Emitted at build via getStaticPaths.
  */
 import type { APIRoute } from "astro";
 import type { Integration } from "~/lib/types.ts";

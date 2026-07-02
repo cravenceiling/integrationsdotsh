@@ -8,7 +8,7 @@ import { all, byId } from "./data.ts";
 import type { IndexRecord } from "./data.ts";
 import type { CatalogSection } from "../components/Surfaces.tsx";
 import { KIND_ORDER, SECTION_LABEL } from "./domain-labels.ts";
-import { baselineSlugs } from "./catalog-to-discovery.ts";
+import { baselineSlugs, isDiscoveredShim } from "./catalog-to-discovery.ts";
 
 /** Per-record meta hint shown on the right of each row. The slim index record
  * lacks per-format detail, so join back to the full record via `byId`. */
@@ -38,10 +38,11 @@ const identityFor = (r: IndexRecord): { url?: string; spec?: string; docs?: stri
 
 /** Sections in canonical format order, most-popular record first within each. */
 export function domainSections(records: IndexRecord[]) {
+  const catalogRecords = records.filter((r) => !isDiscoveredShim(r));
   return KIND_ORDER.map((kind) => ({
     kind,
     label: SECTION_LABEL[kind],
-    items: records
+    items: catalogRecords
       .filter((r) => r.kind === kind)
       .sort((a, b) => (b.popularity ?? 0) - (a.popularity ?? 0) || a.name.localeCompare(b.name)),
   })).filter((s) => s.items.length > 0);
@@ -52,9 +53,10 @@ export function domainSections(records: IndexRecord[]) {
  * slugs (computed over the domain's records in `all` order, exactly as the
  * /disc JSON does), so island links and the surface route always agree. */
 export function catalogSeed(records: IndexRecord[]): CatalogSection[] {
-  const ids = new Set(records.map((r) => r.id));
+  const catalogRecords = records.filter((r) => !isDiscoveredShim(r));
+  const ids = new Set(catalogRecords.map((r) => r.id));
   const slugById = baselineSlugs(all.filter((r) => ids.has(r.id)));
-  return domainSections(records).map((s) => ({
+  return domainSections(catalogRecords).map((s) => ({
     kind: s.kind,
     label: s.label,
     items: s.items.map((r) => ({

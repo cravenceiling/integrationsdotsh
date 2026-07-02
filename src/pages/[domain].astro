@@ -1,6 +1,6 @@
 ---
 // Prerendered domain page — the build-time rendering of DomainPage, one per
-// catalog domain. When a domain has a STORED discovery in KV, the worker
+// listed domain. When a domain has a STORED discovery in KV, the worker
 // intercepts the request and SSRs the same DomainPage with the map baked in
 // (src/pages/ssr/[domain].astro) instead of serving this asset.
 import DomainPage from "~/components/DomainPage.astro";
@@ -9,7 +9,8 @@ import type { IndexRecord } from "~/lib/data.ts";
 import { catalogSeed } from "~/lib/domain-seed.ts";
 
 // Group every enriched record by its registrable domain (the same key the
-// homepage groups by: `domain`, else the slug). One page per domain.
+// homepage groups by: `domain`, else the slug). One page per domain, including
+// discovered-only domains whose shim records stay out of the rendered sections.
 export function getStaticPaths() {
   const groups = new Map<string, IndexRecord[]>();
   for (const r of index) {

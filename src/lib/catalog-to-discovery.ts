@@ -19,8 +19,13 @@ import { assignSlug } from "./discover.ts";
 
 const REG_BASIS = { via: "detected" as const, signal: "registry" };
 
+export function isDiscoveredShim(r: { feeds?: readonly string[] }): boolean {
+  return r.feeds?.includes("discovered") ?? false;
+}
+
 /** A catalog record as a v3 discovery surface (sans slug — assigned by the caller). */
 export function recordToSurface(r: Integration): Omit<SurfaceView, "slug"> | null {
+  if (isDiscoveredShim(r)) return null;
   switch (r.kind) {
     case "mcp":
       return {
