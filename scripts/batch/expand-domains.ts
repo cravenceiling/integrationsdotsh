@@ -38,10 +38,14 @@ function sourceDomains(): Set<string> {
 
 function seedDomains(): Set<string> {
   const out = new Set<string>();
-  const path = join(ROOT, "scripts", "batch", "seed-domains.txt");
-  for (const line of existsSync(path) ? readLines(path) : []) {
-    const d = registrable(line);
-    if (d) out.add(d);
+  // Every seed-domains*.txt file counts — curated lists accrete over time.
+  const dir = join(ROOT, "scripts", "batch");
+  for (const name of readdirSync(dir)) {
+    if (!/^seed-domains.*\.txt$/.test(name)) continue;
+    for (const line of readLines(join(dir, name))) {
+      const d = registrable(line);
+      if (d) out.add(d);
+    }
   }
   return out;
 }

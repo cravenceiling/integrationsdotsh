@@ -12,76 +12,27 @@
       "errors": []
     },
     "usedLlm": true,
-    "discoveredAt": "2026-07-02T09:04:25.215Z",
-    "summary": "Atlassian’s public developer surface includes Jira Cloud REST v3 and Confluence Cloud REST v2 (both via HTTP with Basic auth using an Atlassian account API token or Bearer OAuth 2.0 3LO token), plus Atlassian CLI (`acli` login via API token or browser OAuth, and admin commands via an org API key); I also found Atlassian GraphQL and Atlassian MCP/Forge docs, but didn’t fully record their surfaces here.",
+    "discoveredAt": "2026-07-02T09:44:48.880Z",
+    "summary": "Atlassian has three public developer surfaces confirmed: Jira Cloud REST API v3, Confluence Cloud REST API v2, and the Atlassian GraphQL API; all use Atlassian account API tokens via HTTP Basic, with GraphQL also allowing browser-session/API-token access on site-specific gateway URLs.",
     "credentials": {
-      "atlassian_account_api_token": {
+      "atlassian_api_token": {
         "type": "basic",
-        "label": "Atlassian account API token",
+        "label": "Atlassian API token",
         "generateUrl": "https://id.atlassian.com/manage-profile/security/api-tokens",
-        "setup": "Go to your [Atlassian account API tokens](https://id.atlassian.com/manage-profile/security/api-tokens) page and create a new token. Use it for basic auth where Atlassian docs say API tokens are accepted (for example Jira/Confluence REST and Atlassian CLI login).",
-        "acquisition": "manual"
-      },
-      "atlassian_oauth3lo": {
-        "type": "oauth2",
-        "label": "Atlassian OAuth 2.0 3LO access token",
-        "generateUrl": "https://developer.atlassian.com/cloud/oauth/getting-started/enabling-oauth-3lo/",
-        "setup": "Create an OAuth 2.0 app in Atlassian developer console, complete the 3LO flow, and obtain user consent. Use the resulting bearer token for Atlassian cloud APIs that support OAuth 2.0.",
-        "acquisition": "manual"
-      },
-      "atlassian_org_api_key": {
-        "type": "api_key",
-        "label": "Atlassian organization API key",
-        "generateUrl": "https://support.atlassian.com/organization-administration/docs/manage-an-organization-with-the-admin-apis/",
-        "setup": "Create an organization API key from Atlassian organization admin settings. Use it for Atlassian admin/organization commands and admin APIs.",
-        "acquisition": "manual"
-      },
-      "bitbucket_access_token": {
-        "type": "bearer",
-        "label": "Bitbucket access token",
-        "generateUrl": "https://developer.atlassian.com/cloud/bitbucket/rest/intro/#authentication",
-        "setup": "Create a repository, project, or workspace access token in Bitbucket Cloud. It is a token tied to a single repo/project/workspace and can be used against Bitbucket REST APIs as a bearer-style credential.",
-        "acquisition": "manual"
-      },
-      "bitbucket_app_password": {
-        "type": "basic",
-        "label": "Bitbucket app password",
-        "generateUrl": "https://developer.atlassian.com/cloud/bitbucket/rest/intro/#app-passwords",
-        "setup": "Create an app password from Bitbucket account settings. Use it as the password part of HTTP basic auth for Bitbucket REST API calls.",
-        "acquisition": "manual"
-      },
-      "bitbucket_api_token": {
-        "type": "basic",
-        "label": "Bitbucket API token",
-        "generateUrl": "https://developer.atlassian.com/cloud/bitbucket/rest/intro/#api-tokens",
-        "setup": "Create an API token in Bitbucket Cloud account settings. Use it with HTTP basic auth when the Bitbucket docs say API tokens are supported.",
-        "acquisition": "manual"
-      },
-      "bitbucket_oauth2": {
-        "type": "oauth2",
-        "label": "Bitbucket OAuth 2.0 token",
-        "generateUrl": "https://developer.atlassian.com/cloud/bitbucket/rest/intro/#oauth-2-0",
-        "setup": "Register an OAuth consumer/app in Bitbucket Cloud and complete the OAuth 2.0 flow to obtain an access token. Use it for Bitbucket REST APIs that support OAuth 2.0.",
-        "acquisition": "manual"
-      },
-      "acli_login_session": {
-        "type": "bearer",
-        "label": "Atlassian CLI login session",
-        "generateUrl": "https://developer.atlassian.com/cloud/acli/guides/how-to-get-started/",
-        "setup": "Run `acli jira auth login --web` for browser-based OAuth, or `acli jira auth login --site \"mysite.atlassian.net\" --email \"user@atlassian.com\" --token` for API-token login. The CLI stores the resulting authenticated session and uses it for Atlassian CLI commands.",
+        "setup": "Go to [API tokens](https://id.atlassian.com/manage-profile/security/api-tokens) in your Atlassian account, create a token, and copy it once. Use it as the password in HTTP Basic auth with your Atlassian account email. Atlassian notes these tokens can be used for scripts against cloud apps and now expire by default after one year. If you use two-step verification, use an API token instead of your normal password.",
         "acquisition": "manual"
       }
     },
     "surfaces": [
       {
-        "slug": "jira-cloud-rest-api-v3",
-        "name": "Jira Cloud REST API v3",
-        "type": "http",
-        "docs": "https://developer.atlassian.com/cloud/jira/platform/rest/",
+        "slug": "atlassian-graphql-api",
+        "name": "Atlassian GraphQL API",
+        "type": "graphql",
+        "docs": "https://developer.atlassian.com/platform/atlassian-graphql-api/graphql/",
         "basis": {
           "via": "discovered",
           "evidence": [
-            "https://developer.atlassian.com/cloud/jira/platform/rest/"
+            "https://developer.atlassian.com/platform/atlassian-graphql-api/graphql/"
           ]
         },
         "auth": {
@@ -90,16 +41,7 @@
             {
               "use": [
                 {
-                  "id": "atlassian_account_api_token",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "header",
-                    "headerName": "Authorization",
-                    "scheme": "Basic"
-                  }
-                },
-                {
-                  "id": "atlassian_account_api_token",
+                  "id": "atlassian_api_token",
                   "mechanics": {
                     "source": "http",
                     "in": "header",
@@ -111,14 +53,15 @@
               "basis": {
                 "via": "discovered",
                 "evidence": [
-                  "https://developer.atlassian.com/cloud/jira/platform/rest/"
+                  "https://developer.atlassian.com/platform/atlassian-graphql-api/graphql/",
+                  "https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/"
                 ]
               }
             },
             {
               "use": [
                 {
-                  "id": "atlassian_oauth3lo",
+                  "id": "atlassian_api_token",
                   "mechanics": {
                     "source": "http",
                     "in": "header",
@@ -130,23 +73,23 @@
               "basis": {
                 "via": "discovered",
                 "evidence": [
-                  "https://developer.atlassian.com/cloud/jira/platform/rest/"
+                  "https://developer.atlassian.com/platform/atlassian-graphql-api/graphql/"
                 ]
               }
             }
           ]
         },
-        "spec": "https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/"
+        "url": "https://developer.atlassian.com/platform/atlassian-graphql-api/graphql/"
       },
       {
         "slug": "confluence-cloud-rest-api-v2",
         "name": "Confluence Cloud REST API v2",
         "type": "http",
-        "docs": "https://developer.atlassian.com/cloud/confluence/rest/",
+        "docs": "https://developer.atlassian.com/cloud/confluence/rest/v2/intro/",
         "basis": {
           "via": "discovered",
           "evidence": [
-            "https://developer.atlassian.com/cloud/confluence/rest/"
+            "https://developer.atlassian.com/cloud/confluence/rest/v2/intro/"
           ]
         },
         "auth": {
@@ -155,7 +98,7 @@
             {
               "use": [
                 {
-                  "id": "atlassian_account_api_token",
+                  "id": "atlassian_api_token",
                   "mechanics": {
                     "source": "http",
                     "in": "header",
@@ -167,54 +110,78 @@
               "basis": {
                 "via": "discovered",
                 "evidence": [
-                  "https://developer.atlassian.com/cloud/confluence/rest/"
+                  "https://developer.atlassian.com/cloud/confluence/rest/v2/intro/",
+                  "https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/"
                 ]
               }
-            },
+            }
+          ]
+        }
+      },
+      {
+        "slug": "jira-cloud-platform-rest-api-v3",
+        "name": "Jira Cloud platform REST API v3",
+        "type": "http",
+        "docs": "https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/",
+            "https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
             {
               "use": [
                 {
-                  "id": "atlassian_oauth3lo",
+                  "id": "atlassian_api_token",
                   "mechanics": {
                     "source": "http",
                     "in": "header",
                     "headerName": "Authorization",
-                    "scheme": "Bearer"
+                    "scheme": "Basic"
                   }
                 }
               ],
               "basis": {
                 "via": "discovered",
                 "evidence": [
-                  "https://developer.atlassian.com/cloud/confluence/rest/"
+                  "https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/",
+                  "https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/"
                 ]
               }
             }
           ]
-        },
-        "spec": "https://dac-static.atlassian.com/cloud/confluence/openapi-v2.v3.json?_v=1.8516.44"
+        }
       }
     ]
   },
-  "discoveredAt": "2026-07-02T09:04:25.216Z",
+  "discoveredAt": "2026-07-02T09:44:48.881Z",
   "model": "loop-gpt-5.4-mini",
   "usage": {
-    "prompt_tokens": 284152,
-    "completion_tokens": 1707,
-    "total_tokens": 285859
+    "prompt_tokens": 262314,
+    "completion_tokens": 1685,
+    "total_tokens": 263999
   },
   "visited": [
+    "https://atlassian.com/llms.txt",
     "https://community.atlassian.com/forums/Jira-questions/authenticating-into-GraphQL-API-via-CLI/qaq-p/2127858",
-    "https://developer.atlassian.com/cloud/",
-    "https://developer.atlassian.com/cloud/acli/",
-    "https://developer.atlassian.com/cloud/acli/guides/how-to-get-started/",
-    "https://developer.atlassian.com/cloud/bitbucket/rest/",
+    "https://community.atlassian.com/forums/Rovo-questions/Claude-Code-Rovo-MCP-API-Token-Authentication/qaq-p/3211969",
+    "https://developer.atlassian.com/cloud/confluence/graphql/",
     "https://developer.atlassian.com/cloud/confluence/rest/",
-    "https://developer.atlassian.com/cloud/jira/platform/rest/",
-    "https://developer.atlassian.com/cloud/oauth/",
+    "https://developer.atlassian.com/cloud/confluence/rest/v1/api-group-content/",
+    "https://developer.atlassian.com/cloud/confluence/rest/v1/intro/",
+    "https://developer.atlassian.com/cloud/confluence/rest/v2/intro/",
+    "https://developer.atlassian.com/cloud/jira/platform/rest/v2/",
+    "https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/",
+    "https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-projects/",
+    "https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/",
     "https://developer.atlassian.com/platform/atlassian-graphql-api/graphql/",
-    "https://github.com/sooperset/mcp-atlassian",
-    "https://go.atlassian.com/forge-mcp-server",
-    "https://mcpservers.org/servers/github-com-sooperset-mcp-atlassian"
+    "https://developer.atlassian.com/platform/atlassian-graphql-api/graphql/#authentication",
+    "https://lobehub.com/mcp/amruthabesto28-jira-mcp",
+    "https://pypi.org/project/mcp-atlassian/",
+    "https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/"
   ]
 }

@@ -33,28 +33,28 @@
       "errors": []
     },
     "usedLlm": true,
-    "discoveredAt": "2026-07-02T09:10:01.012Z",
-    "summary": "Airtable exposes a token-authenticated Web API and MCP server; both accept bearer personal access tokens or OAuth access tokens, while legacy API keys are deprecated.",
+    "discoveredAt": "2026-07-02T09:42:59.351Z",
+    "summary": "Airtable exposes one public developer API surface (Web API over HTTP with Bearer PAT or OAuth access tokens) and one MCP surface (official Airtable MCP server using OAuth sign-in).",
     "credentials": {
       "airtable_pat": {
         "type": "bearer",
         "label": "Personal access token",
         "generateUrl": "https://airtable.com/create/tokens",
-        "setup": "Go to [Create tokens](https://airtable.com/create/tokens) in your Airtable account, create a personal access token, choose the scopes and base/workspace resources it should access, then copy the token value. Airtable notes PATs are for personal development and act as your user account; do not share them with third-party services.",
+        "setup": "Go to [Personal access tokens](https://airtable.com/create/tokens) and create a token for your own development use. Choose the minimum scopes and add the specific bases/workspaces the token should access. Airtable says PATs are for personal development and should not be shared with third-party services. Use the token as an `Authorization: Bearer ...` credential.",
         "acquisition": "manual"
       },
       "airtable_oauth": {
         "type": "oauth2",
         "label": "OAuth access token",
         "generateUrl": "https://airtable.com/create/oauth",
-        "setup": "Register an OAuth integration at [Create OAuth](https://airtable.com/create/oauth), configure the integration metadata (Terms of Service URL, Support Email, Privacy Policy URL), choose scopes, then run the OAuth authorization code + PKCE flow to obtain an access token. Airtable’s OAuth reference uses `https://airtable.com/oauth2/v1/authorize` and `https://airtable.com/oauth2/v1/token`, and it supports dynamic client registration at [register](https://airtable.com/oauth2/v1/register).",
+        "setup": "Register an OAuth integration at [Create OAuth](https://airtable.com/create/oauth). Configure the integration's redirect URI(s), selected scopes, and production metadata (Terms of Service URL, Support Email, Privacy Policy URL). Users then grant access through the Airtable OAuth flow and your app receives an access token. Airtable uses OAuth 2.0 with PKCE for this flow.",
         "acquisition": "manual"
       },
-      "airtable_api_key_legacy": {
-        "type": "bearer",
-        "label": "Legacy API key",
-        "generateUrl": "https://support.airtable.com/docs/how-do-i-get-my-api-key-",
-        "setup": "Legacy Airtable API keys are deprecated and no longer supported for the Web API; Airtable’s authentication docs say the deprecation period ended on 2024-02-01. Do not create new integrations around API keys; migrate to personal access tokens or OAuth access tokens instead.",
+      "airtable_mcp_oauth": {
+        "type": "oauth2",
+        "label": "Airtable MCP OAuth token",
+        "generateUrl": "https://support.airtable.com/docs/using-the-airtable-mcp-server",
+        "setup": "Use Airtable's MCP server and sign in with the same Airtable account your AI tool will operate on. The MCP docs describe the official connection as OAuth-based; the token is obtained through the MCP server's Airtable sign-in flow rather than by copying a shared secret.",
         "acquisition": "manual"
       }
     },
@@ -63,10 +63,11 @@
         "slug": "airtable-web-api",
         "name": "Airtable Web API",
         "type": "http",
-        "docs": "https://www.airtable.com/developers/web/api/authentication",
+        "docs": "https://www.airtable.com/developers/web/api/introduction",
         "basis": {
           "via": "discovered",
           "evidence": [
+            "https://www.airtable.com/developers/web/api/introduction",
             "https://www.airtable.com/developers/web/api/authentication",
             "https://www.airtable.com/developers/web/api/scopes",
             "https://www.airtable.com/developers/web/api/oauth-reference"
@@ -99,23 +100,23 @@
               "basis": {
                 "via": "discovered",
                 "evidence": [
-                  "https://www.airtable.com/developers/web/api/authentication"
+                  "https://www.airtable.com/developers/web/api/authentication",
+                  "https://www.airtable.com/developers/web/api/oauth-reference"
                 ]
               }
             }
           ]
-        },
-        "spec": "https://www.airtable.com/developers/web/api"
+        }
       },
       {
         "slug": "airtable-mcp-server",
         "name": "Airtable MCP server",
         "type": "mcp",
+        "docs": "https://support.airtable.com/docs/using-the-airtable-mcp-server",
         "basis": {
           "via": "discovered",
           "evidence": [
-            "https://support.airtable.com/docs/using-the-airtable-mcp-server",
-            "https://www.airtable.com/developers/web/api/authentication"
+            "https://support.airtable.com/docs/using-the-airtable-mcp-server"
           ]
         },
         "auth": {
@@ -124,29 +125,16 @@
             {
               "use": [
                 {
-                  "id": "airtable_pat",
+                  "id": "airtable_mcp_oauth",
                   "mechanics": {
-                    "source": "http",
-                    "in": "header",
-                    "headerName": "Authorization",
-                    "scheme": "Bearer"
-                  }
-                },
-                {
-                  "id": "airtable_oauth",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "header",
-                    "headerName": "Authorization",
-                    "scheme": "Bearer"
+                    "source": "well-known"
                   }
                 }
               ],
               "basis": {
                 "via": "discovered",
                 "evidence": [
-                  "https://support.airtable.com/docs/using-the-airtable-mcp-server",
-                  "https://www.airtable.com/developers/web/api/authentication"
+                  "https://support.airtable.com/docs/using-the-airtable-mcp-server"
                 ]
               }
             }
@@ -154,25 +142,29 @@
         },
         "url": "https://support.airtable.com/docs/using-the-airtable-mcp-server",
         "transports": [
-          "streamable-http",
-          "sse"
+          "streamable-http"
         ]
       }
     ]
   },
-  "discoveredAt": "2026-07-02T09:10:01.012Z",
+  "discoveredAt": "2026-07-02T09:42:59.352Z",
   "model": "loop-gpt-5.4-mini",
   "usage": {
-    "prompt_tokens": 86995,
-    "completion_tokens": 1048,
-    "total_tokens": 88043
+    "prompt_tokens": 107563,
+    "completion_tokens": 1109,
+    "total_tokens": 108672
   },
   "visited": [
-    "https://docs.bravostudio.app/connect-api/browse-by-backend/airtable/update-airtable-access-token",
-    "https://support.airtable.com/docs/creating-personal-access-tokens",
-    "https://support.airtable.com/docs/service-accounts-overview",
+    "https://airtable.com/oauth2/v1/authorize",
+    "https://airtable.com/oauth2/v1/register",
+    "https://airtable.com/oauth2/v1/token",
+    "https://community.retool.com/t/how-to-connect-to-airtable-via-oauth/39187",
+    "https://github.com/onimsha/airtable-mcp-server-oauth",
+    "https://support.airtable.com/docs/how-do-i-get-my-api-key-",
+    "https://support.airtable.com/docs/public-rest-api",
     "https://support.airtable.com/docs/using-the-airtable-mcp-server",
     "https://www.airtable.com/developers/web/api/authentication",
+    "https://www.airtable.com/developers/web/api/introduction",
     "https://www.airtable.com/developers/web/api/oauth-reference",
     "https://www.airtable.com/developers/web/api/scopes",
     "https://www.scalekit.com/blog/airtable-mcp-vs-api",
