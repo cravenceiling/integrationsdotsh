@@ -211,6 +211,7 @@ async function runDomain(domain: string, opts: { apiKey: string; contextKey: str
     for (const item of deduped.collapses) console.log(`dedup: ${item.domain} merged ${item.dropped} into ${item.kept}`);
     result = deduped.result as typeof result;
     demoteBadSpecShapes(result, d.domain);
+    demoteBadMcpUrls(result, d.domain);
     if (Array.isArray(result.surfaces)) preserveSlugs(result.surfaces, readPriorSurfaces(opts.existingDir, d.domain));
 
     writeJson(outPath, {
@@ -249,6 +250,23 @@ function demoteBadSpecShapes(
     delete surface.spec;
     if (!surface.docs) surface.docs = spec;
     console.log(`spec-shape: ${domain} demoted ${surface.name ?? surface.type ?? "surface"} spec ${spec}`);
+  }
+}
+
+/** An mcp `url` must be a connect endpoint. Auth/login/settings funnels are
+ * noise — demote to docs. GitHub repos stay: they locate local servers. */
+function demoteBadMcpUrls(
+  result: { surfaces?: Array<{ name?: string; type?: string; docs?: string; url?: string }> },
+  domain: string,
+): void {
+  if (!Array.isArray(result.surfaces)) return;
+  for (const surface of result.surfaces) {
+    if (surface.type !== "mcp" || !surface.url) continue;
+    if (!/[?&](redirect|returnTo|continue)=|\/(login|signin|sign-in|choose-org|settings)\b/i.test(surface.url)) continue;
+    const url = surface.url;
+    delete surface.url;
+    if (!surface.docs) surface.docs = url;
+    console.log(`mcp-url: ${domain} demoted ${surface.name ?? "mcp surface"} url ${url}`);
   }
 }
 
