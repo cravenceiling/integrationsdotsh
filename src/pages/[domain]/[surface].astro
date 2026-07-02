@@ -82,6 +82,9 @@ if (surface.spec)
 if (surface.command) detailRows.push({ label: "Command", value: surface.command, kind: "code" });
 if (surface.docs && surface.docs !== surface.spec) detailRows.push({ label: "Docs", value: surface.docs, kind: "link" });
 
+// Credit APIs.guru when the spec is one of their mirrored OpenAPI docs.
+const fromApisGuru = typeof surface.spec === "string" && hostOf(surface.spec) === "api.apis.guru";
+
 const title = `${surface.name} — ${typeLabel}`;
 const description = `${surface.name} on ${domain}: a ${typeLabel} surface and how to authenticate.`;
 Astro.response.headers.set("cache-control", "public, max-age=60");
@@ -174,7 +177,14 @@ Astro.response.headers.set("cache-control", "public, max-age=60");
 
     {detailRows.length > 0 && (
       <section>
-        <div class="sec-header"><span class="sec-label">Details</span></div>
+        <div class="sec-header">
+          <span class="sec-label">Details</span>
+          {fromApisGuru && (
+            <span class="sec-note">
+              API specs supplied by <a href="https://apis.guru" target="_blank" rel="noopener noreferrer">APIs.guru</a>
+            </span>
+          )}
+        </div>
         <dl class="kv">
           {detailRows.map((r) => (
             <>
@@ -206,4 +216,6 @@ Astro.response.headers.set("cache-control", "public, max-age=60");
   .auth-none .auth-use { font-size: 13px; color: var(--gray-500); font-weight: 400; }
   .muted { color: var(--gray-400); font-size: 13.5px; margin: 14px 0 0; }
   .prov-end { margin-left: auto; }
+  .sec-note a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+  .sec-note a:hover { color: var(--gray-600); }
 </style>
