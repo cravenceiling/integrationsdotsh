@@ -151,7 +151,9 @@ export function checklist(
     (grounding ?? []).flatMap((url) => {
       const clean = url.replace(/[.,;:]+$/, "");
       // URLs embedded in query params (auth.x.com/authorize?audience=https://api.y.com) ground too.
-      const embedded = decodeURIComponent(clean).match(/https?:\/\/[^\s"'<>),&\]`]+/g) ?? [];
+      let decoded = clean;
+      try { decoded = decodeURIComponent(clean); } catch { /* malformed % sequences stay raw */ }
+      const embedded = decoded.match(/https?:\/\/[^\s"'<>),&\]`]+/g) ?? [];
       return [clean, ...embedded];
     }),
   );
