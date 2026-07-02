@@ -8,7 +8,7 @@ import { getDomain as tldGetDomain } from "tldts";
 // (app.vercel.app, user.github.io) instead of collapsing onto the platform.
 const getDomain = (url: string) => tldGetDomain(url, { allowPrivateDomains: true });
 import type { Integration, Feed, Kind, ExtractedTool } from "../src/lib/types.ts";
-import { faviconUrl } from "../src/lib/favicon.ts";
+import { faviconUrl, isJunkDomain } from "../src/lib/favicon.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SOURCES = join(ROOT, "sources");
@@ -627,6 +627,8 @@ function dedupeSlugs(recs: Integration[]): Integration[] {
 // Index: slim record for search
 // ─────────────────────────────────────────────────────────────────────────────
 
+const KIND_ORDER: Kind[] = ["mcp", "openapi", "graphql", "cli"];
+
 // The registrable domain a record belongs to — the grouping key for the
 // domain-grouped homepage. OpenAPI carries an eTLD+1 provider already; for MCP
 // and GraphQL we derive it from the endpoint (mcp.notion.com → notion.com).
@@ -689,6 +691,49 @@ function buildIndex(all: Integration[]) {
       devtool: DEVTOOL_DOMAINS.has(domain) || undefined,
     };
   });
+}
+
+type IndexEntry = ReturnType<typeof buildIndex>[number];
+
+interface SearchIndexEntry {
+  domain: string;
+  description: string;
+  kinds: Kind[];
+  devtool: boolean;
+  popularity: number;
+  total: number;
+}
+
+function buildSearchIndex(index: IndexEntry[]): SearchIndexEntry[] {
+  const map = new Map<string, { domain: string; description: string; kinds: Set<Kind>; devtool: boolean; popularity: number; total: number }>();
+  for (const r of index) {
+    const domain = r.domain || r.slug;
+    if (!domain) continue;
+    if (isJunkDomain(domain)) continue;
+    let group = map.get(domain);
+    if (!group) {
+      group = { domain, description: "", kinds: new Set(), devtool: false, popularity: 0, total: 0 };
+      map.set(domain, group);
+    }
+    group.total++;
+    group.kinds.add(r.kind);
+    group.popularity = Math.max(group.popularity, r.popularity ?? 0);
+    group.devtool ||= r.devtool === true;
+    if (!group.description && r.description) group.description = r.description.replace(/\s+/g, " ").slice(0, 110);
+  }
+
+  return [...map.values()]
+    .map((group) => ({
+      domain: group.domain,
+      description: group.description,
+      kinds: KIND_ORDER.filter((kind) => group.kinds.has(kind)),
+      devtool: group.devtool,
+      popularity: group.popularity,
+      total: group.total,
+    }))
+    .sort(
+      (a, b) => Number(b.devtool) - Number(a.devtool) || b.popularity - a.popularity || b.total - a.total || a.domain.localeCompare(b.domain),
+    );
 }
 
 interface CatalogSeedEntry {
@@ -803,8 +848,10 @@ function main() {
   writeFileSync(join(OUTPUT, "cli.json"), JSON.stringify(cli, null, 2));
 
   const all = [...mcp, ...openapi, ...graphql, ...cli];
-  writeFileSync(join(OUTPUT, "index.json"), JSON.stringify(buildIndex(all)));
+  const index = buildIndex(all);
+  writeFileSync(join(OUTPUT, "index.json"), JSON.stringify(index));
   writeFileSync(join(OUTPUT, "catalog-seeds.json"), JSON.stringify(buildCatalogSeedData(all)));
+  writeFileSync(join(OUTPUT, "search-index.json"), JSON.stringify(buildSearchIndex(index)));
 
   const mergedMcp = mcp.filter((r) => r.feeds.length > 1).length;
   const withTools = (rs: Integration[]) =>

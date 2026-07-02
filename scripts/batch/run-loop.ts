@@ -248,6 +248,7 @@ async function runDomain(domain: string, opts: RunDomainOptions): Promise<void> 
     result = deduped.result as typeof result;
     demoteBadSpecShapes(result, d.domain);
     demoteBadMcpUrls(result, d.domain);
+    demoteExampleHosts(result, d.domain);
     if (Array.isArray(result.surfaces)) preserveSlugs(result.surfaces, readPriorSurfaces(opts.existingDir, d.domain));
 
     writeJson(outPath, {
@@ -303,6 +304,22 @@ function demoteBadMcpUrls(
     delete surface.url;
     if (!surface.docs) surface.docs = url;
     console.log(`mcp-url: ${domain} demoted ${surface.name ?? "mcp surface"} url ${url}`);
+  }
+}
+
+/** example.com/org hosts are spec-placeholder servers (RFC 2606), never real
+ * endpoints — the model copies them out of OpenAPI `servers` blocks. */
+function demoteExampleHosts(
+  result: { surfaces?: Array<{ name?: string; type?: string; url?: string; notes?: string }> },
+  domain: string,
+): void {
+  if (!Array.isArray(result.surfaces)) return;
+  for (const surface of result.surfaces) {
+    if (!surface.url || !/\/\/([a-z0-9-]+\.)*example\.(com|org|net)([:/]|$)/i.test(surface.url)) continue;
+    const url = surface.url;
+    delete surface.url;
+    surface.notes = ((surface.notes ?? "") + " Docs show a placeholder server host; the real base URL is tenant- or deployment-specific.").trim();
+    console.log(`example-host: ${domain} demoted ${surface.name ?? surface.type ?? "surface"} url ${url}`);
   }
 }
 

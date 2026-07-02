@@ -14,19 +14,20 @@ import { App } from "astro/app";
 import { handle } from "@astrojs/cloudflare/handler";
 import resvgWasmModule from "@resvg/resvg-wasm/index_bg.wasm?module";
 import yogaWasmModule from "satori/yoga.wasm?module";
-import { apiHandler } from "./api.ts";
+import { apiContext, apiHandler } from "./api.ts";
+import { discoveryDoc } from "./discovery-doc.ts";
 import { setChat, setWebBackend, discoverWithProgress, preserveSlugs } from "./operations.ts";
 import { contextWeb, naiveWeb } from "../src/lib/contextdev.ts";
 import { isJunkDomain, registrableDomain } from "../src/lib/favicon.ts";
 import { renderOgPng, type OgFonts, type OgImageData } from "../src/lib/og.tsx";
 import type { Surface } from "../src/lib/surface-view.ts";
-import type { Credential, DiscoveryDoc } from "../src/lib/surface-view.ts";
+import type { Credential } from "../src/lib/surface-view.ts";
 import type { EdgeCaches, Env, ExecutionContext } from "./env.ts";
 import { McpDurableObject } from "./mcp-do.ts";
 
 // Bump when detect/discover output shape or logic changes, so the edge Cache API
 // (which survives deploys) stops serving results produced by the old code.
-const CACHE_VERSION = "17"; // 17: conventions scorecard + integrations.json detect output
+const CACHE_VERSION = "18"; // 18: search + surface API operations
 
 // The discovery-loop model. gpt-5.4 drives the agentic tool-calling loop
 // (search/sitemap/scrape/report). (Note: gpt-5.x rejects `reasoning_effort`
@@ -81,36 +82,10 @@ function wireAi(env: Env): void {
   });
 }
 
-/** Prior surfaces for a domain: the stored KV result, else the baseline
- * discovery document (whose slugs the prerendered pages already link to). */
+/** Prior surfaces for a domain: the same stored-or-baseline document the domain
+ * page renders, whose slugs the prerendered pages already link to. */
 async function priorSurfaces(env: Env, origin: string, domain: string): Promise<Surface[]> {
-  try {
-    const raw = await env.DISCOVERY.get(domain);
-    if (raw) {
-      const stored = JSON.parse(raw) as { result?: { surfaces?: Surface[] } };
-      if (stored.result?.surfaces?.length) return stored.result.surfaces;
-    }
-    const res = await env.ASSETS.fetch(`${origin}/disc/${encodeURIComponent(domain)}.json`);
-    if (res.ok) return ((await res.json()) as { surfaces?: Surface[] }).surfaces ?? [];
-  } catch {
-    /* no priors — fresh slugs stand */
-  }
-  return [];
-}
-
-async function discoveryDoc(env: Env, origin: string, domain: string): Promise<DiscoveryDoc | null> {
-  try {
-    const raw = await env.DISCOVERY.get(domain);
-    if (raw) {
-      const stored = JSON.parse(raw) as { result?: DiscoveryDoc };
-      if (stored.result?.surfaces?.length) return stored.result;
-    }
-    const res = await env.ASSETS.fetch(`${origin}/disc/${encodeURIComponent(domain)}.json`);
-    if (res.ok) return (await res.json()) as DiscoveryDoc;
-  } catch {
-    /* no OG for unavailable or malformed discovery data */
-  }
-  return null;
+  return (await discoveryDoc(env, origin, domain))?.surfaces ?? [];
 }
 
 let ogFontsPromise: Promise<OgFonts> | null = null;
@@ -475,9 +450,14 @@ export function createExports(manifest: SSRManifest) {
       });
     }
 
-    // Dynamic API (the Effect HttpApi) — detect, discover + the OpenAPI doc.
+    // Dynamic API (the Effect HttpApi) — catalog search, surface docs, detect,
+    // discover + the OpenAPI doc.
     // Other /api/* paths (e.g. the static /api/domains.json) fall through to Astro.
-    if (url.pathname === "/openapi.json" || /^\/api\/[^/]+\/(?:detect|discover)\/?$/.test(url.pathname)) {
+    if (
+      url.pathname === "/openapi.json" ||
+      url.pathname === "/api/search" ||
+      /^\/api\/[^/]+\/(?:detect|discover|surface)\/?$/.test(url.pathname)
+    ) {
       track(env, ctx, request, "api_request");
       const cache = (caches as unknown as EdgeCaches).default;
       // Version the cache key so a deploy that bumps CACHE_VERSION orphans stale
@@ -496,12 +476,13 @@ export function createExports(manifest: SSRManifest) {
           return json({ error: "rate limited — try again in a minute" }, 429, { "retry-after": "60" });
         }
       }
-      const res = await apiHandler(request);
-      if (request.method === "GET" && res.status === 200) {
+      const res = await apiHandler(request, apiContext(env, url.origin));
+      const maxAge = url.pathname.includes("/discover") ? 86400 : url.pathname.includes("/surface") ? 60 : 3600;
+      if (request.method === "GET" && (res.status === 200 || (url.pathname.includes("/surface") && res.status === 404))) {
         const out = new Response(res.clone().body, res);
-        // discover runs the LLM agent — cache a day; detect/openapi are cheap — an hour.
-        out.headers.set("cache-control", url.pathname.includes("/discover") ? "public, max-age=86400" : "public, max-age=3600");
-        ctx.waitUntil(cache.put(cacheKey, out.clone()));
+        // discover runs the LLM agent — cache a day; surface matches /api/{domain}/discovery; the rest are cheap — an hour.
+        out.headers.set("cache-control", `public, max-age=${maxAge}`);
+        if (res.status === 200) ctx.waitUntil(cache.put(cacheKey, out.clone()));
         return out;
       }
       return res;
