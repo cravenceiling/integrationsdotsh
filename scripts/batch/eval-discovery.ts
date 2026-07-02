@@ -124,6 +124,7 @@ export function checklist(
   result: { domain?: string; detect?: unknown; credentials?: unknown; surfaces?: readonly unknown[] },
   corpusText?: string,
   visited?: readonly string[],
+  grounding?: readonly string[],
 ): Checklist {
   const credentials = credentialsOf(result);
   const credentialEntries = Object.entries(credentials);
@@ -141,10 +142,17 @@ export function checklist(
   // Hosts the loop actually visited are grounded too — a service's docs often
   // live on a sibling registrable domain (canva.com → canva.dev).
   const visitedDomains = new Set((visited ?? []).map((url) => registrable(url)).filter(Boolean));
+  const groundingSet = new Set((grounding ?? []).map((url) => url.replace(/[.,;:]+$/, "")));
   const urlOffenders = [...collectUrls(result)].filter((url) => {
     if (corpusText !== undefined) return !corpusText.includes(url);
     const urlDomain = registrable(url);
-    return !evidenceUrls.has(url) && !(resultDomain && urlDomain === resultDomain) && !detectedUrls.has(url) && !(urlDomain && visitedDomains.has(urlDomain));
+    return (
+      !evidenceUrls.has(url) &&
+      !(resultDomain && urlDomain === resultDomain) &&
+      !detectedUrls.has(url) &&
+      !(urlDomain && visitedDomains.has(urlDomain)) &&
+      !groundingSet.has(url.replace(/[.,;:]+$/, ""))
+    );
   });
   const unresolvedAuthIds = authUses(result)
     .map((use) => use.id)

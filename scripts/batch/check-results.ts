@@ -28,7 +28,7 @@ async function main(): Promise<void> {
 
   let failed = 0;
   for (const file of files) {
-    const row = readJson<{ result?: { domain?: string; detect?: unknown; credentials?: unknown; surfaces?: readonly unknown[] }; visited?: string[] }>(file);
+    const row = readJson<{ result?: { domain?: string; detect?: unknown; credentials?: unknown; surfaces?: readonly unknown[] }; visited?: string[]; grounding?: string[] }>(file);
     const result = row.result;
     const domain = result?.domain ?? file.split("/").pop()!.replace(/\.json$/, "");
     if (!result) {
@@ -38,7 +38,7 @@ async function main(): Promise<void> {
     }
     // Loop results carry `visited` (live scrape trail) — ground against that,
     // not a corpus file that some earlier one-shot run may have left behind.
-    const checks = row.visited ? checklist(result, undefined, row.visited) : checklist(result, corpusText(corpusDir, domain));
+    const checks = row.visited ? checklist(result, undefined, row.visited, row.grounding) : checklist(result, corpusText(corpusDir, domain));
     const bad = Object.entries(checks.checks).filter(([, check]) => !check.passed).map(([name]) => name);
     if (!checks.passed) failed++;
     console.log(`${domain}\t${checks.passed ? "pass" : "fail"}${bad.length ? `\t${bad.join(",")}` : ""}`);

@@ -165,21 +165,36 @@ async function runDomain(domain: string, opts: { apiKey: string; contextKey: str
     // Record everywhere the loop actually looked — grounding checks trust
     // visited hosts (docs often live off-domain, e.g. canva.dev for canva.com).
     const visited = new Set<string>();
+    // Every URL the model could have literally read: visited pages plus URLs
+    // appearing in scraped content — the grounding universe for the checker.
+    const seenUrls = new Set<string>();
+    const noteUrls = (text: string) => {
+      for (const m of text.match(/https?:\/\/[^\s"'<>)\],`\\]+/g) ?? []) seenUrls.add(m.replace(/[.,;:]+$/, ""));
+    };
     const inner = contextWeb(opts.contextKey);
     const web: typeof inner = {
       canSearch: inner.canSearch,
       async search(query) {
         const hits = await inner.search(query);
-        for (const hit of hits) visited.add(hit.url);
+        for (const hit of hits) {
+          visited.add(hit.url);
+          seenUrls.add(hit.url);
+        }
         return hits;
       },
       async scrape(url) {
         visited.add(url);
-        return inner.scrape(url);
+        seenUrls.add(url);
+        const content = await inner.scrape(url);
+        noteUrls(content);
+        return content;
       },
       async sitemap(dom, urlRegex) {
         const urls = await inner.sitemap(dom, urlRegex);
-        for (const url of urls) visited.add(url);
+        for (const url of urls) {
+          visited.add(url);
+          seenUrls.add(url);
+        }
         return urls;
       },
     };
@@ -204,6 +219,7 @@ async function runDomain(domain: string, opts: { apiKey: string; contextKey: str
       model: `loop-${opts.model}`,
       usage: stats.usage,
       visited: [...visited].sort(),
+      grounding: [...seenUrls].sort(),
     });
 
     const seconds = ((Date.now() - started) / 1000).toFixed(1);

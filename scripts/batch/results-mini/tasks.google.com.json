@@ -10,14 +10,14 @@
       "errors": []
     },
     "usedLlm": true,
-    "discoveredAt": "2026-07-02T09:27:50.888Z",
-    "summary": "Google Tasks exposes one public developer surface: the Google Tasks REST API, authenticated with Google OAuth 2.0 (user-granted scopes).",
+    "discoveredAt": "2026-07-02T10:03:50.358Z",
+    "summary": "Google Tasks exposes one public developer surface: the Google Tasks API (REST/HTTP), authenticated with OAuth 2.0 bearer tokens from a Google OAuth client.",
     "credentials": {
-      "google_oauth2": {
+      "google_oauth_client": {
         "type": "oauth2",
-        "label": "Google OAuth 2.0 client + user grant",
-        "generateUrl": "https://console.cloud.google.com/workspace-api",
-        "setup": "Create a Google Cloud project, enable the Google Tasks API, and configure OAuth consent and an OAuth client in the [Google Cloud console](https://console.cloud.google.com/workspace-api). Then have the user authorize the app for Google Tasks scopes such as `https://www.googleapis.com/auth/tasks` or narrower scopes listed on the Tasks auth page. Use the resulting OAuth access token/refresh token for API calls.",
+        "label": "Google OAuth client for Google Tasks",
+        "generateUrl": "https://console.cloud.google.com/apis/credentials",
+        "setup": "Create or select a Google Cloud project in the [Google Cloud console](https://console.cloud.google.com/). Enable the Google Tasks API, then create an OAuth client under [APIs & Services > Credentials](https://console.cloud.google.com/apis/credentials). Use it to obtain user consent for the Google account whose tasks you want to access. The easiest path is usually a standard OAuth client (desktop/web) with the relevant Google Tasks scopes from [Choose scopes](https://developers.google.com/workspace/tasks/auth).",
         "acquisition": "manual"
       }
     },
@@ -26,12 +26,13 @@
         "slug": "google-tasks-api",
         "name": "Google Tasks API",
         "type": "http",
-        "docs": "https://developers.google.com/workspace/tasks/reference/rest",
+        "docs": "https://developers.google.com/workspace/tasks/overview",
         "basis": {
           "via": "discovered",
           "evidence": [
-            "https://developers.google.com/workspace/tasks/auth",
-            "https://developers.google.com/workspace/tasks/reference/rest"
+            "https://developers.google.com/workspace/tasks/overview",
+            "https://developers.google.com/workspace/tasks/reference/rest",
+            "https://developers.google.com/workspace/tasks/auth"
           ]
         },
         "auth": {
@@ -40,10 +41,12 @@
             {
               "use": [
                 {
-                  "id": "google_oauth2",
+                  "id": "google_oauth_client",
                   "mechanics": {
-                    "source": "spec",
-                    "scheme": "oauth2"
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Bearer"
                   }
                 }
               ],
@@ -56,24 +59,25 @@
               }
             }
           ]
-        },
-        "spec": "https://developers.google.com/workspace/tasks/reference/rest"
+        }
       }
     ]
   },
-  "discoveredAt": "2026-07-02T09:27:50.888Z",
+  "discoveredAt": "2026-07-02T10:03:50.358Z",
   "model": "loop-gpt-5.4-mini",
   "usage": {
-    "prompt_tokens": 30399,
-    "completion_tokens": 430,
-    "total_tokens": 30829
+    "prompt_tokens": 57042,
+    "completion_tokens": 688,
+    "total_tokens": 57730
   },
   "visited": [
-    "https://developers.google.com/identity/protocols/oauth2",
     "https://developers.google.com/workspace/tasks/auth",
+    "https://developers.google.com/workspace/tasks/overview",
     "https://developers.google.com/workspace/tasks/reference/rest",
-    "https://stackoverflow.com/questions/14265770/authorize-and-access-google-tasks-api-from-android-app",
-    "https://support.google.com/googleapi/answer/6158862?hl=en",
+    "https://developers.google.com/workspace/tasks/reference/rest/v1",
+    "https://docs.cloud.google.com/docs/authentication/api-keys",
+    "https://github.com/googleapis/google-api-go-client/blob/main/tasks/v1/tasks-api.json",
+    "https://stackoverflow.com/questions/53786782/google-api-authentication-tasks-api",
     "https://tasksboard.com/google-tasks/api"
   ]
 }
