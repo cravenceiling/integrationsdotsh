@@ -63,3 +63,12 @@
   keep it for the results-mini sample vintage).
 - check-results gained --probe (live-verify grounding offenders; github MCP
   endpoint case). 257/257 passing at last full check.
+
+## 07:45 update — TPM bump landed (180M/min)
+- Driver restarted at concurrency 16; ~560 domains done, batch 3 in flight.
+- narvar rerun: correct empty result (no public dev surface). opentools.com is
+  an MCP AGGREGATOR — its 'surfaces' are other vendors' servers; flagged for
+  manual curation like apis.guru, checker fail is by design. Exclude or curate.
+- Checker matured: placeholder hosts (YOUR_INSTANCE), localhost quickstarts,
+  host-family grounding, cli-oauth check narrowed to login-acquired creds.
+- Third-party-credential prompt rule active (narvar/opentools class).
