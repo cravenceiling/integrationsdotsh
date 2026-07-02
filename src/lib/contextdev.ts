@@ -33,12 +33,22 @@ async function retrying(run: () => Promise<Response>): Promise<Response> {
 
 // Global politeness cap on concurrent context.dev requests, shared across all
 // discovery loops in the process — bulk runs multiply per-domain parallelism,
-// and their API shouldn't absorb the product of both.
-const CTX_MAX_CONCURRENT = 12;
+// and their API shouldn't absorb the product of both. The cap RAMPS from a
+// gentle start to peak over the first minutes of the process so context.dev's
+// autoscaling can track the load instead of eating a step function.
+const CTX_PEAK_CONCURRENT = 12;
+const CTX_RAMP_START = 3;
+const CTX_RAMP_MINUTES = 10;
+const ctxProcessStart = Date.now();
+function ctxMaxConcurrent(): number {
+  const elapsedMin = (Date.now() - ctxProcessStart) / 60_000;
+  if (elapsedMin >= CTX_RAMP_MINUTES) return CTX_PEAK_CONCURRENT;
+  return Math.max(CTX_RAMP_START, Math.round(CTX_RAMP_START + (CTX_PEAK_CONCURRENT - CTX_RAMP_START) * (elapsedMin / CTX_RAMP_MINUTES)));
+}
 let ctxInFlight = 0;
 const ctxWaiters: Array<() => void> = [];
 async function ctxSlot<T>(run: () => Promise<T>): Promise<T> {
-  if (ctxInFlight >= CTX_MAX_CONCURRENT) await new Promise<void>((resolve) => ctxWaiters.push(resolve));
+  while (ctxInFlight >= ctxMaxConcurrent()) await new Promise<void>((resolve) => ctxWaiters.push(resolve));
   ctxInFlight++;
   try {
     return await run();
