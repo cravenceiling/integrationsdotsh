@@ -111,3 +111,19 @@ without failing the check (external uptime monitor target).
 - Checker matured: placeholder hosts (YOUR_INSTANCE), localhost quickstarts,
   host-family grounding, cli-oauth check narrowed to login-acquired creds.
 - Third-party-credential prompt rule active (narvar/opentools class).
+
+## Launch readiness (2026-07-02 ~15:00) — COMPLETE
+- Analytics: full outcome-carrying event set server+client, worker_exception
+  catch-all, event contract documented above. Verify in PostHog after launch
+  traffic arrives.
+- /healthz live (version + KV probe) — point external uptime monitor here.
+  ALERT DESTINATION still needs owner input.
+- Launch P0s shipped: versioned data envelopes, www/workers.dev 301s,
+  domain sitemap. OG 500s → 404s.
+- Rate limit: 3 uncached discovery runs/IP/min, both endpoints.
+- OPS RULE (from today's bad deploy): build+tests are NOT deploy verification.
+  Mandatory: local `wrangler dev` smoke (healthz, one page, one data route)
+  before every `wrangler deploy`. A rollback (`wrangler rollback`) took prod
+  from 500s back to healthy in ~60s — total incident window ~4 minutes.
+- Regen: ~1,300/3,124 on gpt-5.4; catalog swap after completion + checklist.
+  Launch does NOT block on it (current data is live and checklist-clean).
