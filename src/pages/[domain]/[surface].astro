@@ -89,12 +89,11 @@ if (surface.spec)
   detailRows.push(
     surface.spec === "introspection"
       ? { label: "Spec", value: "introspection", kind: "text" }
-      : { label: "Spec", value: surface.spec, kind: "link", linkLabel: hostOf(surface.spec) || "spec" },
+      : { label: "Spec", value: surface.spec, kind: "link" },
   );
 for (const spec of surface.specAlternates ?? []) {
   if (!spec || spec === surface.spec) continue;
-  const format = specFormatLabel(spec);
-  detailRows.push({ label: `Spec (${format})`, value: spec, kind: "link", linkLabel: hostOf(spec) || format });
+  detailRows.push({ label: `Spec (${specFormatLabel(spec)})`, value: spec, kind: "link" });
 }
 if (surface.command) detailRows.push({ label: "Command", value: surface.command, kind: "code" });
 if (surface.docs && surface.docs !== surface.spec) detailRows.push({ label: "Docs", value: surface.docs, kind: "link" });
