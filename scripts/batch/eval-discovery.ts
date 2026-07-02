@@ -158,6 +158,7 @@ export function checklist(
   const urlOffenders = [...collectUrls(result)].filter((url) => {
     if (corpusText !== undefined) return !corpusText.includes(url);
     if (/[{}]/.test(url) || /\/\/[^/]*\b[A-Z]{2,}[A-Z_-]*[A-Z]\b/.test(url)) return false; // {tenant} and YOUR_INSTANCE placeholders
+    if (/^https?:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0)([:/]|$)/.test(url)) return false; // self-hosted quickstart examples
     const urlDomain = registrable(url);
     return (
       !evidenceUrls.has(url) &&
@@ -177,7 +178,11 @@ export function checklist(
     .filter((use) => {
       const credential = typeof use.id === "string" ? credentials[use.id] : undefined;
       const setup = credential && typeof credential === "object" ? (credential as { setup?: unknown }).setup : undefined;
-      return use.mechanics?.source === "cli" && typeof use.id === "string" && typeof setup === "string" && /\/oauth\//i.test(setup);
+      // Only creds ACQUIRED by a login command; env-var/flag consumption via
+      // cli mechanics may legitimately document the service's OAuth endpoints.
+      const mech = use.mechanics as { source?: string; command?: string; env?: string[] } | undefined;
+      const acquiredByCli = mech?.source === "cli" && !!mech.command && !/[<{$]/.test(mech.command) && !mech.env?.length;
+      return acquiredByCli && typeof use.id === "string" && typeof setup === "string" && /\/oauth\//i.test(setup);
     })
     .map((use) => use.id!)
     .filter((id, index, ids) => ids.indexOf(id) === index);
