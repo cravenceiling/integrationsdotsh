@@ -107,7 +107,8 @@
             },
             "description": "Used for PUT and POST requests."
           }
-        ]
+        ],
+        "spec": "https://api.quickblox.com/openapi"
       }
     ]
   },

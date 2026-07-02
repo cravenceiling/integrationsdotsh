@@ -107,7 +107,8 @@
             }
           ]
         },
-        "url": "https://app.posthog.com/api/schema/swagger-ui/"
+        "url": "https://app.posthog.com/api/schema/swagger-ui/",
+        "spec": "https://app.posthog.com/api/schema/"
       },
       {
         "slug": "posthog-api",
@@ -182,7 +183,8 @@
             }
           ]
         },
-        "url": "https://us.i.posthog.com"
+        "url": "https://us.i.posthog.com",
+        "spec": "https://us.i.posthog.com/api/schema/"
       },
       {
         "slug": "posthog-oauth-server",

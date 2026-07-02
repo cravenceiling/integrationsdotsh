@@ -54,7 +54,8 @@
             }
           ]
         },
-        "url": "https://domainfinder.nic.at/api/v1/suggest"
+        "url": "https://domainfinder.nic.at/api/v1/suggest",
+        "spec": "https://domainfinder.nic.at/openapi"
       }
     ]
   },

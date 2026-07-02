@@ -100,27 +100,6 @@
         "transports": [
           "streamable-http"
         ]
-      },
-      {
-        "slug": "neurnav-oauth-authorize-endpoint",
-        "name": "Neurnav OAuth authorize endpoint",
-        "type": "http",
-        "basis": {
-          "via": "discovered",
-          "evidence": [
-            "https://neurnav.com/oauth/authorize"
-          ]
-        },
-        "auth": {
-          "status": "none",
-          "basis": {
-            "via": "discovered",
-            "evidence": [
-              "https://neurnav.com/oauth/authorize"
-            ]
-          }
-        },
-        "url": "https://neurnav.com/oauth/authorize"
       }
     ]
   },

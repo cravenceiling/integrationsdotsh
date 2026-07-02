@@ -32,52 +32,6 @@
     },
     "surfaces": [
       {
-        "slug": "at-t-oauth-2-0-token-service",
-        "name": "AT&T OAuth 2.0 token service",
-        "type": "http",
-        "docs": "https://developer.att.com/oauth-2/docs",
-        "basis": {
-          "via": "discovered",
-          "evidence": [
-            "https://developer.att.com/oauth-2/docs"
-          ]
-        },
-        "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "att_app_key_secret",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "body",
-                    "scheme": "client_id",
-                    "paramName": "client_id"
-                  }
-                },
-                {
-                  "id": "att_app_key_secret",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "body",
-                    "scheme": "client_secret",
-                    "paramName": "client_secret"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://developer.att.com/oauth-2/docs"
-                ]
-              }
-            }
-          ]
-        },
-        "url": "https://api.att.com/oauth/v4/token"
-      },
-      {
         "slug": "at-t-sms-api",
         "name": "AT&T SMS API",
         "type": "http",

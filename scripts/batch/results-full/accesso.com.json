@@ -117,52 +117,6 @@
         "url": "https://api.{region}.te2.io/oauth2"
       },
       {
-        "slug": "accesso-service-account-token-flow",
-        "name": "accesso service-account token flow",
-        "type": "http",
-        "docs": "http://developers.te2.io/docs/guides/oauth2-service-accounts-and-service-tokens.html",
-        "basis": {
-          "via": "discovered",
-          "evidence": [
-            "http://developers.te2.io/docs/guides/oauth2-service-accounts-and-service-tokens.html"
-          ]
-        },
-        "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "accesso_api_key",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "header",
-                    "headerName": "Authorization",
-                    "scheme": "Basic"
-                  }
-                },
-                {
-                  "id": "accesso_service_jwt",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "body",
-                    "scheme": "bearer",
-                    "paramName": "client_assertion"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "http://developers.te2.io/docs/guides/oauth2-service-accounts-and-service-tokens.html"
-                ]
-              }
-            }
-          ]
-        },
-        "url": "https://api.{region}.te2.io/oauth2/token"
-      },
-      {
         "slug": "accesso-webhook-topic-subscription",
         "name": "accesso Webhook Topic Subscription",
         "type": "http",

@@ -61,7 +61,8 @@
             }
           ]
         },
-        "url": "https://api.gitbook.com/v1"
+        "url": "https://api.gitbook.com/v1",
+        "spec": "https://api.gitbook.com/openapi.yaml"
       },
       {
         "slug": "gitbook-published-docs-mcp",

@@ -67,50 +67,6 @@
         "url": "https://priority-guard.com"
       },
       {
-        "slug": "priority-guardian-oauth-authorization-server",
-        "name": "Priority Guardian OAuth Authorization Server",
-        "type": "http",
-        "basis": {
-          "via": "discovered",
-          "evidence": [
-            "https://www.priority-guard.com/openapi.json",
-            "https://www.priority-guard.com/oauth/pg/authorize"
-          ]
-        },
-        "auth": {
-          "status": "none",
-          "basis": {
-            "via": "discovered",
-            "evidence": [
-              "https://www.priority-guard.com/oauth/pg/authorize"
-            ]
-          }
-        },
-        "url": "https://www.priority-guard.com/oauth/pg/authorize"
-      },
-      {
-        "slug": "priority-guardian-oauth-token-endpoint",
-        "name": "Priority Guardian OAuth Token Endpoint",
-        "type": "http",
-        "basis": {
-          "via": "discovered",
-          "evidence": [
-            "https://www.priority-guard.com/openapi.json",
-            "https://www.priority-guard.com/oauth/pg/token"
-          ]
-        },
-        "auth": {
-          "status": "none",
-          "basis": {
-            "via": "discovered",
-            "evidence": [
-              "https://www.priority-guard.com/oauth/pg/token"
-            ]
-          }
-        },
-        "url": "https://www.priority-guard.com/oauth/pg/token"
-      },
-      {
         "slug": "priority-guardian-oauth-dynamic-client-registration",
         "name": "Priority Guardian OAuth Dynamic Client Registration",
         "type": "http",

@@ -58,7 +58,8 @@
             }
           ]
         },
-        "url": "https://api.edmunds.com/api/vehicle/v3"
+        "url": "https://api.edmunds.com/api/vehicle/v3",
+        "spec": "https://api.edmunds.com/openapi.yaml"
       },
       {
         "slug": "edmunds-editorial-api",
@@ -96,7 +97,8 @@
             }
           ]
         },
-        "url": "https://api.edmunds.com/api/editorial/v3"
+        "url": "https://api.edmunds.com/api/editorial/v3",
+        "spec": "https://api.edmunds.com/openapi.yaml"
       },
       {
         "slug": "edmunds-dealer-api",
@@ -134,7 +136,8 @@
             }
           ]
         },
-        "url": "https://api.edmunds.com/api/dealer/v5"
+        "url": "https://api.edmunds.com/api/dealer/v5",
+        "spec": "https://api.edmunds.com/openapi.yaml"
       },
       {
         "slug": "edmunds-media-api",
@@ -172,7 +175,8 @@
             }
           ]
         },
-        "url": "https://api.edmunds.com/api/media/v2"
+        "url": "https://api.edmunds.com/api/media/v2",
+        "spec": "https://api.edmunds.com/openapi.yaml"
       }
     ]
   },

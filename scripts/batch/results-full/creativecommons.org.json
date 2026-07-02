@@ -119,51 +119,6 @@
           ]
         },
         "url": "https://api.openverse.org/v1"
-      },
-      {
-        "slug": "openverse-api-token-endpoint",
-        "name": "Openverse API token endpoint",
-        "type": "http",
-        "docs": "https://api.creativecommons.engineering/v1/",
-        "basis": {
-          "via": "discovered",
-          "evidence": [
-            "https://api.creativecommons.engineering/v1/"
-          ]
-        },
-        "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "openverse_client_credentials",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "body",
-                    "scheme": "client_credentials"
-                  }
-                },
-                {
-                  "id": "openverse_bearer_token",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "header",
-                    "headerName": "Authorization",
-                    "scheme": "Bearer"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://api.creativecommons.engineering/v1/"
-                ]
-              }
-            }
-          ]
-        },
-        "url": "https://api.openverse.org/v1/auth_tokens/token/"
       }
     ]
   },

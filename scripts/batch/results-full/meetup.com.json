@@ -71,26 +71,6 @@
         "url": "https://api.meetup.com/gql-ext"
       },
       {
-        "slug": "meetup-oauth-2-authorization-endpoints",
-        "name": "Meetup OAuth 2 authorization endpoints",
-        "type": "http",
-        "docs": "https://www.meetup.com/graphql/authentication/",
-        "basis": {
-          "via": "discovered",
-          "evidence": []
-        },
-        "auth": {
-          "status": "none",
-          "basis": {
-            "via": "discovered",
-            "evidence": [
-              "https://www.meetup.com/graphql/authentication/"
-            ]
-          }
-        },
-        "url": "https://secure.meetup.com/oauth2/authorize"
-      },
-      {
         "slug": "meetup-oauth-2-access-token-endpoint",
         "name": "Meetup OAuth 2 access token endpoint",
         "type": "http",

@@ -128,39 +128,6 @@
           ]
         },
         "url": "wss://api.fugle.tw/marketdata/v1.0/stock/streaming"
-      },
-      {
-        "slug": "fugle-oauth-2-0-authorization-server",
-        "name": "Fugle OAuth 2.0 authorization server",
-        "type": "http",
-        "basis": {
-          "via": "discovered",
-          "evidence": [
-            "https://www.fugle.tw/api/v2/oauth/authorize"
-          ]
-        },
-        "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "fugle_oauth_client",
-                  "mechanics": {
-                    "source": "http"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://www.fugle.tw/api/v2/oauth/authorize"
-                ]
-              }
-            }
-          ]
-        },
-        "url": "https://www.fugle.tw/api/v2/oauth/authorize"
       }
     ]
   },

@@ -86,7 +86,8 @@
             }
           ]
         },
-        "url": "https://api.ideal-postcodes.co.uk/v1"
+        "url": "https://api.ideal-postcodes.co.uk/v1",
+        "spec": "https://api.ideal-postcodes.co.uk/openapi.yaml"
       },
       {
         "slug": "ideal-postcodes-cli",

@@ -61,7 +61,8 @@
             }
           ]
         },
-        "url": "https://api.mailboxvalidator.com/v2"
+        "url": "https://api.mailboxvalidator.com/v2",
+        "spec": "https://api.mailboxvalidator.com/openapi.json"
       },
       {
         "slug": "mailboxvalidator-mcp",

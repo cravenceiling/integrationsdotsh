@@ -106,7 +106,8 @@
             }
           ]
         },
-        "url": "https://api.happenstance.ai"
+        "url": "https://api.happenstance.ai",
+        "spec": "https://api.happenstance.ai/openapi.json"
       },
       {
         "slug": "happenstance-mcp",

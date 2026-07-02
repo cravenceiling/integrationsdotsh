@@ -68,7 +68,8 @@
             }
           ]
         },
-        "url": "https://api.screenshotone.com/take"
+        "url": "https://api.screenshotone.com/take",
+        "spec": "https://api.screenshotone.com/openapi.json"
       }
     ]
   },

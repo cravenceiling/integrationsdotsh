@@ -45,7 +45,8 @@
             ]
           }
         },
-        "url": "https://api.tokenjay.app/"
+        "url": "https://api.tokenjay.app/",
+        "spec": "https://api.tokenjay.app/api-docs"
       }
     ]
   },

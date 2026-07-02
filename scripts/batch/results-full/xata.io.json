@@ -159,7 +159,8 @@
             }
           ]
         },
-        "url": "https://api.xata.tech"
+        "url": "https://api.xata.tech",
+        "spec": "https://api.xata.tech/openapi.yaml"
       },
       {
         "slug": "xata-cli",

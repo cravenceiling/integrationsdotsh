@@ -23,62 +23,6 @@
     },
     "surfaces": [
       {
-        "slug": "walmart-marketplace-token-api",
-        "name": "Walmart Marketplace Token API",
-        "type": "http",
-        "docs": "https://developer.walmart.com/us-marketplace/reference/tokenapi",
-        "basis": {
-          "via": "discovered",
-          "evidence": [
-            "https://developer.walmart.com/us-marketplace/reference/tokenapi",
-            "https://developer.walmart.com/us-marketplace/docs"
-          ]
-        },
-        "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "walmart_marketplace_basic",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "header",
-                    "headerName": "Authorization",
-                    "scheme": "Basic"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://developer.walmart.com/us-marketplace/reference/tokenapi"
-                ]
-              }
-            }
-          ]
-        },
-        "url": "https://marketplace.walmartapis.com/v3/token",
-        "requiredHeaders": [
-          {
-            "name": "accept",
-            "source": {
-              "kind": "static",
-              "value": "application/json"
-            },
-            "description": "Response content type; docs also allow application/xml"
-          },
-          {
-            "name": "content-type",
-            "source": {
-              "kind": "static",
-              "value": "application/x-www-form-urlencoded"
-            },
-            "description": "Form-encoded token request"
-          }
-        ]
-      },
-      {
         "slug": "walmart-marketplace-api",
         "name": "Walmart Marketplace API",
         "type": "http",

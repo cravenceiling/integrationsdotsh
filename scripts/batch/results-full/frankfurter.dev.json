@@ -45,7 +45,8 @@
             ]
           }
         },
-        "url": "https://api.frankfurter.dev/v1"
+        "url": "https://api.frankfurter.dev/v1",
+        "spec": "https://api.frankfurter.dev/v1/openapi.json"
       },
       {
         "slug": "frankfurter-mcp",

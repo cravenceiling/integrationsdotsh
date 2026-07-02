@@ -129,7 +129,8 @@
             }
           ]
         },
-        "url": "https://directview.earthcache.com"
+        "url": "https://directview.earthcache.com",
+        "spec": "https://directview.earthcache.com/openapi.json"
       }
     ]
   },

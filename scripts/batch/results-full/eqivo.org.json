@@ -56,7 +56,8 @@
             }
           ]
         },
-        "url": "https://eqivo.org/"
+        "url": "https://eqivo.org/",
+        "spec": "https://eqivo.org/openapi.yaml"
       }
     ]
   },

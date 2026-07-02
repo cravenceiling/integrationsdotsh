@@ -89,7 +89,8 @@
             }
           ]
         },
-        "url": "https://api.openstatus.dev"
+        "url": "https://api.openstatus.dev",
+        "spec": "https://api.openstatus.dev/openapi.yaml"
       },
       {
         "slug": "openstatus-mcp-server",
