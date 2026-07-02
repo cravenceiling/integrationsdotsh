@@ -10,21 +10,21 @@
       "errors": []
     },
     "usedLlm": true,
-    "discoveredAt": "2026-07-02T10:11:28.161Z",
-    "summary": "Acuity Scheduling exposes one authenticated HTTP API surface with Basic Auth (User ID + API Key) or OAuth2 Bearer tokens; docs also describe webhooks and SDKs, but no separate GraphQL, MCP, or CLI surface was found.",
+    "discoveredAt": "2026-07-02T16:15:58.682Z",
+    "summary": "Acuity Scheduling exposes one public developer surface: an HTTP REST API at https://acuityscheduling.com/api/v1, authenticated either with Basic auth (numeric User ID + API Key) or OAuth2 Bearer access tokens; no public MCP, GraphQL, or CLI surface was found.",
     "credentials": {
-      "acuity_basic": {
+      "acuity_basic_auth": {
         "type": "basic",
-        "label": "Acuity account User ID + API Key",
+        "label": "Acuity API basic auth credential",
         "generateUrl": "https://secure.acuityscheduling.com/app.php?action=settings&key=api",
-        "setup": "Go to the Acuity account Integrations/API settings page: [API settings](https://secure.acuityscheduling.com/app.php?action=settings&key=api). There you’ll find your numeric `User ID` and `API Key`. Use them together for Basic Auth on API requests: `User ID` as the username and `API Key` as the password.",
+        "setup": "Go to [Integrations](https://secure.acuityscheduling.com/app.php?action=settings&key=api) in your Acuity account and copy the API credentials shown there. Use your numeric `User ID` as the username and your `API Key` as the password when calling the scheduling API.",
         "acquisition": "manual"
       },
-      "acuity_oauth2": {
+      "acuity_oauth_client": {
         "type": "oauth2",
-        "label": "Acuity OAuth2 client",
+        "label": "Acuity OAuth2 client credentials",
         "generateUrl": "https://acuityscheduling.com/oauth2/register",
-        "setup": "Register an OAuth client at [Acuity OAuth2 registration](https://acuityscheduling.com/oauth2/register). Create your client credentials, set a `redirect_uri` you control, and request the `api-v1` scope when sending users through the connect flow. After consent, exchange the authorization code for a Bearer access token.",
+        "setup": "Register an OAuth2 client at [Acuity OAuth2 registration](https://acuityscheduling.com/oauth2/register). You will receive a `client_id` and `client_secret`, and you must configure a `redirect_uri` for your app. Use this flow when multiple Acuity users need to connect their accounts.",
         "acquisition": "manual"
       }
     },
@@ -37,9 +37,9 @@
         "basis": {
           "via": "discovered",
           "evidence": [
+            "https://developers.acuityscheduling.com/",
             "https://developers.acuityscheduling.com/reference/quick-start",
-            "https://developers.acuityscheduling.com/docs/oauth2",
-            "https://developers.acuityscheduling.com/docs/webhooks"
+            "https://developers.acuityscheduling.com/docs/oauth2"
           ]
         },
         "auth": {
@@ -48,7 +48,7 @@
             {
               "use": [
                 {
-                  "id": "acuity_basic",
+                  "id": "acuity_basic_auth",
                   "mechanics": {
                     "source": "http",
                     "in": "header",
@@ -67,7 +67,7 @@
             {
               "use": [
                 {
-                  "id": "acuity_oauth2",
+                  "id": "acuity_oauth_client",
                   "mechanics": {
                     "source": "http",
                     "in": "header",
@@ -84,28 +84,28 @@
               }
             }
           ]
-        }
+        },
+        "url": "https://acuityscheduling.com/api/v1"
       }
     ]
   },
-  "discoveredAt": "2026-07-02T10:11:28.161Z",
+  "discoveredAt": "2026-07-02T16:15:58.682Z",
   "model": "loop-gpt-5.4-mini",
   "usage": {
-    "prompt_tokens": 58213,
-    "completion_tokens": 753,
-    "total_tokens": 58966
+    "prompt_tokens": 57373,
+    "completion_tokens": 731,
+    "total_tokens": 58104
   },
   "visited": [
     "https://apitracker.io/a/acuity-scheduling",
     "https://developers.acuityscheduling.com/",
     "https://developers.acuityscheduling.com/docs/getting-started",
     "https://developers.acuityscheduling.com/docs/oauth2",
-    "https://developers.acuityscheduling.com/docs/sdks",
     "https://developers.acuityscheduling.com/docs/webhooks",
     "https://developers.acuityscheduling.com/llms.txt",
     "https://developers.acuityscheduling.com/reference/post-appointments",
     "https://developers.acuityscheduling.com/reference/quick-start",
-    "https://rollout.com/integration-guides/acuity-scheduling/api-essentials"
+    "https://github.com/AcuityScheduling/acuity-js"
   ],
   "grounding": [
     "http://example.org/oauth2?code=AN_AUTHORIZATION_CODE",
@@ -210,15 +210,11 @@
     "https://example.acuityscheduling.com",
     "https://example.com/webhook-callback",
     "https://github.com/AcuityScheduling/acuity-js",
-    "https://github.com/AcuityScheduling/acuity-php",
     "https://help.acuityscheduling.com/hc/en-us/requests/new",
-    "https://packagist.org/packages/acuityscheduling/acuityscheduling",
-    "https://rollout.com/integration-guides/acuity-scheduling/api-essentials",
     "https://secure.acuityscheduling.com/app.php?action=settings&key=api",
     "https://secure.acuityscheduling.com/preferences.php?action=integrations#api",
     "https://support.squarespace.com/hc/en-us/requests/new?ticket_form_id=360000461931",
     "https://www.iana.org/time-zones",
-    "https://www.npmjs.com/package/acuityscheduling",
     "https://www.php.net/manual/en/function.strtotime.php",
     "https://www.squarespace.com/developer-terms",
     "https://www.squarespace.com/privacy"

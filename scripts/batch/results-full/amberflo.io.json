@@ -10,28 +10,29 @@
       "errors": []
     },
     "usedLlm": true,
-    "discoveredAt": "2026-07-02T14:54:58.497Z",
-    "summary": "Amberflo exposes one public developer surface: an HTTP usage-ingest API at `https://app.amberflo.io/ingest` authenticated with an Amberflo API key in `X-API-KEY`; docs are on `docs.amberflo.io`, and no GraphQL, MCP, or CLI surface was confirmed.",
+    "discoveredAt": "2026-07-02T16:16:32.623Z",
+    "summary": "Amberflo exposes one public developer surface: an HTTP API at https://app.amberflo.io authenticated with an API key sent in the X-API-KEY header; no GraphQL, MCP, or CLI surface was found.",
     "credentials": {
       "amberflo_api_key": {
         "type": "api_key",
-        "label": "Amberflo API Key",
-        "generateUrl": "https://ui.amberflo.io/login",
-        "setup": "Sign in to the Amberflo console at [Amberflo Login](https://ui.amberflo.io/login), then create or retrieve your API key from the account or developer settings. Amberflo’s docs show the key being sent as `X-API-KEY` when calling the ingest API.",
+        "label": "Amberflo API key",
+        "generateUrl": "https://app.amberflo.io/",
+        "setup": "Sign in to the Amberflo console at [app.amberflo.io](https://app.amberflo.io/), then open the API key / developer credentials area and create an API key. The docs show this key is sent as the `X-API-KEY` header.",
         "acquisition": "manual"
       }
     },
     "surfaces": [
       {
-        "slug": "amberflo-usage-ingest-api",
-        "name": "Amberflo Usage Ingest API",
+        "slug": "amberflo-api",
+        "name": "Amberflo API",
         "type": "http",
-        "docs": "https://amberflo.io",
+        "docs": "https://docs.amberflo.io/amberflo-api/usageexplain",
         "basis": {
           "via": "discovered",
           "evidence": [
-            "https://amberflo.io",
-            "https://docs.amberflo.io/"
+            "https://docs.amberflo.io/amberflo-api/usageexplain",
+            "https://docs.amberflo.io/amberflo-api/ingest-events",
+            "https://docs.amberflo.io/amberflo-api/get-rewards-history-for-all-product-items"
           ]
         },
         "auth": {
@@ -52,31 +53,30 @@
               "basis": {
                 "via": "discovered",
                 "evidence": [
-                  "https://amberflo.io"
+                  "https://docs.amberflo.io/amberflo-api/usageexplain",
+                  "https://docs.amberflo.io/amberflo-api/ingest-events",
+                  "https://docs.amberflo.io/amberflo-api/get-rewards-history-for-all-product-items"
                 ]
               }
             }
           ]
         },
-        "url": "https://app.amberflo.io/ingest"
+        "url": "https://app.amberflo.io"
       }
     ]
   },
-  "discoveredAt": "2026-07-02T14:54:58.498Z",
+  "discoveredAt": "2026-07-02T16:16:32.623Z",
   "model": "loop-gpt-5.4-mini",
   "usage": {
-    "prompt_tokens": 57172,
-    "completion_tokens": 696,
-    "total_tokens": 57868
+    "prompt_tokens": 34736,
+    "completion_tokens": 701,
+    "total_tokens": 35437
   },
   "visited": [
-    "https://amberflo.io",
-    "https://docs.amberflo.io/",
-    "https://docs.amberflo.io/?__hstc=17958374.4bddf344d072f2baed4a9a3f7a4f08d0.1762188392583.1763976474481.1763984185629.46&__hssc=17958374.6.1763984185629&__hsfp=1603770359",
-    "https://docs.amberflo.io/customer-billing-quick-start",
-    "https://docs.amberflo.io/platform/metering",
-    "https://docs.amberflo.io/quick-start",
-    "https://docs.amberflo.io/search?q=api",
+    "https://docs.amberflo.io/amberflo-api/get-rewards-history-for-all-product-items",
+    "https://docs.amberflo.io/amberflo-api/ingest-events",
+    "https://docs.amberflo.io/amberflo-api/paymentspricingstripestripe-product-detailsall",
+    "https://docs.amberflo.io/amberflo-api/usageexplain",
     "https://docs.fireflies.ai/getting-started/docs-mcp-server",
     "https://docs.spacelift.io/integrations/api",
     "https://learn.microsoft.com/en-us/fabric/data-engineering/api-graphql-local-model-context-protocol",
@@ -85,66 +85,23 @@
     "https://zuplo.com/docs/mcp-server/graphql"
   ],
   "grounding": [
-    "https://amberflo.io",
-    "https://amberflo.io/#Monetization",
-    "https://amberflo.io/#Optimization-and-Cost-Control",
-    "https://amberflo.io/#Unified-LLM",
-    "https://amberflo.io/#w-tabs-0-data-w-pane-0",
-    "https://amberflo.io/#w-tabs-0-data-w-pane-1",
-    "https://amberflo.io/#w-tabs-0-data-w-pane-2",
-    "https://amberflo.io/#w-tabs-0-data-w-pane-3",
-    "https://amberflo.io/#w-tabs-0-data-w-pane-4",
-    "https://amberflo.io/#w-tabs-1-data-w-pane-0",
-    "https://amberflo.io/#w-tabs-1-data-w-pane-1",
-    "https://amberflo.io/blog/5-stripe-billing-alternatives-worth-evaluating-in-2026",
-    "https://amberflo.io/blog/pricing-for-ai-lessons-from-50-companies",
-    "https://amberflo.io/blog/top-5-orb-alternatives-for-ai-companies-in-2026",
-    "https://amberflo.io/company/about",
-    "https://amberflo.io/company/careers",
-    "https://amberflo.io/company/contact",
-    "https://amberflo.io/company/seats-to-usage-based-teardown-anthropic-pricing-model-webinar",
-    "https://amberflo.io/join-slack",
-    "https://amberflo.io/legal/apa",
-    "https://amberflo.io/legal/dpa",
-    "https://amberflo.io/legal/privacy-policy",
-    "https://amberflo.io/legal/sla",
-    "https://amberflo.io/legal/subprocessors",
-    "https://amberflo.io/legal/terms-and-condition",
-    "https://amberflo.io/platform/billing",
-    "https://amberflo.io/platform/cost-tracking",
-    "https://amberflo.io/platform/metering",
-    "https://amberflo.io/pricing",
-    "https://amberflo.io/resources",
-    "https://amberflo.io/resources/blog",
     "https://app.amberflo.io/ingest",
-    "https://discord.gg/femn96kV8z",
-    "https://docs.amberflo.io/",
-    "https://docs.amberflo.io/#1-ai-usage-and-cost-intelligence",
-    "https://docs.amberflo.io/#1-customer-billing",
-    "https://docs.amberflo.io/#2-ai-monetization-and-customer-billing",
-    "https://docs.amberflo.io/#2-cost-visibility",
-    "https://docs.amberflo.io/#3-margin-and-unit-economics-for-ai",
-    "https://docs.amberflo.io/#amberflo-platform",
-    "https://docs.amberflo.io/#built-for-ai-native-products",
-    "https://docs.amberflo.io/#choose-your-starting-point",
-    "https://docs.amberflo.io/#important-context",
-    "https://docs.amberflo.io/#join-our-discord-channel",
-    "https://docs.amberflo.io/#the-shift-to-ai-usage-based-economics",
-    "https://docs.amberflo.io/#what-these-paths-have-in-common",
-    "https://docs.amberflo.io/#what-to-do-next",
-    "https://docs.amberflo.io/#why-this-approach",
-    "https://docs.amberflo.io/?__hstc=17958374.4bddf344d072f2baed4a9a3f7a4f08d0.1762188392583.1763976474481.1763984185629.46&__hssc=17958374.6.1763984185629&__hsfp=1603770359",
-    "https://docs.amberflo.io/customer-billing-quick-start",
-    "https://docs.amberflo.io/platform/metering",
-    "https://docs.amberflo.io/quick-start",
-    "https://docs.amberflo.io/quick-start?__hstc=17958374.4bddf344d072f2baed4a9a3f7a4f08d0.1762188392583.1763976474481.1763984185629.46&__hssc=17958374.6.1763984185629&__hsfp=1603770359",
-    "https://docs.amberflo.io/search?q=api",
+    "https://app.amberflo.io/payments/rewards/customer-item-rewards-history/all",
+    "https://app.amberflo.io/usage/explain",
+    "https://docs.amberflo.io/amberflo-api/bizopsadmin",
+    "https://docs.amberflo.io/amberflo-api/get-rewards-history-for-a-product-item",
+    "https://docs.amberflo.io/amberflo-api/get-rewards-history-for-all-product-items",
+    "https://docs.amberflo.io/amberflo-api/ingest-events",
+    "https://docs.amberflo.io/amberflo-api/ingest-events-dry-run",
+    "https://docs.amberflo.io/amberflo-api/paymentsanalysisby-rule-revenue-calculator",
+    "https://docs.amberflo.io/amberflo-api/paymentspricingstripestripe-product-detailsall",
+    "https://docs.amberflo.io/amberflo-api/usageevents",
+    "https://docs.amberflo.io/amberflo-api/usageexplain",
+    "https://docs.amberflo.io/amberflo-api/usagevia-ts",
     "https://docs.fireflies.ai/getting-started/docs-mcp-server",
     "https://docs.spacelift.io/integrations/api",
+    "https://github.com/ndjson/ndjson-spec",
     "https://learn.microsoft.com/en-us/fabric/data-engineering/api-graphql-local-model-context-protocol",
-    "https://trust.amberflo.io/?__hstc=17958374.4bddf344d072f2baed4a9a3f7a4f08d0.1762188392583.1763126253765.1763136561673.22&__hssc=17958374.3.1763136561673&__hsfp=1603770359",
-    "https://ui.amberflo.io/cGxnLXNpZ251cA==",
-    "https://ui.amberflo.io/login?__hstc=17958374.4bddf344d072f2baed4a9a3f7a4f08d0.1762188392583.1763126253765.1763136561673.22&__hssc=17958374.3.1763136561673&__hsfp=1603770359",
     "https://www.apollographql.com/blog/connect-ai-agents-to-your-graphql-api-using-mcp-and-type-safe-tool-configuration",
     "https://www.archbee.com/?utm_campaign=hosted-docs&utm_medium=referral&utm_source=docs.amberflo.io",
     "https://www.youtube.com/watch?v=tMTsNn09GNo",

@@ -12,34 +12,114 @@
       "errors": []
     },
     "usedLlm": true,
-    "discoveredAt": "2026-07-02T10:16:08.758Z",
-    "summary": "Agility CMS exposes REST Content Fetch, Content Sync, Content Management, GraphQL, an OAuth/PAT-backed MCP server, a public knowledgebase MCP server, and the Agility CLI.",
+    "discoveredAt": "2026-07-02T16:16:27.230Z",
+    "summary": "Agility CMS exposes REST Content Fetch, REST Content Management, GraphQL, MCP, and CLI surfaces; auth uses API keys for read APIs, PATs for management/MCP, and CLI login for the Agility CLI.",
     "credentials": {
       "agility_api_key": {
         "type": "api_key",
-        "label": "Agility API key",
-        "generateUrl": "https://manager.agilitycms.com/",
-        "setup": "Go to [Settings > API Keys](https://manager.agilitycms.com/) in your Agility instance and create or copy an API key. Agility supports separate keys for published content (`fetch`) and preview/staging content (`preview`); use the key that matches the API URL you call. Send it as the `APIKey` request header.",
+        "label": "Agility CMS API Key",
+        "setup": "In Agility, go to [Settings > API Keys](https://agilitycms.com/docs/developers/content-fetch-api) and create an API key for the API type you need. Use the **Fetch** key for published content and the **Preview** key for staging/preview content. Copy the secret value and store it securely; Agility says each request must send it as the `APIKey` header.",
         "acquisition": "manual"
       },
       "agility_pat": {
         "type": "bearer",
-        "label": "Personal Access Token",
-        "generateUrl": "https://mgmt.aglty.io/index.html",
-        "setup": "Create a Personal Access Token in the Management API Swagger docs at [mgmt.aglty.io](https://mgmt.aglty.io/index.html) under the Personal Access Tokens section. PATs are tied to your user, inherit your permissions, and are shown only once when created. Agility notes this is currently beta and not supported for production use.",
+        "label": "Agility CMS Personal Access Token",
+        "setup": "Create a personal access token from Agility’s Management API Swagger docs at [mgmt.aglty.io](https://mgmt.aglty.io/index.html) under the **Personal Access Tokens** section. Agility notes PATs are currently beta, are created by an OAuth-authenticated user, and the token secret is shown only once.",
         "acquisition": "manual"
       }
     },
     "surfaces": [
       {
-        "slug": "agility-content-sync-api",
-        "name": "Agility Content Sync API",
+        "slug": "agility-cms-content-fetch-api",
+        "name": "Agility CMS Content Fetch API",
         "type": "http",
-        "docs": "https://agilitycms.com/docs/developers/content-sync-api",
+        "docs": "https://agilitycms.com/docs/developers/content-fetch-api",
         "basis": {
           "via": "discovered",
           "evidence": [
-            "https://agilitycms.com/docs/developers/content-sync-api",
+            "https://agilitycms.com/docs/developers/content-fetch-api",
+            "https://agilitycms.com/docs/training-guide/developer-api-basics",
+            "https://agilitycms.com/docs/developers/testing-on-swagger",
+            "https://api.aglty.io/swagger/index.html"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "agility_api_key",
+                  "mechanics": {
+                    "source": "spec",
+                    "scheme": "APIKey"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://agilitycms.com/docs/developers/content-fetch-api",
+                  "https://agilitycms.com/docs/training-guide/developer-api-basics",
+                  "https://agilitycms.com/docs/developers/testing-on-swagger",
+                  "https://api.aglty.io/swagger/index.html"
+                ]
+              }
+            }
+          ]
+        },
+        "url": "https://api.aglty.io/{instance-guid}/fetch"
+      },
+      {
+        "slug": "agility-cms-content-management-api",
+        "name": "Agility CMS Content Management API",
+        "type": "http",
+        "docs": "https://agilitycms.com/docs/developers/content-management-api",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://agilitycms.com/docs/developers/content-management-api",
+            "https://mgmt.aglty.io/index.html",
+            "https://agilitycms.com/docs/developers/personal-access-tokens-public-beta",
+            "https://agilitycms.com/docs/developers/cli-ci-cd-integration-guide"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "agility_pat",
+                  "mechanics": {
+                    "source": "spec",
+                    "scheme": "Bearer"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://agilitycms.com/docs/developers/content-management-api",
+                  "https://mgmt.aglty.io/index.html",
+                  "https://agilitycms.com/docs/developers/personal-access-tokens-public-beta",
+                  "https://agilitycms.com/docs/developers/cli-ci-cd-integration-guide"
+                ]
+              }
+            }
+          ]
+        },
+        "url": "https://mgmt.aglty.io/api/v1/instance/{guid}"
+      },
+      {
+        "slug": "agility-cms-graphql-api",
+        "name": "Agility CMS GraphQL API",
+        "type": "graphql",
+        "docs": "https://agilitycms.com/docs/developers/graphql-api",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://agilitycms.com/docs/developers/graphql-api",
             "https://agilitycms.com/docs/training-guide/developer-api-basics"
           ]
         },
@@ -53,57 +133,21 @@
                   "mechanics": {
                     "source": "http",
                     "in": "header",
-                    "headerName": "APIKey",
-                    "scheme": "APIKey"
+                    "headerName": "APIKey"
                   }
                 }
               ],
               "basis": {
                 "via": "discovered",
                 "evidence": [
-                  "https://agilitycms.com/docs/developers/content-sync-api",
+                  "https://agilitycms.com/docs/developers/graphql-api",
                   "https://agilitycms.com/docs/training-guide/developer-api-basics"
                 ]
               }
             }
           ]
-        }
-      },
-      {
-        "slug": "agility-graphql-api",
-        "name": "Agility GraphQL API",
-        "type": "graphql",
-        "docs": "https://agilitycms.com/docs/developers/graphql-api",
-        "basis": {
-          "via": "discovered",
-          "evidence": [
-            "https://agilitycms.com/docs/developers/graphql-api"
-          ]
         },
-        "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "agility_api_key",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "header",
-                    "headerName": "APIKey",
-                    "scheme": "APIKey"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://agilitycms.com/docs/developers/graphql-api"
-                ]
-              }
-            }
-          ]
-        }
+        "url": "https://api.aglty.io/{instance-guid}/{apitype}/graphql"
       },
       {
         "slug": "agility-cms-mcp-server",
@@ -143,31 +187,6 @@
         ]
       },
       {
-        "slug": "agility-knowledgebase-mcp-server",
-        "name": "Agility Knowledgebase MCP Server",
-        "type": "mcp",
-        "docs": "https://agilitycms.com/docs/overview/agility-knowledgebase-mcp-server",
-        "basis": {
-          "via": "discovered",
-          "evidence": [
-            "https://agilitycms.com/docs/overview/agility-knowledgebase-mcp-server"
-          ]
-        },
-        "auth": {
-          "status": "none",
-          "basis": {
-            "via": "discovered",
-            "evidence": [
-              "https://agilitycms.com/docs/overview/agility-knowledgebase-mcp-server"
-            ]
-          }
-        },
-        "url": "https://docs.agilitycms.com/docs/api/mcp",
-        "transports": [
-          "streamable-http"
-        ]
-      },
-      {
         "slug": "agility-cli",
         "name": "Agility CLI",
         "type": "cli",
@@ -175,7 +194,9 @@
         "basis": {
           "via": "discovered",
           "evidence": [
-            "https://agilitycms.com/docs/developers/cli"
+            "https://agilitycms.com/docs/developers/cli",
+            "https://agilitycms.com/docs/developers/cli-ci-cd-integration-guide",
+            "https://agilitycms.com/docs/developers/personal-access-tokens-public-beta"
           ]
         },
         "auth": {
@@ -195,7 +216,7 @@
                 "via": "discovered",
                 "evidence": [
                   "https://agilitycms.com/docs/developers/cli",
-                  "https://agilitycms.com/docs/developers/personal-access-tokens-public-beta"
+                  "https://agilitycms.com/docs/developers/cli-ci-cd-integration-guide"
                 ]
               }
             }
@@ -212,28 +233,33 @@
       }
     ]
   },
-  "discoveredAt": "2026-07-02T10:16:08.758Z",
+  "discoveredAt": "2026-07-02T16:16:27.230Z",
   "model": "loop-gpt-5.4-mini",
   "usage": {
-    "prompt_tokens": 81568,
-    "completion_tokens": 1625,
-    "total_tokens": 83193
+    "prompt_tokens": 352074,
+    "completion_tokens": 2343,
+    "total_tokens": 354417
   },
   "visited": [
     "https://agilitycms.com/docs/developers/agility-cms-mcp-server",
     "https://agilitycms.com/docs/developers/cli",
+    "https://agilitycms.com/docs/developers/cli-ci-cd-integration-guide",
     "https://agilitycms.com/docs/developers/content-fetch-api",
     "https://agilitycms.com/docs/developers/content-management-api",
     "https://agilitycms.com/docs/developers/content-sync-api",
     "https://agilitycms.com/docs/developers/graphql-api",
     "https://agilitycms.com/docs/developers/personal-access-tokens-public-beta",
-    "https://agilitycms.com/docs/overview/agility-knowledgebase-mcp-server",
+    "https://agilitycms.com/docs/developers/testing-on-swagger",
     "https://agilitycms.com/docs/training-guide/developer-api-basics",
-    "https://mcpservers.org/servers/ctkadvisors/graphql-mcp",
-    "https://www.youtube.com/watch?v=tMTsNn09GNo"
+    "https://agilitycms.com/llms.txt",
+    "https://api.aglty.io/swagger/index.html",
+    "https://mcpservers.org/servers/elifuzz/api-docs-mcp",
+    "https://mgmt.aglty.io/index.html",
+    "https://www.reddit.com/r/mcp/comments/1ogb1ye/api_graphql_openapi_swagger_docs_mcp_server/"
   ],
   "grounding": [
     "http://www.museivaticani.va/content/museivaticani/en/collezioni/musei/tour-virtuali-elenco.html",
+    "https://agilitycms.com",
     "https://agilitycms.com/#0dy_cC32I1",
     "https://agilitycms.com/#0t3SDWYsPE",
     "https://agilitycms.com/#1DniW55RUM",
@@ -244,7 +270,9 @@
     "https://agilitycms.com/#BMs-vFzUdK",
     "https://agilitycms.com/#DT4Qxge5DD",
     "https://agilitycms.com/#GaB4-O0J68",
+    "https://agilitycms.com/#GipMJ91ykO",
     "https://agilitycms.com/#HOShkzAMA4",
+    "https://agilitycms.com/#LW4wSpSH9n",
     "https://agilitycms.com/#NqgDd6_FA5",
     "https://agilitycms.com/#QY7ltDOU3Q",
     "https://agilitycms.com/#QkxY58aGC8",
@@ -252,23 +280,28 @@
     "https://agilitycms.com/#UMpXcgMN0G",
     "https://agilitycms.com/#XZgt3Jbu2G",
     "https://agilitycms.com/#_YFhDU8DhF",
+    "https://agilitycms.com/#advanced-configuration",
     "https://agilitycms.com/#api-overview",
-    "https://agilitycms.com/#available-tools",
     "https://agilitycms.com/#best-practices",
     "https://agilitycms.com/#confirmation-for-destructive-actions",
     "https://agilitycms.com/#content-fetch-api",
+    "https://agilitycms.com/#crVcx11T3d",
+    "https://agilitycms.com/#environment-variables",
     "https://agilitycms.com/#error-handling",
+    "https://agilitycms.com/#headless-mode",
+    "https://agilitycms.com/#overview",
+    "https://agilitycms.com/#prerequisites",
     "https://agilitycms.com/#q7b8r4Btjq",
-    "https://agilitycms.com/#related",
     "https://agilitycms.com/#response-structure",
-    "https://agilitycms.com/#server-url",
-    "https://agilitycms.com/#setup",
-    "https://agilitycms.com/#technical-details",
+    "https://agilitycms.com/#sample-pipeline-configurations",
+    "https://agilitycms.com/#support",
+    "https://agilitycms.com/#troubleshooting",
     "https://agilitycms.com/#using-the-sdk",
     "https://agilitycms.com/#vmYVuCLPjM",
     "https://agilitycms.com/#whats-new-in-20",
-    "https://agilitycms.com/#why-use-it",
+    "https://agilitycms.com/#workflow-operations",
     "https://agilitycms.com/#xhFiARzXNU",
+    "https://agilitycms.com/#yT0QJdbHz3",
     "https://agilitycms.com/./05-component-development.md",
     "https://agilitycms.com/Developer-Dependent-CMS-Calculator",
     "https://agilitycms.com/about-us/careers",
@@ -276,24 +309,31 @@
     "https://agilitycms.com/about-us/team",
     "https://agilitycms.com/best-canadian-headless-cms",
     "https://agilitycms.com/contact-agility-cms",
+    "https://agilitycms.com/customer-agreement",
     "https://agilitycms.com/docs",
     "https://agilitycms.com/docs/apps",
+    "https://agilitycms.com/docs/changelog",
     "https://agilitycms.com/docs/developers",
     "https://agilitycms.com/docs/developers/agility-cms-mcp-server",
     "https://agilitycms.com/docs/developers/apps",
     "https://agilitycms.com/docs/developers/cli",
     "https://agilitycms.com/docs/developers/cli-ci-cd-integration-guide",
     "https://agilitycms.com/docs/developers/cli-public-beta",
+    "https://agilitycms.com/docs/developers/component-models",
     "https://agilitycms.com/docs/developers/content-fetch-api",
     "https://agilitycms.com/docs/developers/content-management-api",
+    "https://agilitycms.com/docs/developers/content-models",
     "https://agilitycms.com/docs/developers/content-sync-api",
     "https://agilitycms.com/docs/developers/custom-asset-domains",
     "https://agilitycms.com/docs/developers/custom-sections",
     "https://agilitycms.com/docs/developers/extending-the-cms",
+    "https://agilitycms.com/docs/developers/fields",
     "https://agilitycms.com/docs/developers/graphql-api",
     "https://agilitycms.com/docs/developers/graphql-operators",
+    "https://agilitycms.com/docs/developers/handling-agility-urls",
     "https://agilitycms.com/docs/developers/personal-access-tokens-public-beta",
     "https://agilitycms.com/docs/developers/publishing-to-social-channels",
+    "https://agilitycms.com/docs/developers/quick-start-the-basics",
     "https://agilitycms.com/docs/developers/rich-text-editor-customization",
     "https://agilitycms.com/docs/developers/testing-on-swagger",
     "https://agilitycms.com/docs/developers/updating-legacy-input-forms",
@@ -303,13 +343,6 @@
     "https://agilitycms.com/docs/javascript/content-fetch-js-sdk",
     "https://agilitycms.com/docs/javascript/content-management-js-sdk",
     "https://agilitycms.com/docs/overview",
-    "https://agilitycms.com/docs/overview/agility-academy",
-    "https://agilitycms.com/docs/overview/agility-knowledgebase-mcp-server",
-    "https://agilitycms.com/docs/overview/cms-environments-development-and-content-workflow-best-practices",
-    "https://agilitycms.com/docs/overview/concepts",
-    "https://agilitycms.com/docs/overview/content-architecture",
-    "https://agilitycms.com/docs/overview/page-management",
-    "https://agilitycms.com/docs/overview/plenum-ui",
     "https://agilitycms.com/docs/owners-admins",
     "https://agilitycms.com/docs/training-guide",
     "https://agilitycms.com/docs/training-guide/developer-api-basics",
@@ -327,7 +360,9 @@
     "https://agilitycms.com/glossary",
     "https://agilitycms.com/join-slack",
     "https://agilitycms.com/landing-page/headless-cms-comparison",
+    "https://agilitycms.com/llms.txt",
     "https://agilitycms.com/mach",
+    "https://agilitycms.com/master-subscription-agreement",
     "https://agilitycms.com/partners/implementation",
     "https://agilitycms.com/partners/integrations",
     "https://agilitycms.com/pricing",
@@ -338,6 +373,7 @@
     "https://agilitycms.com/product/enterprise",
     "https://agilitycms.com/product/features",
     "https://agilitycms.com/product/headless-cms",
+    "https://agilitycms.com/product/pricing",
     "https://agilitycms.com/resources",
     "https://agilitycms.com/resources/case-studies",
     "https://agilitycms.com/resources/events",
@@ -345,7 +381,9 @@
     "https://agilitycms.com/roi-calculator",
     "https://agilitycms.com/security",
     "https://agilitycms.com/solutions",
+    "https://agilitycms.com/solutions/enterprise-grade-security",
     "https://agilitycms.com/starters",
+    "https://agilitycms.com/starters/nextjs",
     "https://agilitycms.com/subscribe",
     "https://agilitycms.com/trial/",
     "https://api-aus.aglty.io",
@@ -360,6 +398,7 @@
     "https://api.aglty.io/e13c7b01-u/preview/en-us/list/posts",
     "https://api.aglty.io/swagger",
     "https://api.aglty.io/swagger/index.html",
+    "https://api.aglty.io/swagger/v1/swagger.json",
     "https://api.aglty.io/{guid}/{apitype",
     "https://api.aglty.io/{instance-guid}/fetch",
     "https://cdn.agilitycms.com/",
@@ -370,26 +409,32 @@
     "https://cdn.aglty.io/gixkprai/posts/taj-mahal.jpg",
     "https://cdn.aglty.io/gixkprai/posts/vancouver.jpeg",
     "https://cdn.aglty.io/gixkprai/posts/vatican-museum.jpg",
-    "https://docs.agilitycms.com/docs/api/mcp",
+    "https://github.com/agility",
     "https://github.com/agility/agility-cli/issues",
+    "https://github.com/agility/agility-cms-management-cli/issues",
     "https://github.com/agility/agility-cms-management-sdk-dotnet",
     "https://github.com/agility/agility-cms-management-sdk-typescript",
     "https://github.com/agility/agility-mcp-server",
-    "https://github.com/vercel/mcp-handler",
+    "https://github.com/agility/agilitycms-nextjs-starter",
+    "https://help.agilitycms.com",
     "https://help.agilitycms.com/hc/en-us/articles/360048730131-Syncing-Content-using-the-JS-SDK",
     "https://help.agilitycms.com/hc/en-us/requests/new",
+    "https://join.slack.com/t/agilitycommunity/shared_invite/enQtNzI2NDc3MzU4Njc2LWI2OTNjZTI3ZGY1NWRiNTYzNmEyNmI0MGZlZTRkYzI3NmRjNzkxYmI5YTZjNTg2ZTk4NGUzNjg5NzY3OWViZGI",
     "https://lmstudio.ai/install-mcp",
     "https://manager.agilitycms.com/",
     "https://mcp.agilitycms.com",
     "https://mcp.agilitycms.com/api/mcp",
     "https://mcp.agilitycms.com/instructions",
     "https://mcp.agilitycms.com/tools",
-    "https://mcpservers.org/servers/ctkadvisors/graphql-mcp",
+    "https://mcpservers.org/servers/elifuzz/api-docs-mcp",
     "https://mgmt.aglty.io/index.html",
+    "https://mgmt.aglty.io/swagger/v1/swagger.json",
     "https://modelcontextprotocol.io",
-    "https://modelcontextprotocol.io/",
+    "https://roadmap.agilitycms.com",
     "https://roadmap.agilitycms.com/",
+    "https://status.agilitycms.com",
     "https://status.agilitycms.com/",
+    "https://status.agilitycms.com/history",
     "https://www.agilitycms.com/Developer-Dependent-CMS-Calculator",
     "https://www.airpano.com/360photo/Taj-Mahal-India/",
     "https://www.familysearch.org/blog/en/heritage-tourism/",
@@ -402,8 +447,8 @@
     "https://www.louvre.fr/en/visites-en-ligne#tabs",
     "https://www.npmjs.com/package/@agility/cli",
     "https://www.planetware.com/vancouver/stanley-park-vancouver-cdn-bc-bcvsp.htm",
+    "https://www.reddit.com/r/mcp/comments/1ogb1ye/api_graphql_openapi_swagger_docs_mcp_server/",
     "https://www.thechinaguide.com/destination/great-wall-of-china",
-    "https://www.youtube.com/user/AgilityIncVideo/featured",
-    "https://www.youtube.com/watch?v=tMTsNn09GNo"
+    "https://www.youtube.com/user/AgilityIncVideo/featured"
   ]
 }

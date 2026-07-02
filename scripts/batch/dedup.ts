@@ -50,6 +50,12 @@ export function surfaceDedupKey(surface: SurfaceLike): string {
   if ((type === "http" || type === "graphql") && !surface.spec && surface.url) {
     return `${type}|${normalizeLocator(surface.url)}|${normalizeLocator(surface.name)}`;
   }
+  // An mcp surface keyed by url and its url-less twin (same name) are the same
+  // server recorded at different confidence — key mcp by name so they collapse
+  // (mergeSurface keeps the url-bearing one).
+  if (type === "mcp") {
+    return `${type}|${normalizeLocator(surface.name)}`;
+  }
   return `${type}|${normalizeLocator(locator) || normalizeLocator(surface.name)}`;
 }
 

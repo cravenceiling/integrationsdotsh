@@ -1,0 +1,563 @@
+{
+  "result": {
+    "version": 3,
+    "domain": "anthropic.com",
+    "detect": {
+      "domain": "anthropic.com",
+      "found": [],
+      "mcp": [],
+      "llmsTxt": false,
+      "errors": []
+    },
+    "usedLlm": true,
+    "discoveredAt": "2026-07-02T16:10:32.400Z",
+    "summary": "Anthropic exposes a direct Claude REST API at https://api.anthropic.com, the `ant` CLI, and an MCP connector via the Messages API; auth is via API key or WIF bearer token for the API/MCP, and `ant auth login` for the CLI.",
+    "credentials": {
+      "anthropic_api_key": {
+        "type": "api_key",
+        "label": "Anthropic API key",
+        "generateUrl": "https://platform.claude.com/settings/keys",
+        "setup": "Go to the [Claude Console](https://platform.claude.com/), open [Account Settings → API keys](https://platform.claude.com/settings/keys), and create a new key. Use this key as the `x-api-key` header for direct Claude API calls.",
+        "acquisition": "manual"
+      },
+      "anthropic_wif_token": {
+        "type": "bearer",
+        "label": "Short-lived Anthropic access token via Workload Identity Federation",
+        "generateUrl": "https://platform.claude.com/docs/en/manage-claude/workload-identity-federation",
+        "setup": "Configure a [Workload Identity Federation](https://platform.claude.com/docs/en/manage-claude/workload-identity-federation) rule in the Claude Console so your external identity can mint short-lived access tokens. Use the resulting `Bearer <token>` value when the API is configured for OAuth-style bearer auth.",
+        "acquisition": "manual"
+      },
+      "anthropic_cli_session": {
+        "type": "oauth2",
+        "label": "Claude CLI local login session",
+        "generateUrl": "https://platform.claude.com/docs/en/cli-sdks-libraries/cli/quickstart",
+        "setup": "Install the `ant` CLI and run `ant auth login` to open the browser-based Claude Console flow. The CLI stores the resulting credentials locally so you can use `ant` without managing an API key yourself.",
+        "acquisition": "manual"
+      }
+    },
+    "surfaces": [
+      {
+        "slug": "claude-api",
+        "name": "Claude API",
+        "type": "http",
+        "docs": "https://platform.claude.com/docs/en/api/overview",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://platform.claude.com/docs/en/api/overview"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "anthropic_api_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "x-api-key",
+                    "scheme": "api-key"
+                  }
+                },
+                {
+                  "id": "anthropic_api_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "anthropic-version",
+                    "scheme": "api-key"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://platform.claude.com/docs/en/api/overview"
+                ]
+              }
+            },
+            {
+              "use": [
+                {
+                  "id": "anthropic_wif_token",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Bearer"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://platform.claude.com/docs/en/api/overview"
+                ]
+              }
+            }
+          ]
+        },
+        "url": "https://api.anthropic.com"
+      },
+      {
+        "slug": "ant-cli",
+        "name": "ant CLI",
+        "type": "cli",
+        "docs": "https://platform.claude.com/docs/en/api/sdks/cli",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://platform.claude.com/docs/en/api/sdks/cli"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "anthropic_cli_session",
+                  "mechanics": {
+                    "source": "cli",
+                    "command": "ant auth login"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://platform.claude.com/docs/en/api/sdks/cli"
+                ]
+              }
+            }
+          ]
+        },
+        "command": "ant"
+      },
+      {
+        "slug": "messages-api-mcp-connector",
+        "name": "Messages API MCP connector",
+        "type": "mcp",
+        "docs": "https://platform.claude.com/docs/en/agents-and-tools/mcp-connector",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://platform.claude.com/docs/en/agents-and-tools/mcp-connector"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "anthropic_api_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "x-api-key",
+                    "scheme": "api-key"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://platform.claude.com/docs/en/agents-and-tools/mcp-connector"
+                ]
+              }
+            },
+            {
+              "use": [
+                {
+                  "id": "anthropic_wif_token",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Bearer"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://platform.claude.com/docs/en/agents-and-tools/mcp-connector"
+                ]
+              }
+            }
+          ]
+        },
+        "url": "https://api.anthropic.com",
+        "transports": [
+          "streamable-http"
+        ],
+        "requiredHeaders": [
+          {
+            "name": "anthropic-beta",
+            "source": {
+              "kind": "static",
+              "value": "mcp-client-2025-11-20"
+            },
+            "description": "Required beta header for the MCP connector feature."
+          }
+        ]
+      }
+    ]
+  },
+  "discoveredAt": "2026-07-02T16:10:32.400Z",
+  "model": "loop-gpt-5.4-mini",
+  "usage": {
+    "prompt_tokens": 173958,
+    "completion_tokens": 1275,
+    "total_tokens": 175233
+  },
+  "visited": [
+    "https://github.com/anthropics/anthropic-cli",
+    "https://platform.claude.com/docs",
+    "https://platform.claude.com/docs/en/agents-and-tools/mcp-connector",
+    "https://platform.claude.com/docs/en/api/client-sdks",
+    "https://platform.claude.com/docs/en/api/messages/create",
+    "https://platform.claude.com/docs/en/api/overview",
+    "https://platform.claude.com/docs/en/api/sdks/cli",
+    "https://platform.claude.com/docs/en/build-with-claude/overview",
+    "https://platform.claude.com/docs/en/manage-claude/admin-api",
+    "https://www.anthropic.com/engineering/advanced-tool-use",
+    "https://www.anthropic.com/learn/build-with-claude"
+  ],
+  "grounding": [
+    "https://",
+    "https://a-cdn.anthropic.com/next-integrations/actions/amplitude-plugins/f12a4347e1080fb88155.js",
+    "https://anthropic.skilljar.com/",
+    "https://anthropic.skilljar.com/claude-code-in-action",
+    "https://anthropic.skilljar.com/claude-in-amazon-bedrock",
+    "https://anthropic.skilljar.com/claude-with-google-vertex",
+    "https://anthropic.skilljar.com/claude-with-the-anthropic-api",
+    "https://anthropic.skilljar.com/introduction-to-agent-skills",
+    "https://anthropic.skilljar.com/introduction-to-model-context-protocol",
+    "https://anthropic.skilljar.com/introduction-to-subagents",
+    "https://anthropic.skilljar.com/model-context-protocol-advanced-topics",
+    "https://api.anthropic.com",
+    "https://claude.ai/",
+    "https://claude.ai/download",
+    "https://claude.com/blog",
+    "https://claude.com/chrome",
+    "https://claude.com/claude-for-microsoft-365",
+    "https://claude.com/customers",
+    "https://claude.com/partn",
+    "https://claude.com/partners/amazon-bedrock",
+    "https://claude.com/partners/google-cloud-vertex-ai",
+    "https://claude.com/partners/mcp",
+    "https://claude.com/partners/powered-by-claude",
+    "https://claude.com/partners/services",
+    "https://claude.com/pricing",
+    "https://claude.com/product/claude-code",
+    "https://claude.com/product/claude-code/enterprise",
+    "https://claude.com/product/claude-science",
+    "https://claude.com/product/claude-security",
+    "https://claude.com/product/cowork",
+    "https://claude.com/product/design",
+    "https://claude.com/product/overview",
+    "https://claude.com/product/tag",
+    "https://claude.com/programs/startups",
+    "https://claude.com/resources/courses",
+    "https://claude.com/resources/use-cases",
+    "https://claude.com/solutions/agents",
+    "https://claude.com/solutions/code-modernization",
+    "https://claude.com/solutions/coding",
+    "https://claude.com/solutions/customer-support",
+    "https://claude.com/solutions/education",
+    "https://claude.com/solutions/financial-services",
+    "https://claude.com/solutions/government",
+    "https://claude.com/solutions/life-sciences",
+    "https://code.claude.com/docs/en/overview",
+    "https://console.anthropic.com",
+    "https://docs.anthropic.com/en/api/admin-api/",
+    "https://docs.anthropic.com/en/api/claude-on-amazon-bedrock",
+    "https://docs.anthropic.com/en/api/claude-on-vertex-ai",
+    "https://docs.anthropic.com/en/api/client-sdks#go",
+    "https://docs.anthropic.com/en/api/client-sdks#java",
+    "https://docs.anthropic.com/en/api/client-sdks#python",
+    "https://docs.anthropic.com/en/api/client-sdks#ruby",
+    "https://docs.anthropic.com/en/api/client-sdks#typescript",
+    "https://docs.anthropic.com/en/api/messages",
+    "https://docs.anthropic.com/en/api/prompt-tools-generate",
+    "https://docs.anthropic.com/en/api/prompt-tools-improve",
+    "https://docs.anthropic.com/en/api/prompt-tools-templatize",
+    "https://docs.anthropic.com/en/docs/about-claude/models/choosing-a-model",
+    "https://docs.anthropic.com/en/docs/about-claude/models/extended-thinking-models",
+    "https://docs.anthropic.com/en/docs/about-claude/models/migrating-to-claude-4",
+    "https://docs.anthropic.com/en/docs/about-claude/models/overview",
+    "https://docs.anthropic.com/en/docs/about-claude/pricing",
+    "https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview",
+    "https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/troubleshooting",
+    "https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/tutorials#set-up-model-context-protocol-mcp",
+    "https://docs.anthropic.com/en/docs/agents-and-tools/computer-use",
+    "https://docs.anthropic.com/en/docs/agents-and-tools/mcp-connector",
+    "https://docs.anthropic.com/en/docs/agents-and-tools/remote-mcp-servers",
+    "https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/code-execution-tool",
+    "https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/text-editor-tool",
+    "https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/web-search-tool",
+    "https://docs.anthropic.com/en/docs/build-with-claude/batch-processing",
+    "https://docs.anthropic.com/en/docs/build-with-claude/develop-tests",
+    "https://docs.anthropic.com/en/docs/build-with-claude/embeddings",
+    "https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking",
+    "https://docs.anthropic.com/en/docs/build-with-claude/files",
+    "https://docs.anthropic.com/en/docs/build-with-claude/pdf-support",
+    "https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching",
+    "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/claude-4-best-practices",
+    "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/extended-thinking-tips",
+    "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview",
+    "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/prompt-generator",
+    "https://docs.anthropic.com/en/docs/build-with-claude/tool-use/overview",
+    "https://docs.anthropic.com/en/docs/build-with-claude/vision",
+    "https://docs.anthropic.com/en/docs/claude-code/enterprise-setup",
+    "https://docs.anthropic.com/en/docs/claude-code/ide-integrations",
+    "https://docs.anthropic.com/en/docs/claude-code/overview",
+    "https://docs.anthropic.com/en/docs/get-started",
+    "https://docs.anthropic.com/en/docs/test-and-evaluate/eval-tool",
+    "https://docs.anthropic.com/en/docs/test-and-evaluate/strengthen-guardrails/increase-consistency",
+    "https://docs.anthropic.com/en/home",
+    "https://docs.anthropic.com/en/release-notes/api",
+    "https://docs.claude.com/en/api/skills-guide",
+    "https://docs.claude.com/en/docs/about-claude/models/whats-new-sonnet-4-5",
+    "https://docs.claude.com/en/docs/agents-and-tools/agent-skills/best-practices",
+    "https://docs.claude.com/en/docs/agents-and-tools/agent-skills/overview",
+    "https://docs.claude.com/en/docs/claude-code/common-workflows",
+    "https://docs.claude.com/en/docs/claude-code/skills",
+    "https://docs.google.com/presentation/d/1ntCqBrd7RRCu5JY6cH7-3tt-miSwNKj96B6KGjm92n0/edit?slide=id.g366fee14ac4_0_0#slide=id.g366fee14ac4_0_0",
+    "https://example-server.modelcontextprotocol.io/sse",
+    "https://github.com/anthropics/anthropic-cli",
+    "https://github.com/anthropics/anthropic-cookbook",
+    "https://github.com/anthropics/anthropic-cookbook/blob/main/misc/building_evals.ipynb",
+    "https://github.com/anthropics/anthropic-cookbook/blob/main/misc/prompt_caching.ipynb",
+    "https://github.com/anthropics/anthropic-cookbook/blob/main/multimodal/best_practices_for_vision.ipynb",
+    "https://github.com/anthropics/anthropic-cookbook/blob/main/multimodal/getting_started_with_vision.ipynb",
+    "https://github.com/anthropics/anthropic-cookbook/blob/main/multimodal/how_to_transcribe_text.ipynb",
+    "https://github.com/anthropics/anthropic-cookbook/blob/main/multimodal/reading_charts_graphs_powerpoints.ipynb",
+    "https://github.com/anthropics/anthropic-cookbook/blob/main/third_party/MongoDB/rag_using_mongodb.ipynb",
+    "https://github.com/anthropics/anthropic-cookbook/blob/main/third_party/VoyageAI/how_to_create_embeddings.md",
+    "https://github.com/anthropics/anthropic-cookbook/tree/main/extended_thinking",
+    "https://github.com/anthropics/anthropic-cookbook/tree/main/patterns/agents",
+    "https://github.com/anthropics/anthropic-cookbook/tree/main/third_party/LlamaIndex",
+    "https://github.com/anthropics/anthropic-cookbook/tree/main/tool_use",
+    "https://github.com/anthropics/anthropic-quickstarts",
+    "https://github.com/anthropics/anthropic-quickstarts/tree/main/computer-use-demo",
+    "https://github.com/anthropics/anthropic-quickstarts/tree/main/customer-support-agent",
+    "https://github.com/anthropics/courses/blob/master/prompt_engineering_interactive_tutorial/README.md",
+    "https://github.com/anthropics/courses/blob/master/prompt_evaluations/README.md",
+    "https://github.com/anthropics/courses/blob/master/real_world_prompting/README.md",
+    "https://github.com/anthropics/courses/blob/master/tool_use/README.md",
+    "https://github.com/modelcontextprotocol",
+    "https://github.com/modelcontextprotocol/servers",
+    "https://modelcontextprotocol.io/development/roadmap",
+    "https://modelcontextprotocol.io/docs/concepts/tools",
+    "https://modelcontextprotocol.io/introduction",
+    "https://modelcontextprotocol.io/introduction#explore-mcp",
+    "https://modelcontextprotocol.io/quickstart/user",
+    "https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization",
+    "https://platform.claude.com",
+    "https://platform.claude.com/",
+    "https://platform.claude.com/#authentication",
+    "https://platform.claude.com/#availability",
+    "https://platform.claude.com/#available-apis",
+    "https://platform.claude.com/#claude-api",
+    "https://platform.claude.com/#claude-api-vs-cloud-platforms",
+    "https://platform.claude.com/#client-sdks",
+    "https://platform.claude.com/#cloud-platform-apis",
+    "https://platform.claude.com/#deprecated-version-mcp-client-2025-04-04",
+    "https://platform.claude.com/#getting-api-keys",
+    "https://platform.claude.com/#installation",
+    "https://platform.claude.com/#next-steps",
+    "https://platform.claude.com/#pagination",
+    "https://platform.claude.com/#prerequisites",
+    "https://platform.claude.com/#rate-limits",
+    "https://platform.claude.com/#rate-limits-and-availability",
+    "https://platform.claude.com/#request-and-response-format",
+    "https://platform.claude.com/#request-size-limits",
+    "https://platform.claude.com/#response-headers",
+    "https://platform.claude.com/#send-your-first-request",
+    "https://platform.claude.com/#shell-completion",
+    "https://platform.claude.com/cookbooks",
+    "https://platform.claude.com/docs",
+    "https://platform.claude.com/docs/en/about-claude/models/migration-guide",
+    "https://platform.claude.com/docs/en/about-claude/models/overview",
+    "https://platform.claude.com/docs/en/about-claude/pricing",
+    "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+    "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/enterprise",
+    "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview",
+    "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/quickstart",
+    "https://platform.claude.com/docs/en/agents-and-tools/mcp-connector",
+    "https://platform.claude.com/docs/en/agents-and-tools/remote-mcp-servers",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/advisor-tool",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/bash-tool",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/build-a-tool-using-agent",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/code-execution-tool",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/computer-use-tool",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/fine-grained-tool-streaming",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/how-tool-use-works",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/manage-tool-context",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/memory-tool",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview#when-claude-uses-tools",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/parallel-tool-use",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/programmatic-tool-calling",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/strict-tool-use",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/text-editor-tool",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-combinations",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-reference",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-runner",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-use-with-prompt-caching",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/troubleshooting-tool-use",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-fetch-tool",
+    "https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool",
+    "https://platform.claude.com/docs/en/api/beta-headers",
+    "https://platform.claude.com/docs/en/api/beta/sessions",
+    "https://platform.claude.com/docs/en/api/cli/messages/create",
+    "https://platform.claude.com/docs/en/api/client-sdks",
+    "https://platform.claude.com/docs/en/api/creating-message-batches",
+    "https://platform.claude.com/docs/en/api/files-create",
+    "https://platform.claude.com/docs/en/api/messages-count-tokens",
+    "https://platform.claude.com/docs/en/api/messages/create",
+    "https://platform.claude.com/docs/en/api/models/list",
+    "https://platform.claude.com/docs/en/api/overview",
+    "https://platform.claude.com/docs/en/api/rate-limits",
+    "https://platform.claude.com/docs/en/api/sdks/cli",
+    "https://platform.claude.com/docs/en/api/skills/create-skill",
+    "https://platform.claude.com/docs/en/api/supported-regions",
+    "https://platform.claude.com/docs/en/api/versioning",
+    "https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking",
+    "https://platform.claude.com/docs/en/build-with-claude/api-and-data-retention",
+    "https://platform.claude.com/docs/en/build-with-claude/batch-processing",
+    "https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics",
+    "https://platform.claude.com/docs/en/build-with-claude/citations",
+    "https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock",
+    "https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry",
+    "https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#additional-features-not-supported-when-hosted-on-azure",
+    "https://platform.claude.com/docs/en/build-with-claude/claude-on-amazon-bedrock-legacy",
+    "https://platform.claude.com/docs/en/build-with-claude/claude-on-vertex-ai",
+    "https://platform.claude.com/docs/en/build-with-claude/claude-platform-on-aws",
+    "https://platform.claude.com/docs/en/build-with-claude/claude-platform-on-aws#request-ids",
+    "https://platform.claude.com/docs/en/build-with-claude/compaction",
+    "https://platform.claude.com/docs/en/build-with-claude/context-editing",
+    "https://platform.claude.com/docs/en/build-with-claude/context-windows",
+    "https://platform.claude.com/docs/en/build-with-claude/effort",
+    "https://platform.claude.com/docs/en/build-with-claude/embeddings",
+    "https://platform.claude.com/docs/en/build-with-claude/extended-thinking",
+    "https://platform.claude.com/docs/en/build-with-claude/fallback-credit",
+    "https://platform.claude.com/docs/en/build-with-claude/fast-mode",
+    "https://platform.claude.com/docs/en/build-with-claude/files",
+    "https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons",
+    "https://platform.claude.com/docs/en/build-with-claude/mid-conversation-effort-example",
+    "https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages",
+    "https://platform.claude.com/docs/en/build-with-claude/multilingual-support",
+    "https://platform.claude.com/docs/en/build-with-claude/overview",
+    "https://platform.claude.com/docs/en/build-with-claude/pdf-support",
+    "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+    "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview",
+    "https://platform.claude.com/docs/en/build-with-claude/refusals-and-fallback",
+    "https://platform.claude.com/docs/en/build-with-claude/search-results",
+    "https://platform.claude.com/docs/en/build-with-claude/skills-guide",
+    "https://platform.claude.com/docs/en/build-with-claude/streaming",
+    "https://platform.claude.com/docs/en/build-with-claude/structured-outputs",
+    "https://platform.claude.com/docs/en/build-with-claude/task-budgets",
+    "https://platform.claude.com/docs/en/build-with-claude/token-counting",
+    "https://platform.claude.com/docs/en/build-with-claude/usage-cost-api",
+    "https://platform.claude.com/docs/en/build-with-claude/vision",
+    "https://platform.claude.com/docs/en/build-with-claude/working-with-messages",
+    "https://platform.claude.com/docs/en/build-with-claude/workspaces",
+    "https://platform.claude.com/docs/en/cli-sdks-libraries/cli/authentication",
+    "https://platform.claude.com/docs/en/cli-sdks-libraries/cli/quickstart",
+    "https://platform.claude.com/docs/en/cli-sdks-libraries/cli/scripting",
+    "https://platform.claude.com/docs/en/cli-sdks-libraries/cli/using",
+    "https://platform.claude.com/docs/en/cli-sdks-libraries/libraries/apple-foundation-models",
+    "https://platform.claude.com/docs/en/cli-sdks-libraries/libraries/openai-sdk",
+    "https://platform.claude.com/docs/en/cli-sdks-libraries/middleware",
+    "https://platform.claude.com/docs/en/cli-sdks-libraries/overview",
+    "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/csharp",
+    "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/go",
+    "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/java",
+    "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/php",
+    "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python",
+    "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/ruby",
+    "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/typescript",
+    "https://platform.claude.com/docs/en/get-started",
+    "https://platform.claude.com/docs/en/home",
+    "https://platform.claude.com/docs/en/intro",
+    "https://platform.claude.com/docs/en/manage-claude/admin-api",
+    "https://platform.claude.com/docs/en/manage-claude/authentication",
+    "https://platform.claude.com/docs/en/manage-claude/workload-identity-federation",
+    "https://platform.claude.com/docs/en/managed-agents/agent-setup",
+    "https://platform.claude.com/docs/en/managed-agents/environments",
+    "https://platform.claude.com/docs/en/managed-agents/overview",
+    "https://platform.claude.com/docs/en/managed-agents/quickstart",
+    "https://platform.claude.com/docs/en/managed-agents/session-operations#listing-sessions",
+    "https://platform.claude.com/docs/en/managed-agents/sessions",
+    "https://platform.claude.com/docs/en/release-notes/overview",
+    "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests",
+    "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/handle-streaming-refusals",
+    "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/increase-consistency",
+    "https://platform.claude.com/docs/og?locale=en&amp;path=cli-sdks-libraries/overview&amp;design-rev=1",
+    "https://platform.claude.com/docs/og?locale=en&amp;path=manage-claude/admin-api&amp;design-rev=1",
+    "https://platform.claude.com/login",
+    "https://platform.claude.com/login?returnTo=%2Fdocs%2Fen%2Fagents-and-tools%2Fmcp-connector",
+    "https://platform.claude.com/login?returnTo=%2Fdocs%2Fen%2Fapi%2Fmessages%2Fcreate",
+    "https://platform.claude.com/login?returnTo=%2Fdocs%2Fen%2Fapi%2Foverview",
+    "https://platform.claude.com/login?returnTo=%2Fdocs%2Fen%2Fcli-sdks-libraries%2Fcli%2Fquickstart",
+    "https://platform.claude.com/login?returnTo=%2Fdocs%2Fen%2Fhome",
+    "https://platform.claude.com/settings/keys",
+    "https://platform.claude.com/settings/limits",
+    "https://platform.claude.com/settings/workspaces",
+    "https://platform.claude.com/workbench",
+    "https://privacy.anthropic.com/en/articles/10030352-what-personal-data-will-be-processed-by-computer-use-beta",
+    "https://status.claude.com/",
+    "https://support.claude.com/",
+    "https://trust.anthropic.com",
+    "https://www.anthropic.com/#footer",
+    "https://www.anthropic.com/#main-content",
+    "https://www.anthropic.com/careers",
+    "https://www.anthropic.com/claud",
+    "https://www.anthropic.com/claude/opus",
+    "https://www.anthropic.com/claude/sonnet",
+    "https://www.anthropic.com/company",
+    "https://www.anthropic.com/discord",
+    "https://www.anthropic.com/economic-futures",
+    "https://www.anthropic.com/engineering",
+    "https://www.anthropic.com/engineering/advanced-tool-use",
+    "https://www.anthropic.com/engineering/building-effective-agents",
+    "https://www.anthropic.com/events",
+    "https://www.anthropic.com/learn",
+    "https://www.anthropic.com/learn/build-with-claude",
+    "https://www.anthropic.com/legal/aup",
+    "https://www.anthropic.com/legal/commercial-terms",
+    "https://www.anthropic.com/legal/consumer-terms",
+    "https://www.anthropic.com/legal/privacy",
+    "https://www.anthropic.com/news",
+    "https://www.anthropic.com/news/3-5-models-and-computer-use",
+    "https://www.anthropic.com/news/announcing-our-updated-responsible-scaling-policy",
+    "https://www.anthropic.com/news/claude-3-5-sonnet",
+    "https://www.anthropic.com/news/claude-4",
+    "https://www.anthropic.com/news/contextual-retrieval",
+    "https://www.anthropic.com/news/developing-computer-use",
+    "https://www.anthropic.com/news/model-context-protocol",
+    "https://www.anthropic.com/news/prompt-caching",
+    "https://www.anthropic.com/news/tool-use-ga",
+    "https://www.anthropic.com/policy",
+    "https://www.anthropic.com/research",
+    "https://www.anthropic.com/responsible-disclosure-policy",
+    "https://www.anthropic.com/supported-countries",
+    "https://www.anthropic.com/transparency",
+    "https://www.claude.com/skills",
+    "https://www.youtube.com/watch?v=6wkFb2_cUik",
+    "https://www.youtube.com/watch?v=AJpK3YTTKZ4",
+    "https://www.youtube.com/watch?v=T9aRN5JkmL8",
+    "https://www.youtube.com/watch?v=h18BezoizkI&list=PLf2m23nhTg1OQAT3n_OD0g3P3gnK6pxW-",
+    "https://www.youtube.com/watch?v=t3nnDXa81Hs"
+  ]
+}

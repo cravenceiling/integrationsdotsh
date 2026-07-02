@@ -18,43 +18,35 @@
       "errors": []
     },
     "usedLlm": true,
-    "discoveredAt": "2026-07-02T14:54:53.546Z",
-    "summary": "Adyen exposes HTTP APIs secured by `X-API-Key`, client-side authenticated surfaces using `Client-Key`, webhook intake with HMAC verification, and a public MCP server at the discovered well-known endpoint.",
+    "discoveredAt": "2026-07-02T16:16:20.151Z",
+    "summary": "Adyen exposes HTTP APIs for Checkout, BinLookup, Disputes, and Webhooks plus an MCP server; authenticated surfaces use Adyen API keys or webhook HMAC, while the MCP auth mechanics couldn’t be confirmed from available docs.",
     "credentials": {
       "adyen_api_key": {
         "type": "api_key",
         "label": "Adyen API key",
-        "generateUrl": "https://docs.adyen.com/development-resources/api-credentials",
-        "setup": "Go to the [Adyen Customer Area](https://ca-live.adyen.com/) or test Customer Area, then open **Developers → API credentials**. Create or select an API credential and generate an `API key`. Adyen uses this for server-side API authentication; keep it private and use it from your backend.",
+        "generateUrl": "https://ca-test.adyen.com/ca/ca/config/api_credentials.shtml",
+        "setup": "In the [Adyen Customer Area](https://ca-test.adyen.com/ca/ca/config/api_credentials.shtml), create an API credential and generate an `API key`. Copy it once and store it securely; Adyen uses this key for server-to-server API authentication.",
         "acquisition": "manual"
       },
-      "adyen_client_key": {
-        "type": "api_key",
-        "label": "Adyen client key",
-        "generateUrl": "https://docs.adyen.com/development-resources/client-side-authentication",
-        "setup": "In the Adyen Customer Area, create or open your API credential, then generate a `client key` for client-side integrations. Use this in browser/mobile code only where Adyen explicitly documents client-side authentication; do not treat it like a secret API key.",
-        "acquisition": "manual"
-      },
-      "adyen_hmac_key": {
+      "adyen_hmac": {
         "type": "api_key",
         "label": "Adyen webhook HMAC key",
-        "generateUrl": "https://docs.adyen.com/development-resources/webhooks/secure-webhooks",
-        "setup": "In the Customer Area, open your webhook configuration and enable webhook signing / HMAC verification. Adyen will show or let you set a webhook `HMAC key`; use it to verify incoming webhook signatures on your server.",
+        "generateUrl": "https://ca-test.adyen.com/ca/ca/config/webhooks.shtml",
+        "setup": "In the [Adyen Customer Area](https://ca-test.adyen.com/ca/ca/config/webhooks.shtml), open a webhook configuration and generate the `HMAC key` used to sign and verify webhook payloads.",
         "acquisition": "manual"
       }
     },
     "surfaces": [
       {
-        "slug": "adyen-http-apis",
-        "name": "Adyen HTTP APIs",
+        "slug": "adyen-checkout-api",
+        "name": "Adyen Checkout API",
         "type": "http",
         "docs": "https://docs.adyen.com/api-explorer/",
         "basis": {
           "via": "discovered",
           "evidence": [
             "https://docs.adyen.com/api-explorer/",
-            "https://docs.adyen.com/development-resources/api-authentication",
-            "https://docs.adyen.com/development-resources/api-credentials"
+            "https://docs.adyen.com/online-payments"
           ]
         },
         "auth": {
@@ -68,7 +60,7 @@
                     "source": "http",
                     "in": "header",
                     "headerName": "X-API-Key",
-                    "scheme": "X-API-Key"
+                    "scheme": "Basic"
                   }
                 }
               ],
@@ -81,17 +73,18 @@
               }
             }
           ]
-        }
+        },
+        "url": "https://checkout-test.adyen.com/v72"
       },
       {
-        "slug": "adyen-client-side-authentication",
-        "name": "Adyen client-side authentication",
+        "slug": "adyen-binlookup-api",
+        "name": "Adyen BinLookup API",
         "type": "http",
-        "docs": "https://docs.adyen.com/development-resources/client-side-authentication",
+        "docs": "https://docs.adyen.com/api-explorer/",
         "basis": {
           "via": "discovered",
           "evidence": [
-            "https://docs.adyen.com/development-resources/client-side-authentication"
+            "https://docs.adyen.com/api-explorer/"
           ]
         },
         "auth": {
@@ -100,35 +93,36 @@
             {
               "use": [
                 {
-                  "id": "adyen_client_key",
+                  "id": "adyen_api_key",
                   "mechanics": {
                     "source": "http",
                     "in": "header",
-                    "headerName": "Client-Key",
-                    "scheme": "Client-Key"
+                    "headerName": "X-API-Key",
+                    "scheme": "Basic"
                   }
                 }
               ],
               "basis": {
                 "via": "discovered",
                 "evidence": [
-                  "https://docs.adyen.com/development-resources/client-side-authentication"
+                  "https://docs.adyen.com/development-resources/api-authentication",
+                  "https://docs.adyen.com/development-resources/api-credentials"
                 ]
               }
             }
           ]
-        }
+        },
+        "url": "https://pal-test.adyen.com/pal/servlet/BinLookup/v54"
       },
       {
-        "slug": "adyen-webhooks",
-        "name": "Adyen webhooks",
+        "slug": "adyen-disputes-api",
+        "name": "Adyen Disputes API",
         "type": "http",
-        "docs": "https://docs.adyen.com/development-resources/webhooks",
+        "docs": "https://docs.adyen.com/api-explorer/",
         "basis": {
           "via": "discovered",
           "evidence": [
-            "https://docs.adyen.com/development-resources/webhooks",
-            "https://docs.adyen.com/development-resources/webhooks/secure-webhooks/verify-hmac-signatures"
+            "https://docs.adyen.com/api-explorer/"
           ]
         },
         "auth": {
@@ -137,15 +131,58 @@
             {
               "use": [
                 {
-                  "id": "adyen_hmac_key",
+                  "id": "adyen_api_key",
                   "mechanics": {
-                    "source": "http"
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "X-API-Key",
+                    "scheme": "Basic"
                   }
                 }
               ],
               "basis": {
                 "via": "discovered",
                 "evidence": [
+                  "https://docs.adyen.com/development-resources/api-authentication",
+                  "https://docs.adyen.com/development-resources/api-credentials"
+                ]
+              }
+            }
+          ]
+        },
+        "url": "https://pal-test.adyen.com/pal/servlet/Disputes/v30"
+      },
+      {
+        "slug": "adyen-webhooks-api-reference",
+        "name": "Adyen Webhooks API reference",
+        "type": "http",
+        "docs": "https://docs.adyen.com/api-explorer/",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.adyen.com/api-explorer/",
+            "https://docs.adyen.com/development-resources/webhooks"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "adyen_hmac",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "HMAC-Signature",
+                    "scheme": "HMAC"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.adyen.com/development-resources/webhooks/secure-webhooks",
                   "https://docs.adyen.com/development-resources/webhooks/secure-webhooks/verify-hmac-signatures"
                 ]
               }
@@ -161,33 +198,23 @@
         "basis": {
           "via": "detected",
           "signal": "mcp:initialize",
-          "verifiedAt": "2026-07-02T14:54:53.546Z"
+          "verifiedAt": "2026-07-02T16:16:20.151Z"
         },
         "auth": {
-          "status": "none",
-          "basis": {
-            "via": "discovered",
-            "evidence": [
-              "https://docs.adyen.com/development-resources/mcp-server"
-            ]
-          }
+          "status": "unknown"
         },
-        "url": "https://www.adyen.com/.well-known/mcp/server-card.json",
-        "transports": [
-          "streamable-http"
-        ]
+        "url": "https://www.adyen.com/.well-known/mcp/server-card.json"
       }
     ]
   },
-  "discoveredAt": "2026-07-02T14:54:53.546Z",
+  "discoveredAt": "2026-07-02T16:16:20.152Z",
   "model": "loop-gpt-5.4-mini",
   "usage": {
-    "prompt_tokens": 335502,
-    "completion_tokens": 1603,
-    "total_tokens": 337105
+    "prompt_tokens": 289450,
+    "completion_tokens": 1506,
+    "total_tokens": 290956
   },
   "visited": [
-    "https://adyen.com/llms.txt",
     "https://docs.adyen.com/",
     "https://docs.adyen.com/api-explorer/",
     "https://docs.adyen.com/development-resources/api-authentication",
@@ -195,14 +222,11 @@
     "https://docs.adyen.com/development-resources/client-side-authentication",
     "https://docs.adyen.com/development-resources/documentation-tools",
     "https://docs.adyen.com/development-resources/mcp-server",
-    "https://docs.adyen.com/development-resources/webhooks/secure-webhooks/verify-hmac-signatures",
-    "https://github.com/Adyen/adyen-openapi",
+    "https://docs.adyen.com/development-resources/test-cards-and-credentials/create-test-cards/test-cards-api",
     "https://github.com/adyen/adyen-mcp",
-    "https://www.postman.com/api-evangelist/commerce/documentation/2u4jmxh/adyen-payment-api"
+    "https://www.adyen.com/.well-known/mcp/server-card.json"
   ],
   "grounding": [
-    "http://editor.swagger.io/",
-    "https://adyen.com/llms.txt",
     "https://archiveprogram.github.com",
     "https://docs.adyen.com",
     "https://docs.adyen.com/",
@@ -421,15 +445,122 @@
     "https://docs.adyen.com/development-resources/webhooks/webhook-types/account-settings-webhooks",
     "https://docs.adyen.com/development-resources/webhooks/webhook-types/additional-settings",
     "https://docs.adyen.com/get-started-with-adyen",
+    "https://docs.adyen.com/get-started-with-adyen/adyen-glossary",
+    "https://docs.adyen.com/get-started-with-adyen/application-requirements",
     "https://docs.adyen.com/industries/feature-packs",
     "https://docs.adyen.com/industries/markets",
+    "https://docs.adyen.com/industries/markets/japan/credit-card-security-guidelines-compliance-guide",
     "https://docs.adyen.com/industries/peak-season",
     "https://docs.adyen.com/issuing/account-structure-resources/issuing-adyen-for-platforms",
     "https://docs.adyen.com/issuing/account-structure-resources/issuing-enterprise",
     "https://docs.adyen.com/marketplaces",
     "https://docs.adyen.com/online-payments",
+    "https://docs.adyen.com/online-payments/3d-secure",
+    "https://docs.adyen.com/online-payments/3d-secure-for-regulation-compliance",
+    "https://docs.adyen.com/online-payments/3d-secure/api-reference",
+    "https://docs.adyen.com/online-payments/3d-secure/authorize-mpidata",
+    "https://docs.adyen.com/online-payments/3d-secure/data-only",
+    "https://docs.adyen.com/online-payments/3d-secure/native-3ds2",
+    "https://docs.adyen.com/online-payments/3d-secure/redirect-3ds2",
+    "https://docs.adyen.com/online-payments/3d-secure/redirect-3ds2/android-component",
+    "https://docs.adyen.com/online-payments/3d-secure/redirect-3ds2/android-component/earlier-versions",
+    "https://docs.adyen.com/online-payments/3d-secure/redirect-3ds2/android-drop-in",
+    "https://docs.adyen.com/online-payments/3d-secure/redirect-3ds2/ios-component",
+    "https://docs.adyen.com/online-payments/3d-secure/redirect-3ds2/ios-drop-in",
+    "https://docs.adyen.com/online-payments/3d-secure/redirect-3ds2/web-component",
+    "https://docs.adyen.com/online-payments/3d-secure/redirect-3ds2/web-drop-in",
+    "https://docs.adyen.com/online-payments/3d-secure/standalone-authentication",
+    "https://docs.adyen.com/online-payments/accessibility",
+    "https://docs.adyen.com/online-payments/account-updater",
+    "https://docs.adyen.com/online-payments/account-updater/batch-account-updater",
+    "https://docs.adyen.com/online-payments/account-updater/real-time-account-updater",
+    "https://docs.adyen.com/online-payments/adjust-authorisation",
+    "https://docs.adyen.com/online-payments/adjust-authorisation/adjust-with-preauth",
+    "https://docs.adyen.com/online-payments/analytics-and-data-tracking",
+    "https://docs.adyen.com/online-payments/auspaynet-compliance-guide",
+    "https://docs.adyen.com/online-payments/auto-rescue",
+    "https://docs.adyen.com/online-payments/auto-rescue/cards",
+    "https://docs.adyen.com/online-payments/auto-rescue/sepa",
+    "https://docs.adyen.com/online-payments/build-your-integration",
+    "https://docs.adyen.com/online-payments/build-your-integration/advanced-flow",
+    "https://docs.adyen.com/online-payments/build-your-integration/payment-result-codes",
+    "https://docs.adyen.com/online-payments/build-your-integration/sessions-flow",
+    "https://docs.adyen.com/online-payments/cancel",
+    "https://docs.adyen.com/online-payments/capture",
+    "https://docs.adyen.com/online-payments/capture/failure-reasons",
+    "https://docs.adyen.com/online-payments/card-encryption-with-jwe",
+    "https://docs.adyen.com/online-payments/checkout-settings",
+    "https://docs.adyen.com/online-payments/classic-integrations",
+    "https://docs.adyen.com/online-payments/classic-integrations/classic-api-integration",
+    "https://docs.adyen.com/online-payments/classic-integrations/classic-api-integration/3d-secure-authentication",
+    "https://docs.adyen.com/online-payments/classic-integrations/classic-api-integration/3d-secure-authentication/3d-secure-1",
+    "https://docs.adyen.com/online-payments/classic-integrations/classic-api-integration/3d-secure-authentication/3d-secure-1/3d-secure-1-authentication-only",
+    "https://docs.adyen.com/online-payments/classic-integrations/classic-api-integration/3d-secure-authentication/3d-secure-1/custom-3d-secure-implementation",
+    "https://docs.adyen.com/online-payments/classic-integrations/classic-api-integration/3d-secure-authentication/3d-secure-1/custom-3d-secure-implementation/custom-3d-secure-using-a-hosted-mpi",
+    "https://docs.adyen.com/online-payments/classic-integrations/classic-api-integration/3d-secure-authentication/3d-secure-1/custom-3d-secure-implementation/custom-3d-secure-using-an-external-mpi",
+    "https://docs.adyen.com/online-payments/classic-integrations/classic-api-integration/3d-secure-authentication/native-3ds2",
+    "https://docs.adyen.com/online-payments/classic-integrations/classic-api-integration/3d-secure-authentication/native-3ds2/android-sdk-integration",
+    "https://docs.adyen.com/online-payments/classic-integrations/classic-api-integration/3d-secure-authentication/native-3ds2/api-reference-3d-secure-2",
+    "https://docs.adyen.com/online-payments/classic-integrations/classic-api-integration/3d-secure-authentication/native-3ds2/authentication-only-integration",
+    "https://docs.adyen.com/online-payments/classic-integrations/classic-api-integration/3d-secure-authentication/native-3ds2/browser-based-integration",
+    "https://docs.adyen.com/online-payments/classic-integrations/classic-api-integration/3d-secure-authentication/native-3ds2/browser-based-integration/3d-secure-2-helper-functions",
+    "https://docs.adyen.com/online-payments/classic-integrations/classic-api-integration/3d-secure-authentication/native-3ds2/ios-sdk-integration",
+    "https://docs.adyen.com/online-payments/classic-integrations/classic-api-integration/client-side-encryption",
+    "https://docs.adyen.com/online-payments/classic-integrations/classic-api-integration/client-side-encryption/cse-library-public-key-location-and-token",
+    "https://docs.adyen.com/online-payments/classic-integrations/classic-api-integration/client-side-encryption/hosting-the-cse-library",
+    "https://docs.adyen.com/online-payments/classic-integrations/classic-api-integration/tokenization",
+    "https://docs.adyen.com/online-payments/classic-integrations/classic-api-integration/tokenization/authorise-a-recurring-payment",
+    "https://docs.adyen.com/online-payments/classic-integrations/classic-api-integration/tokenization/authorise-using-details-stored-with-a-third-party",
+    "https://docs.adyen.com/online-payments/classic-integrations/classic-api-integration/tokenization/capture-a-recurring-payment",
+    "https://docs.adyen.com/online-payments/classic-integrations/classic-api-integration/tokenization/disable-stored-details",
+    "https://docs.adyen.com/online-payments/classic-integrations/classic-api-integration/tokenization/retrieve-stored-details",
+    "https://docs.adyen.com/online-payments/classic-integrations/classic-api-integration/tokenization/store-payment-details",
+    "https://docs.adyen.com/online-payments/classic-integrations/classic-api-integration/tokenization/update-stored-details",
+    "https://docs.adyen.com/online-payments/co-badged-cards-compliance",
+    "https://docs.adyen.com/online-payments/donations",
+    "https://docs.adyen.com/online-payments/donations/integration-options",
+    "https://docs.adyen.com/online-payments/donations/integration-options/advanced-flow",
+    "https://docs.adyen.com/online-payments/donations/integration-options/sessions-flow",
+    "https://docs.adyen.com/online-payments/donations/terms-and-conditions",
+    "https://docs.adyen.com/online-payments/donations/testing",
+    "https://docs.adyen.com/online-payments/go-live-checklist",
+    "https://docs.adyen.com/online-payments/instant-card-funding",
+    "https://docs.adyen.com/online-payments/integration-checklist",
+    "https://docs.adyen.com/online-payments/network-tokenization",
+    "https://docs.adyen.com/online-payments/online-payouts",
+    "https://docs.adyen.com/online-payments/online-payouts/instant-payouts",
+    "https://docs.adyen.com/online-payments/online-payouts/payout-webhook",
+    "https://docs.adyen.com/online-payments/online-payouts/payouts-to-a-bank-account",
+    "https://docs.adyen.com/online-payments/online-payouts/payouts-to-bank-accounts-and-wallets",
+    "https://docs.adyen.com/online-payments/partial-authorizations",
+    "https://docs.adyen.com/online-payments/partial-payments",
+    "https://docs.adyen.com/online-payments/payments-india-compliance-guide",
+    "https://docs.adyen.com/online-payments/payments-india-compliance-guide/go-live-india",
+    "https://docs.adyen.com/online-payments/pci-dss-compliance",
+    "https://docs.adyen.com/online-payments/psd2-sca-compliance-and-implementation-guide",
+    "https://docs.adyen.com/online-payments/psd2-sca-compliance-and-implementation-guide/sca-options",
+    "https://docs.adyen.com/online-payments/refund",
+    "https://docs.adyen.com/online-payments/release-notes",
+    "https://docs.adyen.com/online-payments/reversal",
+    "https://docs.adyen.com/online-payments/surcharge",
+    "https://docs.adyen.com/online-payments/tokenization",
+    "https://docs.adyen.com/online-payments/tokenization/create-tokens",
+    "https://docs.adyen.com/online-payments/tokenization/forward-payment-details",
+    "https://docs.adyen.com/online-payments/tokenization/make-token-payments",
+    "https://docs.adyen.com/online-payments/tokenization/managing-tokens",
+    "https://docs.adyen.com/online-payments/two-step-checkout",
+    "https://docs.adyen.com/online-payments/upgrade-your-integration",
+    "https://docs.adyen.com/online-payments/upgrade-your-integration/migrate-to-checkout-api",
+    "https://docs.adyen.com/online-payments/upgrade-your-integration/upgrade-to-android-5-0-0",
+    "https://docs.adyen.com/online-payments/upgrade-your-integration/upgrade-to-checkout-api-v72",
+    "https://docs.adyen.com/online-payments/upgrade-your-integration/upgrade-to-ios-5-0-0",
+    "https://docs.adyen.com/online-payments/upgrade-your-integration/upgrade-to-web-v6",
+    "https://docs.adyen.com/online-payments/upgrade-your-integration/upgrade-to-web-v6/from-v3",
+    "https://docs.adyen.com/online-payments/upgrade-your-integration/upgrade-to-web-v6/from-v4",
+    "https://docs.adyen.com/online-payments/web-best-practices",
     "https://docs.adyen.com/partners/application-information",
     "https://docs.adyen.com/partners/oauth",
+    "https://docs.adyen.com/payment-methods",
     "https://docs.adyen.com/payouts",
     "https://docs.adyen.com/payouts/payout-service/enterprise-accounts",
     "https://docs.adyen.com/platforms",
@@ -442,54 +573,60 @@
     "https://docs.adyen.com/uplift",
     "https://docs.github.com",
     "https://docs.github.com/search-github/github-code-search/understanding-github-code-search-syntax",
-    "https://docs.github.com/site-policy/github-terms/github-terms-of-service",
-    "https://docs.github.com/site-policy/privacy-poli",
     "https://github.blog",
     "https://github.blog/changelog",
-    "https://github.com/#",
-    "https://github.com/#MIT-1-ov-file",
-    "https://github.com/#coc-ov-file",
-    "https://github.com/#contributing-ov-file",
-    "https://github.com/#readme-ov-file",
-    "https://github.com/#security-ov-file",
+    "https://github.com/",
     "https://github.com/#start-of-content",
     "https://github.com/Adyen",
+    "https://github.com/Adyen/adyen-mcp",
+    "https://github.com/Adyen/adyen-mcp/actions",
+    "https://github.com/Adyen/adyen-mcp/blob/main/.gitignore",
+    "https://github.com/Adyen/adyen-mcp/blob/main/CODESPACES_README.md",
+    "https://github.com/Adyen/adyen-mcp/blob/main/CODE_OF_CONDUCT.md",
+    "https://github.com/Adyen/adyen-mcp/blob/main/CONTRIBUTING.md",
+    "https://github.com/Adyen/adyen-mcp/blob/main/LICENSE",
+    "https://github.com/Adyen/adyen-mcp/blob/main/README.md",
+    "https://github.com/Adyen/adyen-mcp/blob/main/renovate.json",
+    "https://github.com/Adyen/adyen-mcp/branches",
+    "https://github.com/Adyen/adyen-mcp/commit/18a5048a2442c75331c30b8ce8ea335006e26d6d",
+    "https://github.com/Adyen/adyen-mcp/commit/615426d7d08ece093247660608e10cece6777668",
+    "https://github.com/Adyen/adyen-mcp/commit/6739276c4fab3e23eab3ca7742501c1968281273",
+    "https://github.com/Adyen/adyen-mcp/commit/76415543a2860f162482eb176e423d1381b902b7",
+    "https://github.com/Adyen/adyen-mcp/commit/930101397d1f595cfb32df285870dfe18987f82a",
+    "https://github.com/Adyen/adyen-mcp/commit/b4f62b87fd343a2975e2f9da3a17385f6da5bb59",
+    "https://github.com/Adyen/adyen-mcp/commit/e7c005cc438d92dd80100875931802282d025ab5",
+    "https://github.com/Adyen/adyen-mcp/commit/e8c91f0450c2c9b74d634ff93ae537d758f7d50e",
+    "https://github.com/Adyen/adyen-mcp/commit/f57565c99ac92369f7449500dbd90b4176989318",
+    "https://github.com/Adyen/adyen-mcp/commits/main/",
+    "https://github.com/Adyen/adyen-mcp/commits?author=dependabot%5Bbot%5D",
+    "https://github.com/Adyen/adyen-mcp/issues",
+    "https://github.com/Adyen/adyen-mcp/projects",
+    "https://github.com/Adyen/adyen-mcp/pull/105",
+    "https://github.com/Adyen/adyen-mcp/pull/114",
+    "https://github.com/Adyen/adyen-mcp/pull/115",
+    "https://github.com/Adyen/adyen-mcp/pull/18",
+    "https://github.com/Adyen/adyen-mcp/pull/21",
+    "https://github.com/Adyen/adyen-mcp/pull/7",
+    "https://github.com/Adyen/adyen-mcp/pull/93",
+    "https://github.com/Adyen/adyen-mcp/pulls",
+    "https://github.com/Adyen/adyen-mcp/pulse",
+    "https://github.com/Adyen/adyen-mcp/security",
+    "https://github.com/Adyen/adyen-mcp/tags",
+    "https://github.com/Adyen/adyen-mcp/tree/main/.devcontainer",
+    "https://github.com/Adyen/adyen-mcp/tree/main/.github",
+    "https://github.com/Adyen/adyen-mcp/tree/main/.vscode",
+    "https://github.com/Adyen/adyen-mcp/tree/main/docs/images",
+    "https://github.com/Adyen/adyen-mcp/tree/main/typescript",
     "https://github.com/Adyen/adyen-openapi",
-    "https://github.com/Adyen/adyen-openapi/actions",
-    "https://github.com/Adyen/adyen-openapi/activity",
-    "https://github.com/Adyen/adyen-openapi/blob/main/CODE_OF_CONDUCT.md",
-    "https://github.com/Adyen/adyen-openapi/blob/main/LICENSE",
-    "https://github.com/Adyen/adyen-openapi/blob/main/README.md",
-    "https://github.com/Adyen/adyen-openapi/branches",
-    "https://github.com/Adyen/adyen-openapi/commit/1b431b9fd9c4c6437a74d3d9972c87be2fc185e0",
-    "https://github.com/Adyen/adyen-openapi/commit/3ceb75eba6e12c33a1855a7ffc824eacd33181bb",
-    "https://github.com/Adyen/adyen-openapi/commit/6c7bd8a950a8a28eafa094797a4d967e2eaa0fdc",
-    "https://github.com/Adyen/adyen-openapi/commit/a4402ca3d86fe2ef728f3dce2905a8a15a0c6dbe",
-    "https://github.com/Adyen/adyen-openapi/commit/aa014f0cbdb58ff5c44a2ff9d5fe734642210aff",
-    "https://github.com/Adyen/adyen-openapi/commits/main/",
-    "https://github.com/Adyen/adyen-openapi/custom-properties",
-    "https://github.com/Adyen/adyen-openapi/forks",
-    "https://github.com/Adyen/adyen-openapi/graphs/contributors",
-    "https://github.com/Adyen/adyen-openapi/issues",
-    "https://github.com/Adyen/adyen-openapi/projects",
-    "https://github.com/Adyen/adyen-openapi/pulls",
-    "https://github.com/Adyen/adyen-openapi/pulse",
-    "https://github.com/Adyen/adyen-openapi/releases",
-    "https://github.com/Adyen/adyen-openapi/security",
-    "https://github.com/Adyen/adyen-openapi/stargazers",
-    "https://github.com/Adyen/adyen-openapi/tags",
-    "https://github.com/Adyen/adyen-openapi/tree/main/.github",
-    "https://github.com/Adyen/adyen-openapi/tree/main/json",
-    "https://github.com/Adyen/adyen-openapi/tree/main/yaml",
-    "https://github.com/Adyen/adyen-openapi/watchers",
-    "https://github.com/Adyen/adyen-openapi/wiki",
     "https://github.com/accelerator",
     "https://github.com/adyen/adyen-mcp",
     "https://github.com/collections",
-    "https://github.com/contact/report-content?content_url=https%3A%2F%2Fgithub.com%2FAdyen%2Fadyen-openapi&report=Adyen+%28user%29",
     "https://github.com/customer-stories",
     "https://github.com/enterprise",
     "https://github.com/enterprise/startups",
+    "https://github.com/fastify/fast-uri",
+    "https://github.com/fastify/fast-uri/compare/v3.1.0...v3.1.2",
+    "https://github.com/fastify/fast-uri/releases",
     "https://github.com/features",
     "https://github.com/features/actions",
     "https://github.com/features/ai/github-app",
@@ -498,11 +635,10 @@
     "https://github.com/features/copilot",
     "https://github.com/features/copilot/copilot-business",
     "https://github.com/features/issues",
-    "https://github.com/login?return_to=%2FAdyen%2Fadyen-openapi",
-    "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2FAdyen%2Fadyen-openapi",
+    "https://github.com/login?return_to=%2FAdyen%2Fadyen-mcp",
+    "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2Fadyen%2Fadyen-mcp",
     "https://github.com/marketplace",
     "https://github.com/mcp",
-    "https://github.com/orgs/Adyen/packages?repo_name=adyen-openapi",
     "https://github.com/orgs/community/discussions",
     "https://github.com/partners",
     "https://github.com/premium-support",
@@ -518,7 +654,7 @@
     "https://github.com/security/advanced-security",
     "https://github.com/security/advanced-security/code-security",
     "https://github.com/security/advanced-security/secret-protection",
-    "https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E&source=header-repo&source_repo=Adyen%2Fadyen-openapi",
+    "https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E&source=header-repo&source_repo=Adyen%2Fadyen-mcp",
     "https://github.com/solutions",
     "https://github.com/solutions/executive-insights",
     "https://github.com/solutions/industry",
@@ -535,25 +671,18 @@
     "https://github.com/sponsors",
     "https://github.com/team",
     "https://github.com/topics",
-    "https://github.com/topics/adyen",
-    "https://github.com/topics/adyen-api",
-    "https://github.com/topics/openapi-specification",
-    "https://github.com/topics/openapi-standard",
-    "https://github.com/topics/swagger-specification",
     "https://github.com/trending",
     "https://github.com/trust-center",
     "https://github.com/why-github",
     "https://help.adyen.com",
     "https://help.adyen.com/contact",
-    "https://json-schema.org/understanding-json-schema/reference/combining.html",
     "https://maintainers.github.com",
     "https://securitylab.github.com",
     "https://skills.github.com",
     "https://stars.github.com",
     "https://support.github.com",
-    "https://swagger.io/docs/specification/openapi-extensions/",
-    "https://swaggerhub.com/",
     "https://www.adyen.com/",
+    "https://www.adyen.com/.well-known/mcp/server-card.json",
     "https://www.adyen.com/about",
     "https://www.adyen.com/about/team",
     "https://www.adyen.com/accept-payments",
@@ -2867,6 +2996,7 @@
     "https://www.adyen.com/the-latest",
     "https://www.adyen.com/the-latest/a-faster-smarter-way-to-manage-payment-methods",
     "https://www.adyen.com/the-latest/a-refreshed-checkout-ui-for-pay-by-link-and-hosted-checkout",
+    "https://www.adyen.com/the-latest/accelerate-access-to-capital-with-early-loan-renewals",
     "https://www.adyen.com/the-latest/accelerate-integration-with-new-platform-ready-components",
     "https://www.adyen.com/the-latest/accept-blik-code-payments-across-all-adyen-terminals-in-poland",
     "https://www.adyen.com/the-latest/accept-combo-card-payments-in-brazil-without-integration-required",
@@ -2892,6 +3022,7 @@
     "https://www.adyen.com/the-latest/boost-success-rates-on-external-tokens-with-pan-retry-logic",
     "https://www.adyen.com/the-latest/boost-your-payment-conversion-with-adyen-uplift",
     "https://www.adyen.com/the-latest/bring-checkout-to-the-table-with-pay-at-table-for-oracle-merchants",
+    "https://www.adyen.com/the-latest/bring-flexible-capital-offers-to-your-api-experience",
     "https://www.adyen.com/the-latest/bring-your-brand-to-life-on-android-terminals",
     "https://www.adyen.com/the-latest/build-flexible-on-brand-checkouts-with-adyen-web-components-and-recurly-now-with-intelligent-payment-routing",
     "https://www.adyen.com/the-latest/capital-now-available-in-france-and-finland",
@@ -2918,6 +3049,7 @@
     "https://www.adyen.com/the-latest/enable-ideal-payments-with-adyen-business-accounts-in-the-netherlands",
     "https://www.adyen.com/the-latest/enable-instant-payouts-with-cashout",
     "https://www.adyen.com/the-latest/enhance-user-experience-in-denmark-and-finland-with-mobilepay-payouts",
+    "https://www.adyen.com/the-latest/expand-buy-now-pay-later-reach-across-europe-with-alma",
     "https://www.adyen.com/the-latest/expanded-capability-reading-non-pci-cards-with-adyen-terminals",
     "https://www.adyen.com/the-latest/expanded-gift-card-capabilities-on-standalone-terminals",
     "https://www.adyen.com/the-latest/expanded-sales-day-payout-coverage-across-key-payment-methods",
@@ -2948,6 +3080,7 @@
     "https://www.adyen.com/the-latest/klarna-in-store-buy-now-pay-later-at-the-terminal",
     "https://www.adyen.com/the-latest/launch-a-new-revenue-stream-with-cashout-now-available-to-all-platforms",
     "https://www.adyen.com/the-latest/launch-payout-faster-with-managed-payouts",
+    "https://www.adyen.com/the-latest/let-your-users-choose-a-repayment-schedule-that-fits-their-business",
     "https://www.adyen.com/the-latest/link-donations-to-the-original-transaction-with-a-new-reporting-field",
     "https://www.adyen.com/the-latest/localized-shopper-statements-now-available-in-japan",
     "https://www.adyen.com/the-latest/log-in-to-multiple-company-accounts-with-a-single-set-of-credentials",
@@ -3011,6 +3144,7 @@
     "https://www.adyen.com/the-latest/stay-on-top-of-api-updates-with-the-new-api-diff-tool",
     "https://www.adyen.com/the-latest/store-amex-cards-for-guest-checkout-and-card-on-file-in-india",
     "https://www.adyen.com/the-latest/store-and-forward-is-available-on-nyc1-ios",
+    "https://www.adyen.com/the-latest/stronger-control-over-us-bank-transfers-with-direct-adyen-banking-connectivity",
     "https://www.adyen.com/the-latest/support-mandatory-instant-paments-in-greece-with-iris",
     "https://www.adyen.com/the-latest/tailor-your-buy-now-pay-later-strategy-with-flexible-affirm-financing-packages",
     "https://www.adyen.com/the-latest/tap-to-pay-on-android-and-nyc1-now-available-in-mexico",
@@ -3045,10 +3179,6 @@
     "https://www.adyen.com/uplift/protect",
     "https://www.adyen.com/uplift/tokenize",
     "https://www.adyen.com/web-payments",
-    "https://www.adyen.com/why-do-i-see-adyen-on-my-bank-statement",
-    "https://www.adyen.help/hc/en-us/requests/new",
-    "https://www.getpostman.com/postman",
-    "https://www.openapis.org/",
-    "https://www.postman.com/api-evangelist/commerce/documentation/2u4jmxh/adyen-payment-api"
+    "https://www.adyen.com/why-do-i-see-adyen-on-my-bank-statement"
   ]
 }

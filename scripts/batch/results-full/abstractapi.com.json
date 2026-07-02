@@ -12,14 +12,14 @@
       "errors": []
     },
     "usedLlm": true,
-    "discoveredAt": "2026-07-02T14:54:32.795Z",
-    "summary": "Abstract API exposes 13 authenticated REST/http surfaces, each using a product-specific API key; Email Reputation also supports Bearer auth in the Authorization header.",
+    "discoveredAt": "2026-07-02T16:16:14.472Z",
+    "summary": "Abstract API exposes multiple REST HTTP APIs; documented auth is per-API Abstract API key, passed via `api_key` query param for most products and additionally as `Authorization: Bearer` for Email Reputation.",
     "credentials": {
       "abstract_api_key": {
         "type": "api_key",
         "label": "Abstract API key",
         "generateUrl": "https://app.abstractapi.com/dashboard",
-        "setup": "Go to the [Abstract dashboard](https://app.abstractapi.com/dashboard) and create or copy the API key for the specific product you want to use. Abstract notes that each API has its own unique key, so an `IP Intelligence` key will not work for `Email Reputation`, and vice versa.",
+        "setup": "Sign in to the [Abstract dashboard](https://app.abstractapi.com/dashboard), then create or view the API key for the specific API product you want to call (keys are per-API, not shared across products). Use the key as `api_key` in the query string or as `Authorization: Bearer <key>` where the docs allow it.",
         "acquisition": "manual"
       }
     },
@@ -45,6 +45,7 @@
                   "mechanics": {
                     "source": "http",
                     "in": "query",
+                    "scheme": "api_key",
                     "paramName": "api_key"
                   }
                 }
@@ -80,42 +81,6 @@
         "url": "https://emailreputation.abstractapi.com/v1/"
       },
       {
-        "slug": "ip-intelligence-api",
-        "name": "IP Intelligence API",
-        "type": "http",
-        "docs": "https://docs.abstractapi.com/api/ip-intelligence",
-        "basis": {
-          "via": "discovered",
-          "evidence": [
-            "https://docs.abstractapi.com/api/ip-intelligence"
-          ]
-        },
-        "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "abstract_api_key",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "query",
-                    "paramName": "api_key"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://docs.abstractapi.com/api/ip-intelligence"
-                ]
-              }
-            }
-          ]
-        },
-        "url": "https://ip-intelligence.abstractapi.com/v1/"
-      },
-      {
         "slug": "phone-intelligence-api",
         "name": "Phone Intelligence API",
         "type": "http",
@@ -136,6 +101,7 @@
                   "mechanics": {
                     "source": "http",
                     "in": "query",
+                    "scheme": "api_key",
                     "paramName": "api_key"
                   }
                 }
@@ -150,6 +116,43 @@
           ]
         },
         "url": "https://phoneintelligence.abstractapi.com/v1/"
+      },
+      {
+        "slug": "ip-intelligence-api",
+        "name": "IP Intelligence API",
+        "type": "http",
+        "docs": "https://docs.abstractapi.com/api/ip-intelligence",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.abstractapi.com/api/ip-intelligence"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "abstract_api_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "query",
+                    "scheme": "api_key",
+                    "paramName": "api_key"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.abstractapi.com/api/ip-intelligence"
+                ]
+              }
+            }
+          ]
+        },
+        "url": "https://ip-intelligence.abstractapi.com/v1/"
       },
       {
         "slug": "company-enrichment-api",
@@ -172,6 +175,7 @@
                   "mechanics": {
                     "source": "http",
                     "in": "query",
+                    "scheme": "api_key",
                     "paramName": "api_key"
                   }
                 }
@@ -208,6 +212,7 @@
                   "mechanics": {
                     "source": "http",
                     "in": "query",
+                    "scheme": "api_key",
                     "paramName": "api_key"
                   }
                 }
@@ -235,29 +240,8 @@
           ]
         },
         "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "abstract_api_key",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "query",
-                    "paramName": "api_key"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://docs.abstractapi.com/api/vat-validation"
-                ]
-              }
-            }
-          ]
-        },
-        "url": "https://vat.abstractapi.com/v1/"
+          "status": "unknown"
+        }
       },
       {
         "slug": "exchange-rates-api",
@@ -271,27 +255,7 @@
           ]
         },
         "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "abstract_api_key",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "query",
-                    "paramName": "api_key"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://docs.abstractapi.com/api/exchange-rates"
-                ]
-              }
-            }
-          ]
+          "status": "unknown"
         }
       },
       {
@@ -315,6 +279,7 @@
                   "mechanics": {
                     "source": "http",
                     "in": "query",
+                    "scheme": "api_key",
                     "paramName": "api_key"
                   }
                 }
@@ -342,27 +307,7 @@
           ]
         },
         "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "abstract_api_key",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "query",
-                    "paramName": "api_key"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://docs.abstractapi.com/api/timezones"
-                ]
-              }
-            }
-          ]
+          "status": "unknown"
         }
       },
       {
@@ -386,6 +331,7 @@
                   "mechanics": {
                     "source": "http",
                     "in": "query",
+                    "scheme": "api_key",
                     "paramName": "api_key"
                   }
                 }
@@ -413,27 +359,7 @@
           ]
         },
         "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "abstract_api_key",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "query",
-                    "paramName": "api_key"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://docs.abstractapi.com/api/images"
-                ]
-              }
-            }
-          ]
+          "status": "unknown"
         }
       },
       {
@@ -448,29 +374,9 @@
           ]
         },
         "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "abstract_api_key",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "query",
-                    "paramName": "api_key"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://docs.abstractapi.com/api/scrape"
-                ]
-              }
-            }
-          ]
+          "status": "unknown"
         },
-        "url": "https://scrape.abstractapi.com/v1/"
+        "url": "https://scrape.abstractapi.com/v1"
       },
       {
         "slug": "website-screenshot-api",
@@ -493,6 +399,7 @@
                   "mechanics": {
                     "source": "http",
                     "in": "query",
+                    "scheme": "api_key",
                     "paramName": "api_key"
                   }
                 }
@@ -506,20 +413,19 @@
             }
           ]
         },
-        "url": "https://screenshot.abstractapi.com/v1/"
+        "url": "https://screenshot.abstractapi.com/v1"
       }
     ]
   },
-  "discoveredAt": "2026-07-02T14:54:32.796Z",
+  "discoveredAt": "2026-07-02T16:16:14.473Z",
   "model": "loop-gpt-5.4-mini",
   "usage": {
-    "prompt_tokens": 85985,
-    "completion_tokens": 2070,
-    "total_tokens": 88055
+    "prompt_tokens": 131622,
+    "completion_tokens": 1934,
+    "total_tokens": 133556
   },
   "visited": [
     "https://abstractapi.com/llms.txt",
-    "https://developers.openai.com/api/docs/llms.txt",
     "https://docs.abstractapi.com/api",
     "https://docs.abstractapi.com/api/avatars",
     "https://docs.abstractapi.com/api/company-enrichment",
@@ -535,8 +441,11 @@
     "https://docs.abstractapi.com/api/timezones",
     "https://docs.abstractapi.com/api/vat-validation",
     "https://docs.abstractapi.com/llms.txt",
-    "https://docs.customer.io/ai/use-docs-with-ai/",
-    "https://github.com/pydantic/pydantic-ai/issues/3140"
+    "https://docs.github.com/en/graphql",
+    "https://graphql.org/",
+    "https://mcpmarket.com/server/api-docs",
+    "https://www.reddit.com/r/mcp/comments/1ogb1ye/api_graphql_openapi_swagger_docs_mcp_server/",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
   ],
   "grounding": [
     "http://www.namecheap.com",
@@ -547,7 +456,6 @@
     "https://avatars.abstractapi.com/v1/",
     "https://calendly.com/d/crbk-jpf-9pv?&utm_source=documentation",
     "https://companyenrichment.abstractapi.com/v2",
-    "https://developers.openai.com/api/docs/llms.txt",
     "https://docs.abstractapi.com/#-popular-apis",
     "https://docs.abstractapi.com/#api-versions",
     "https://docs.abstractapi.com/#authentication-methods",
@@ -805,7 +713,7 @@
     "https://docs.abstractapi.com/vat-validation/calculate",
     "https://docs.abstractapi.com/vat-validation/categories",
     "https://docs.abstractapi.com/vat-validation/validate",
-    "https://docs.customer.io/ai/use-docs-with-ai/",
+    "https://docs.github.com/en/graphql",
     "https://docs.google.com/spreadsheets/d/1w4VMneDoL6JW2NaUp2SjTOyvRcD4rlXDI0XpqKS2PeQ/view?usp=sharing",
     "https://emailreputation.abstractapi.com/v1",
     "https://emailreputation.abstractapi.com/v1/",
@@ -814,13 +722,14 @@
     "https://faultlore.com/blah/text-hates-you/",
     "https://github.com/HackerNews/API",
     "https://github.com/TeamHypersomnia/Hypersomnia",
-    "https://github.com/pydantic/pydantic-ai/issues/3140",
+    "https://graphql.org/",
     "https://holidays.abstractapi.com/v1/",
     "https://ibanvalidation.abstractapi.com/v1/",
     "https://ip-intelligence.abstractapi.com/v1",
     "https://ip-intelligence.abstractapi.com/v1/",
     "https://logo.abstractapi.com/cb6281618-c67a-5004-9c9b-29fc2245a4f7_-airbnb.png",
     "https://matan-h.com/google-has-a-secret-browser-hidden-inside-the-settings/",
+    "https://mcpmarket.com/server/api-docs",
     "https://news.ycombinator.com",
     "https://phoneintelligence.abstractapi.com/v1",
     "https://phoneintelligence.abstractapi.com/v1/",
@@ -1491,7 +1400,9 @@
     "https://www.json.org/json-en.html",
     "https://www.linkedin.com/company/abstractapi",
     "https://www.mintlify.com?utm_campaign=poweredBy&utm_medium=referral&utm_source=abstractapi-avatars",
+    "https://www.reddit.com/r/mcp/comments/1ogb1ye/api_graphql_openapi_swagger_docs_mcp_server/",
     "https://www.ycombinator.com/apply/",
-    "https://www.ycombinator.com/legal/"
+    "https://www.ycombinator.com/legal/",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
   ]
 }

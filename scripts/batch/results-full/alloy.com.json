@@ -12,21 +12,13 @@
       "errors": []
     },
     "usedLlm": true,
-    "discoveredAt": "2026-07-02T14:55:04.971Z",
-    "summary": "Alloy exposes a legacy Alloy API, the Connectivity API, and an MCP Gateway; all require authentication via Alloy-issued API key/secret or bearer token, with MCP also supporting tokenized endpoint access.",
+    "discoveredAt": "2026-07-02T16:16:26.811Z",
+    "summary": "Alloy exposes one documented HTTP API surface at the sandbox/v1 API, authenticated with either HTTP Basic `token:secret` or OAuth 2.0 client-credentials using the same account-level API key pair.",
     "credentials": {
-      "alloy_api_key": {
+      "alloy_token_secret": {
         "type": "compound",
-        "label": "Alloy account-level API key + secret",
-        "generateUrl": "https://developer.alloy.com/public/docs/account-level-api-keys.md",
-        "setup": "Go to the [Account-Level API Keys](https://developer.alloy.com/public/docs/account-level-api-keys.md) guide. In Alloy, open **Roles > Settings > API Keys** and create a new API key. You’ll get a `token` and `secret` (legacy names may appear as `workflow_token` / `workflow_secret`). Treat them like a username/password pair; rotate or revoke them from the same page.",
-        "acquisition": "manual"
-      },
-      "alloy_bearer_token": {
-        "type": "bearer",
-        "label": "Alloy OAuth 2.0 bearer token",
-        "generateUrl": "https://developer.alloy.com/public/docs/authentication-guide.md",
-        "setup": "Use the same Alloy app `token` and `secret` from [API Keys](https://developer.alloy.com/public/docs/account-level-api-keys.md). Exchange them for a bearer token with the OAuth 2.0 client-credentials flow at `https://sandbox.alloy.co/v1/oauth/bearer` (production uses the corresponding production host). The returned access token is valid for one hour.",
+        "label": "Alloy account-level API key pair (token + secret)",
+        "setup": "Go to the Alloy developer dashboard and open **Roles > Settings > API Keys**. Create a new API key or use a migrated workflow key if your account has not moved yet. Alloy shows a `token` and `secret`; keep both secret. For auth, Alloy supports HTTP Basic on requests or OAuth 2.0 client credentials using the same `token` as client ID and `secret` as client secret. See the [Authentication Guide](https://developer.alloy.com/public/docs/authentication-guide.md) and [Account-Level API Keys](https://developer.alloy.com/public/docs/account-level-api-keys.md).",
         "acquisition": "manual"
       }
     },
@@ -51,7 +43,7 @@
             {
               "use": [
                 {
-                  "id": "alloy_api_key",
+                  "id": "alloy_token_secret",
                   "mechanics": {
                     "source": "http",
                     "in": "header",
@@ -60,27 +52,7 @@
                   }
                 },
                 {
-                  "id": "alloy_api_key",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "header",
-                    "headerName": "Authorization",
-                    "scheme": "Basic"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://developer.alloy.com/public/docs/authentication-guide.md",
-                  "https://developer.alloy.com/public/docs/account-level-api-keys.md"
-                ]
-              }
-            },
-            {
-              "use": [
-                {
-                  "id": "alloy_bearer_token",
+                  "id": "alloy_token_secret",
                   "mechanics": {
                     "source": "http",
                     "in": "header",
@@ -95,162 +67,38 @@
                   "https://developer.alloy.com/public/docs/authentication-guide.md"
                 ]
               }
+            },
+            {
+              "use": [
+                {
+                  "id": "alloy_token_secret",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Basic"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://developer.alloy.com/public/docs/authentication-guide.md"
+                ]
+              }
             }
           ]
         },
         "url": "https://sandbox.alloy.co/v1"
-      },
-      {
-        "slug": "alloy-connectivity-api",
-        "name": "Alloy Connectivity API",
-        "type": "http",
-        "docs": "https://docs.runalloy.com/connectivity-api/introduction",
-        "basis": {
-          "via": "discovered",
-          "evidence": [
-            "https://docs.runalloy.com/connectivity-api/introduction",
-            "https://docs.runalloy.com/connectivity-api/authentication",
-            "https://docs.runalloy.com/llms.txt"
-          ]
-        },
-        "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "alloy_api_key",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "header",
-                    "headerName": "Authorization",
-                    "scheme": "Bearer"
-                  }
-                },
-                {
-                  "id": "alloy_api_key",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "header",
-                    "headerName": "x-api-version",
-                    "scheme": "unknown"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://docs.runalloy.com/connectivity-api/authentication"
-                ]
-              }
-            }
-          ]
-        },
-        "url": "https://production.runalloy.com"
-      },
-      {
-        "slug": "alloy-mcp-gateway",
-        "name": "Alloy MCP Gateway",
-        "type": "mcp",
-        "docs": "https://docs.runalloy.com/mcp/platform/introduction",
-        "basis": {
-          "via": "discovered",
-          "evidence": [
-            "https://docs.runalloy.com/mcp/platform/introduction",
-            "https://docs.runalloy.com/mcp/api-reference/authentication"
-          ]
-        },
-        "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "alloy_api_key",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "header",
-                    "headerName": "Authorization",
-                    "scheme": "Bearer"
-                  }
-                },
-                {
-                  "id": "alloy_api_key",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "header",
-                    "headerName": "x-alloy-userid",
-                    "scheme": "unknown"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://docs.runalloy.com/mcp/api-reference/authentication"
-                ]
-              }
-            },
-            {
-              "use": [
-                {
-                  "id": "alloy_api_key",
-                  "mechanics": {
-                    "source": "well-known"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://docs.runalloy.com/mcp/api-reference/authentication"
-                ]
-              }
-            },
-            {
-              "use": [
-                {
-                  "id": "alloy_bearer_token",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "header",
-                    "headerName": "Authorization",
-                    "scheme": "Bearer"
-                  }
-                },
-                {
-                  "id": "alloy_api_key",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "header",
-                    "headerName": "x-alloy-userid",
-                    "scheme": "unknown"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://docs.runalloy.com/mcp/api-reference/authentication"
-                ]
-              }
-            }
-          ]
-        },
-        "url": "https://mcp.runalloy.com/mcp/{serverId}",
-        "transports": [
-          "streamable-http",
-          "sse"
-        ]
       }
     ]
   },
-  "discoveredAt": "2026-07-02T14:55:04.972Z",
+  "discoveredAt": "2026-07-02T16:16:26.812Z",
   "model": "loop-gpt-5.4-mini",
   "usage": {
-    "prompt_tokens": 175813,
-    "completion_tokens": 1512,
-    "total_tokens": 177325
+    "prompt_tokens": 78143,
+    "completion_tokens": 774,
+    "total_tokens": 78917
   },
   "visited": [
     "https://developer.alloy.com/llms.txt",
@@ -258,29 +106,28 @@
     "https://developer.alloy.com/public/docs/api-request.md",
     "https://developer.alloy.com/public/docs/authentication-guide.md",
     "https://developer.alloy.com/public/reference",
+    "https://developer.alloy.com/public/reference/get_entities-entity-token-2",
     "https://developer.alloy.com/public/reference/post_evaluations",
-    "https://docs.runalloy.com/",
-    "https://docs.runalloy.com/connectivity-api/authentication",
-    "https://docs.runalloy.com/connectivity-api/introduction",
-    "https://docs.runalloy.com/llms.txt",
-    "https://docs.runalloy.com/mcp/api-reference/authentication",
-    "https://docs.runalloy.com/mcp/platform/introduction",
+    "https://developer.alloy.com/public/reference/post_events",
+    "https://runalloy.com/blog/what-is-mcp-and-why-it-matters-saas-alloy-automation/",
     "https://www.alloy.com/developer",
-    "https://www.alloy.com/product-updates/category/updated-feature/p4",
-    "https://www.apollographql.com/docs/apollo-mcp-server",
+    "https://www.apollographql.com/blog/building-mcp-tools-with-graphql-a-better-way-to-connect-llms-to-your-api",
+    "https://www.plain.com/docs/graphql/introduction",
     "https://www.youtube.com/watch?v=tMTsNn09GNo"
   ],
   "grounding": [
     "https://alloy.docebosaas.com/learn/signin",
-    "https://api.runalloy.com/api/strategy/connector/hubspot/authorize?userId=",
     "https://app.alloy.co/login/",
-    "https://chat.runalloy.com/",
     "https://developer.alloy.com/",
     "https://developer.alloy.com/#content",
     "https://developer.alloy.com/llms.txt",
+    "https://developer.alloy.com/login?redirect_uri=/public/reference/get_entities-entity-token-2",
     "https://developer.alloy.com/login?redirect_uri=/public/reference/post_evaluations",
+    "https://developer.alloy.com/login?redirect_uri=/public/reference/post_events",
     "https://developer.alloy.com/login?redirect_uri=/public/reference/sandbox-vs-production",
+    "https://developer.alloy.com/login?redirect_uri=/reference/get_entities-entity-token-2",
     "https://developer.alloy.com/login?redirect_uri=/reference/post_evaluations",
+    "https://developer.alloy.com/login?redirect_uri=/reference/post_events",
     "https://developer.alloy.com/login?redirect_uri=/reference/sandbox-vs-production",
     "https://developer.alloy.com/public/docs",
     "https://developer.alloy.com/public/docs/_errors.md",
@@ -463,6 +310,7 @@
     "https://developer.alloy.com/public/reference/patch_investigations-types-delete-investigation-type",
     "https://developer.alloy.com/public/reference/patch_investigations-types-unarchive",
     "https://developer.alloy.com/public/reference/patch_journeys-journey-token-applications-journey-application-token-auditaccess",
+    "https://developer.alloy.com/public/reference/patch_publ",
     "https://developer.alloy.com/public/reference/post_accounts",
     "https://developer.alloy.com/public/reference/post_accounts.md",
     "https://developer.alloy.com/public/reference/post_cases-case-token-evidences",
@@ -520,214 +368,6 @@
     "https://developer.alloy.com/public/reference/put_lists-list-token",
     "https://developer.alloy.com/public/reference/put_lists-list-token-meta",
     "https://developer.alloy.com/public/reference/sandbox-vs-production",
-    "https://docs.runalloy.com/",
-    "https://docs.runalloy.com/#-enterprise-grade-security",
-    "https://docs.runalloy.com/#-instant-access-to-250%2B-integrations",
-    "https://docs.runalloy.com/#-instant-access-to-250+-integrations",
-    "https://docs.runalloy.com/#-multi-user-support",
-    "https://docs.runalloy.com/#-real-time-operations",
-    "https://docs.runalloy.com/#-smart-tool-discovery",
-    "https://docs.runalloy.com/#1-servers",
-    "https://docs.runalloy.com/#2-tools",
-    "https://docs.runalloy.com/#3-connectors",
-    "https://docs.runalloy.com/#4-restrictions",
-    "https://docs.runalloy.com/#api-key",
-    "https://docs.runalloy.com/#api-keys",
-    "https://docs.runalloy.com/#api-management-endpoints",
-    "https://docs.runalloy.com/#authentication-errors",
-    "https://docs.runalloy.com/#authentication-layers",
-    "https://docs.runalloy.com/#common-error-scenarios",
-    "https://docs.runalloy.com/#common-use-cases",
-    "https://docs.runalloy.com/#connector-credentials",
-    "https://docs.runalloy.com/#content-area",
-    "https://docs.runalloy.com/#content-management",
-    "https://docs.runalloy.com/#core-concepts",
-    "https://docs.runalloy.com/#credential-lifecycle",
-    "https://docs.runalloy.com/#credential-types",
-    "https://docs.runalloy.com/#customer-support-automation",
-    "https://docs.runalloy.com/#data-analysis",
-    "https://docs.runalloy.com/#discovering-required-credentials",
-    "https://docs.runalloy.com/#getting-started",
-    "https://docs.runalloy.com/#how-alloy-implements-mcp",
-    "https://docs.runalloy.com/#invalid-api-key",
-    "https://docs.runalloy.com/#invalid-credential-id",
-    "https://docs.runalloy.com/#invalid-user-id",
-    "https://docs.runalloy.com/#jwt-user-isolation",
-    "https://docs.runalloy.com/#key-features",
-    "https://docs.runalloy.com/#mcp-protocol-endpoints",
-    "https://docs.runalloy.com/#missing-api-version-header",
-    "https://docs.runalloy.com/#need-help",
-    "https://docs.runalloy.com/#next-steps",
-    "https://docs.runalloy.com/#oauth-2-0",
-    "https://docs.runalloy.com/#overview",
-    "https://docs.runalloy.com/#platform-authentication",
-    "https://docs.runalloy.com/#recommended-architecture",
-    "https://docs.runalloy.com/#required-headers",
-    "https://docs.runalloy.com/#sales-intelligence",
-    "https://docs.runalloy.com/#security-architecture",
-    "https://docs.runalloy.com/#security-best-practices",
-    "https://docs.runalloy.com/#test-credential-flow",
-    "https://docs.runalloy.com/#test-user-context",
-    "https://docs.runalloy.com/#testing-authentication",
-    "https://docs.runalloy.com/#user-context-authentication",
-    "https://docs.runalloy.com/#user-id-header",
-    "https://docs.runalloy.com/#using-credentials",
-    "https://docs.runalloy.com/#verify-platform-access",
-    "https://docs.runalloy.com/#what-alloy-automation-stores",
-    "https://docs.runalloy.com/#what-is-mcp",
-    "https://docs.runalloy.com/#what-you-store",
-    "https://docs.runalloy.com/#when-user-id-is-required",
-    "https://docs.runalloy.com/#why-choose-alloy-mcp",
-    "https://docs.runalloy.com/#workflow-automation",
-    "https://docs.runalloy.com/best-buy/app-configuration",
-    "https://docs.runalloy.com/best-buy/app-configuration/adding-pickup-component.md",
-    "https://docs.runalloy.com/best-buy/app-configuration/managing-skus.md",
-    "https://docs.runalloy.com/best-buy/app-configuration/setup-checkout.md",
-    "https://docs.runalloy.com/best-buy/app-configuration/setup-connection.md",
-    "https://docs.runalloy.com/best-buy/app-configuration/setup-fulfillment.md",
-    "https://docs.runalloy.com/best-buy/app-installation.md",
-    "https://docs.runalloy.com/best-buy/introduction",
-    "https://docs.runalloy.com/best-buy/introduction.md",
-    "https://docs.runalloy.com/best-buy/order-update-email-notification.md",
-    "https://docs.runalloy.com/best-buy/returns-cancellations.md",
-    "https://docs.runalloy.com/best-buy/shopper-experience.md",
-    "https://docs.runalloy.com/blueprints/e-commerce/creating-and-managing-orders.md",
-    "https://docs.runalloy.com/blueprints/e-commerce/return-handling.md",
-    "https://docs.runalloy.com/blueprints/e-commerce/third-party-logistics-services.md",
-    "https://docs.runalloy.com/blueprints/finance-and-accounting/gl-account-syncing.md",
-    "https://docs.runalloy.com/blueprints/finance-and-accounting/invoicing.md",
-    "https://docs.runalloy.com/blueprints/finance-and-accounting/journal-entries.md",
-    "https://docs.runalloy.com/blueprints/finance-and-accounting/sales-and-purchase-orders.md",
-    "https://docs.runalloy.com/blueprints/finance-and-accounting/underwriting.md",
-    "https://docs.runalloy.com/blueprints/overview",
-    "https://docs.runalloy.com/blueprints/overview.md",
-    "https://docs.runalloy.com/blueprints/productivity/crm-data-sync.md",
-    "https://docs.runalloy.com/blueprints/productivity/file-uploads-and-transfers.md",
-    "https://docs.runalloy.com/buy-with-prime/quick-start",
-    "https://docs.runalloy.com/buy-with-prime/supported-apps/amazon-eventbridge",
-    "https://docs.runalloy.com/changelog",
-    "https://docs.runalloy.com/changelog.md",
-    "https://docs.runalloy.com/changelog/2025/10/mcp.md",
-    "https://docs.runalloy.com/connectivity-api/auth-config",
-    "https://docs.runalloy.com/connectivity-api/auth-config.md",
-    "https://docs.runalloy.com/connectivity-api/authentication",
-    "https://docs.runalloy.com/connectivity-api/authentication.md",
-    "https://docs.runalloy.com/connectivity-api/credentials",
-    "https://docs.runalloy.com/connectivity-api/credentials.md",
-    "https://docs.runalloy.com/connectivity-api/files",
-    "https://docs.runalloy.com/connectivity-api/files.md",
-    "https://docs.runalloy.com/connectivity-api/introduction",
-    "https://docs.runalloy.com/connectivity-api/introduction.md",
-    "https://docs.runalloy.com/connectivity-api/pagination",
-    "https://docs.runalloy.com/connectivity-api/pagination.md",
-    "https://docs.runalloy.com/connectivity-api/quick-start",
-    "https://docs.runalloy.com/connectivity-api/quick-start#step-4%3A-execute-an-action",
-    "https://docs.runalloy.com/connectivity-api/quick-start.md",
-    "https://docs.runalloy.com/connectivity-api/users",
-    "https://docs.runalloy.com/connectivity-api/users.md",
-    "https://docs.runalloy.com/connectors/AcuityScheduling.md",
-    "https://docs.runalloy.com/connectors/Aircall.md",
-    "https://docs.runalloy.com/connectors/Airtable.md",
-    "https://docs.runalloy.com/connectors/AmazonSellerCentral.md",
-    "https://docs.runalloy.com/connectors/Asana.md",
-    "https://docs.runalloy.com/connectors/Avalara.md",
-    "https://docs.runalloy.com/connectors/Awtomic.md",
-    "https://docs.runalloy.com/connectors/Calendly.md",
-    "https://docs.runalloy.com/connectors/Copper.md",
-    "https://docs.runalloy.com/connectors/CustomerIO.md",
-    "https://docs.runalloy.com/connectors/Delighted.md",
-    "https://docs.runalloy.com/connectors/Dropbox.md",
-    "https://docs.runalloy.com/connectors/EasyShip.md",
-    "https://docs.runalloy.com/connectors/Easypost.md",
-    "https://docs.runalloy.com/connectors/Eventbrite.md",
-    "https://docs.runalloy.com/connectors/Faire.md",
-    "https://docs.runalloy.com/connectors/Fairing.md",
-    "https://docs.runalloy.com/connectors/FedEx.md",
-    "https://docs.runalloy.com/connectors/Flock.md",
-    "https://docs.runalloy.com/connectors/Freshdesk.md",
-    "https://docs.runalloy.com/connectors/Gladly.md",
-    "https://docs.runalloy.com/connectors/Gmail.md",
-    "https://docs.runalloy.com/connectors/GoogleAds.md",
-    "https://docs.runalloy.com/connectors/GoogleCalendar.md",
-    "https://docs.runalloy.com/connectors/GoogleDocs.md",
-    "https://docs.runalloy.com/connectors/GoogleDrive.md",
-    "https://docs.runalloy.com/connectors/GoogleSheets.md",
-    "https://docs.runalloy.com/connectors/GoogleWorkspaceAdmin.md",
-    "https://docs.runalloy.com/connectors/Grin.md",
-    "https://docs.runalloy.com/connectors/Heap.md",
-    "https://docs.runalloy.com/connectors/HubSpot.md",
-    "https://docs.runalloy.com/connectors/Hunter.md",
-    "https://docs.runalloy.com/connectors/IBMSterlingOMS.md",
-    "https://docs.runalloy.com/connectors/Intercom.md",
-    "https://docs.runalloy.com/connectors/Inveterate.md",
-    "https://docs.runalloy.com/connectors/Jira.md",
-    "https://docs.runalloy.com/connectors/Junip.md",
-    "https://docs.runalloy.com/connectors/Klaviyo.md",
-    "https://docs.runalloy.com/connectors/Kustomer.md",
-    "https://docs.runalloy.com/connectors/Lightspeed.md",
-    "https://docs.runalloy.com/connectors/LineTen.md",
-    "https://docs.runalloy.com/connectors/Linear.md",
-    "https://docs.runalloy.com/connectors/LinkedIn.md",
-    "https://docs.runalloy.com/connectors/Lob.md",
-    "https://docs.runalloy.com/connectors/LoopReturns.md",
-    "https://docs.runalloy.com/connectors/LoyaltyLion.md",
-    "https://docs.runalloy.com/connectors/Mailchimp.md",
-    "https://docs.runalloy.com/connectors/Mailgun.md",
-    "https://docs.runalloy.com/connectors/MercadoLibre.md",
-    "https://docs.runalloy.com/connectors/MetaAds.md",
-    "https://docs.runalloy.com/connectors/MicrosoftCRM.md",
-    "https://docs.runalloy.com/connectors/MicrosoftDynamicsBusinessCentral.md",
-    "https://docs.runalloy.com/connectors/MicrosoftExcel.md",
-    "https://docs.runalloy.com/connectors/MicrosoftSharepoint.md",
-    "https://docs.runalloy.com/connectors/MicrosoftTeams.md",
-    "https://docs.runalloy.com/connectors/Mintsoft.md",
-    "https://docs.runalloy.com/connectors/Monday.md",
-    "https://docs.runalloy.com/connectors/Notion.md",
-    "https://docs.runalloy.com/connectors/OctaneAI.md",
-    "https://docs.runalloy.com/connectors/utility/CustomConnector",
-    "https://docs.runalloy.com/embedded/alloy-link",
-    "https://docs.runalloy.com/embedded/custom-action",
-    "https://docs.runalloy.com/embedded/custom-api-calls",
-    "https://docs.runalloy.com/embedded/custom-field-types",
-    "https://docs.runalloy.com/embedded/destinations",
-    "https://docs.runalloy.com/embedded/field-types",
-    "https://docs.runalloy.com/embedded/frontend-javascript-sdk",
-    "https://docs.runalloy.com/embedded/handling-custom-oauth",
-    "https://docs.runalloy.com/embedded/headless-mode",
-    "https://docs.runalloy.com/embedded/installation-manager",
-    "https://docs.runalloy.com/embedded/managing-users-and-logs",
-    "https://docs.runalloy.com/embedded/node-sdk",
-    "https://docs.runalloy.com/embedded/platform/monitoring/handling-errors",
-    "https://docs.runalloy.com/embedded/platform/monitoring/ip-addresses",
-    "https://docs.runalloy.com/embedded/platform/monitoring/rate-limits",
-    "https://docs.runalloy.com/embedded/platform/monitoring/retry-mechanism",
-    "https://docs.runalloy.com/embedded/platform/welcome",
-    "https://docs.runalloy.com/embedded/python-sdk",
-    "https://docs.runalloy.com/embedded/quick-start",
-    "https://docs.runalloy.com/embedded/rsa-header-signature",
-    "https://docs.runalloy.com/embedded/styling-the-modal",
-    "https://docs.runalloy.com/embedded/terminology",
-    "https://docs.runalloy.com/embedded/triggers-and-custom-events",
-    "https://docs.runalloy.com/embedded/variable-selector",
-    "https://docs.runalloy.com/llms.txt",
-    "https://docs.runalloy.com/mcp/api-reference/api-endpoints-overview",
-    "https://docs.runalloy.com/mcp/api-reference/authentication",
-    "https://docs.runalloy.com/mcp/api-reference/available-tools",
-    "https://docs.runalloy.com/mcp/api-reference/input-validation",
-    "https://docs.runalloy.com/mcp/api-reference/mcp-protocol",
-    "https://docs.runalloy.com/mcp/api-reference/response-handling",
-    "https://docs.runalloy.com/mcp/api-reference/server-management",
-    "https://docs.runalloy.com/mcp/core-concepts/connectors-tools",
-    "https://docs.runalloy.com/mcp/core-concepts/customization-advanced-features",
-    "https://docs.runalloy.com/mcp/core-concepts/restrictions-guide",
-    "https://docs.runalloy.com/mcp/core-concepts/user-management",
-    "https://docs.runalloy.com/mcp/getting-started/quickstart",
-    "https://docs.runalloy.com/mcp/integrations/overview",
-    "https://docs.runalloy.com/mcp/platform/introduction",
-    "https://docs.runalloy.com/mcp/security/authentication-security",
-    "https://docs.runalloy.com/mcp/troubleshooting/faq-common-issues",
-    "https://docs.runalloy.com/platform",
-    "https://docs.runalloy.com/xero/introduction",
     "https://files.readme.io/1b46e00d350624324796a5327fec852c6da5da52d13e524a86ea8931aba2c9d4-Screenshot_2025-03-24_at_9.31.45_AM.png",
     "https://files.readme.io/1c96e21afe04c536c53764e946364b147efc714b3da2759ec07bb651c462b0ae-Screenshot_2025-03-24_at_9.27.57_AM.png",
     "https://files.readme.io/488b676d208aecaf850e566a037c455d64ab67bc2cc948dd95d981b4dfd3f131-Screenshot_2025-03-24_at_9.33.05_AM.png",
@@ -736,23 +376,9 @@
     "https://files.readme.io/b9f37c7e11e883c88618a893afd23cdb969cdf2802c118a854abec489ad9493d-Screenshot_2025-03-24_at_9.35.42_AM.png",
     "https://help.alloy.com",
     "https://help.alloy.com/hc/en-us",
-    "https://mcp.runalloy.com/mcp/{serverId}",
-    "https://mcp.runalloy.com/mcp/{serverId}/{accessToken}",
-    "https://mcp.runalloy.com/mcp/{serverId}/{token}",
-    "https://modelcontextprotocol.io/docs/getting-started/intro",
-    "https://production.runalloy.com/connectors",
-    "https://production.runalloy.com/connectors/hubspot/actions/createContact/execute",
-    "https://production.runalloy.com/connectors/hubspot/actions/listContacts/execute",
-    "https://production.runalloy.com/connectors/hubspot/credentials",
-    "https://production.runalloy.com/users",
-    "https://production.runalloy.com/users/68c3229752345278627ae373/credentials",
-    "https://runalloy.com",
-    "https://runalloy.com/blog/",
-    "https://runalloy.com/book-demo/",
-    "https://runalloy.com/contact-us/",
+    "https://runalloy.com/blog/what-is-mcp-and-why-it-matters-saas-alloy-automation/",
     "https://sandbox.alloy.co/v1/evaluations",
     "https://sandbox.alloy.co/v1/oauth/bearer",
-    "https://status.runalloy.com/",
     "https://tools.ietf.org/html/rfc6749",
     "https://twitter.com/usealloy",
     "https://uk.alloy.com/",
@@ -787,19 +413,13 @@
     "https://www.alloy.com/orchestration-decisioning-engine",
     "https://www.alloy.com/partners",
     "https://www.alloy.com/privacy-policy",
-    "https://www.alloy.com/product-updates/category/updated-feature/p4",
     "https://www.alloy.com/security",
     "https://www.alloy.com/tos",
-    "https://www.apollographql.com/docs/apollo-mcp-server",
-    "https://www.facebook.com/AlloyAutomation",
+    "https://www.apollographql.com/blog/building-mcp-tools-with-graphql-a-better-way-to-connect-llms-to-your-api",
     "https://www.facebook.com/usealloy/",
-    "https://www.instagram.com/alloyautomation/",
     "https://www.instagram.com/use_alloy/",
     "https://www.linkedin.com/company/alloy-apis/",
-    "https://www.linkedin.com/company/alloy-automation/",
-    "https://www.mintlify.com?utm_campaign=poweredBy&utm_medium=referral&utm_source=alloyautomation-245bf23e",
-    "https://www.youtube.com/watch?v=tMTsNn09GNo",
-    "https://x.com/AlloyAutomation",
-    "https://your-app.com/oauth/callback"
+    "https://www.plain.com/docs/graphql/introduction",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
   ]
 }

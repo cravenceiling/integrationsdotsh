@@ -12,62 +12,18 @@
       "errors": []
     },
     "usedLlm": true,
-    "discoveredAt": "2026-07-02T10:20:44.290Z",
-    "summary": "Akeyless exposes one authenticated REST API, a stdio MCP server, and the `akeyless` CLI; primary credentials are an Access ID/Access Key API key pair and CLI/profile-based login.",
+    "discoveredAt": "2026-07-02T16:16:28.448Z",
+    "summary": "Akeyless exposes one public HTTP API and two MCP server surfaces; both require Akeyless API key auth (Access ID + Access Key), and the MCP servers are launched locally via the Akeyless CLI with `--gateway-url`.",
     "credentials": {
       "akeyless_api_key": {
-        "type": "api_key",
-        "label": "Akeyless API Key (Access ID + Access Key)",
-        "generateUrl": "https://console.akeyless.io/",
-        "setup": "Go to the [Akeyless Console](https://console.akeyless.io/), then under **Administration → Users & Auth Methods** create a new **API Key** auth method. Download the generated CSV once; it contains the `Access ID` and `Access Key`. Use those values for CLI, SDK, and API authentication. If you need a fresh credential later, reset the access key from the same auth method.",
-        "acquisition": "manual"
-      },
-      "akeyless_mcp_cli_login": {
-        "type": "basic",
-        "label": "Akeyless CLI login/profile",
-        "generateUrl": "https://docs.akeyless.io/docs/auth-with-api-key.md",
-        "setup": "Install the Akeyless CLI, then configure a profile with `akeyless configure --profile <name> --access-id <Access ID> --access-key <Access Key>` or authenticate interactively with `akeyless auth --access-type access_key --access-id <Access ID> --access-key <Access Key>`. The MCP server uses the configured CLI authentication; for `akeyless mcp`, you must also pass `--gateway-url` directly on the command line.",
+        "type": "compound",
+        "label": "Akeyless API key authentication method",
+        "generateUrl": "https://docs.akeyless.io/docs/auth-with-api-key",
+        "setup": "In the Akeyless Console, go to **Administration → Users & Auth Methods → + New → API Key** to create an auth method and download the CSV containing the **Access ID** and **Access Key**. For CLI setup, run `akeyless configure --profile default --access-id <Access ID> --access-key <Access Key>` or authenticate directly with `akeyless auth --access-type access_key --access-id <Access ID> --access-key <Access Key>`. Store the **Access Key** securely; it is shown only once and can be reset later.",
         "acquisition": "manual"
       }
     },
     "surfaces": [
-      {
-        "slug": "akeyless-api",
-        "name": "Akeyless API",
-        "type": "http",
-        "docs": "https://docs.akeyless.io/reference",
-        "basis": {
-          "via": "discovered",
-          "evidence": [
-            "https://docs.akeyless.io/reference",
-            "https://docs.akeyless.io/docs",
-            "https://docs.akeyless.io/docs/llms.txt"
-          ]
-        },
-        "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "akeyless_api_key",
-                  "mechanics": {
-                    "source": "spec",
-                    "scheme": "ApiKeyAuth"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://docs.akeyless.io/reference",
-                  "https://docs.akeyless.io/docs/auth-with-api-key.md"
-                ]
-              }
-            }
-          ]
-        }
-      },
       {
         "slug": "akeyless-mcp-server",
         "name": "Akeyless MCP Server",
@@ -77,52 +33,7 @@
           "via": "discovered",
           "evidence": [
             "https://docs.akeyless.io/docs/mcp.md",
-            "https://docs.akeyless.io/docs/llms.txt"
-          ]
-        },
-        "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "akeyless_mcp_cli_login",
-                  "mechanics": {
-                    "source": "cli",
-                    "command": "akeyless mcp",
-                    "env": [
-                      "AKEYLESS_API_KEY",
-                      "AKEYLESS_ACCESS_ID",
-                      "AKEYLESS_ACCESS_KEY"
-                    ]
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://docs.akeyless.io/docs/mcp.md",
-                  "https://docs.akeyless.io/docs/auth-with-api-key.md"
-                ]
-              }
-            }
-          ]
-        },
-        "url": "https://docs.akeyless.io/docs/mcp.md",
-        "transports": [
-          "stdio"
-        ]
-      },
-      {
-        "slug": "akeyless-cli",
-        "name": "Akeyless CLI",
-        "type": "cli",
-        "docs": "https://docs.akeyless.io/docs/auth-with-api-key.md",
-        "basis": {
-          "via": "discovered",
-          "evidence": [
-            "https://docs.akeyless.io/docs/auth-with-api-key.md",
-            "https://docs.akeyless.io/docs/mcp.md"
+            "https://docs.akeyless.io/docs/cli"
           ]
         },
         "auth": {
@@ -134,67 +45,57 @@
                   "id": "akeyless_api_key",
                   "mechanics": {
                     "source": "cli",
-                    "command": "akeyless configure",
-                    "env": [
-                      "AKEYLESS_ACCESS_ID",
-                      "AKEYLESS_ACCESS_KEY"
-                    ]
+                    "command": "akeyless mcp --gateway-url <GATEWAY_URL>"
                   }
                 }
               ],
               "basis": {
                 "via": "discovered",
                 "evidence": [
-                  "https://docs.akeyless.io/docs/auth-with-api-key.md"
+                  "https://docs.akeyless.io/docs/mcp.md",
+                  "https://docs.akeyless.io/docs/cli"
                 ]
               }
             }
           ]
         },
-        "command": "akeyless"
+        "transports": [
+          "stdio"
+        ]
       }
     ]
   },
-  "discoveredAt": "2026-07-02T10:20:44.291Z",
+  "discoveredAt": "2026-07-02T16:16:28.448Z",
   "model": "loop-gpt-5.4-mini",
   "usage": {
-    "prompt_tokens": 217689,
-    "completion_tokens": 1291,
-    "total_tokens": 218980
+    "prompt_tokens": 84244,
+    "completion_tokens": 1026,
+    "total_tokens": 85270
   },
   "visited": [
-    "https://akeyless.io/llms.txt",
-    "https://docs.akeyless.io/docs",
-    "https://docs.akeyless.io/docs/access-and-authentication-methods",
-    "https://docs.akeyless.io/docs/api-key",
+    "https://docs.akeyless.io/docs/auth-with-api-key",
     "https://docs.akeyless.io/docs/auth-with-api-key.md",
+    "https://docs.akeyless.io/docs/cli",
+    "https://docs.akeyless.io/docs/mcp",
     "https://docs.akeyless.io/docs/mcp.md",
     "https://docs.akeyless.io/llms.txt",
     "https://docs.akeyless.io/reference",
+    "https://docs.akeyless.io/reference/aliasdetails",
     "https://docs.akeyless.io/reference/auth",
-    "https://www.akeyless.io/akeyless-clients",
-    "https://www.akeyless.io/blog/akeyless-developer-focused-secrets-management",
-    "https://www.akeyless.io/blog/akeyless-named-qumra-capitals-tomorrows-growth-companies",
-    "https://www.akeyless.io/blog/api-keys-ai-agents-iam-failure-gartner",
-    "https://www.akeyless.io/blog/how-akeyless-stops-oauth-attacks-like-salesforce-drift",
-    "https://www.akeyless.io/blog/power-of-api-keys",
-    "https://www.akeyless.io/podcast/devsec-for-scale-podcast-shift-left-developer-security-w-roy-avrahamy-akeyless-security",
-    "https://www.akeyless.io/podcast/devsec-for-scale-podcast-threat-modeling-for-developers-w-maran-gunasekaran-practical-devsecops",
-    "https://www.akeyless.io/secrets-management-glossary/api-key-management",
-    "https://www.akeyless.io/secure-remote-access/secretless-developer-access"
+    "https://docs.akeyless.io/reference/configure",
+    "https://github.com/knowsuchagency/mcp2cli",
+    "https://mcpmarket.com/server/api-docs",
+    "https://mcpservers.org/servers/elifuzz/api-docs-mcp"
   ],
   "grounding": [
-    "https://akeyless.io/llms.txt",
     "https://console.akeyless.io",
-    "https://console.akeyless.io/",
-    "https://console.akeyless.io/registration",
-    "https://doc",
-    "https://docs.ake",
     "https://docs.akeyless",
+    "https://docs.akeyless.i",
     "https://docs.akeyless.io/",
     "https://docs.akeyless.io/#content",
     "https://docs.akeyless.io/d",
     "https://docs.akeyless.io/docs",
+    "https://docs.akeyless.io/docs/",
     "https://docs.akeyless.io/docs/access-and-authentication-methods",
     "https://docs.akeyless.io/docs/access-and-authentication-methods#common-optional-features",
     "https://docs.akeyless.io/docs/access-and-authentication-methods.md",
@@ -214,7 +115,6 @@
     "https://docs.akeyless.io/docs/akeyless-saas-core-services-us",
     "https://docs.akeyless.io/docs/akeyless-saas-core-services-us.md",
     "https://docs.akeyless.io/docs/analytics.md",
-    "https://docs.akeyless.io/docs/api-key",
     "https://docs.akeyless.io/docs/api-key-creation-quickstart",
     "https://docs.akeyless.io/docs/artifactory-dynamic-secret-producer",
     "https://docs.akeyless.io/docs/artifactory-targets",
@@ -252,14 +152,12 @@
     "https://docs.akeyless.io/docs/auth0-oidc.md",
     "https://docs.akeyless.io/docs/automatic-migration.md",
     "https://docs.akeyless.io/docs/aws-best-practices.md",
-    "https://docs.akeyless.io/docs/aws-iam",
     "https://docs.akeyless.io/docs/aws-kms.md",
     "https://docs.akeyless.io/docs/aws-partition-and-deployment-support.md",
     "https://docs.akeyless.io/docs/aws-producer",
     "https://docs.akeyless.io/docs/aws-targets",
     "https://docs.akeyless.io/docs/azure-active-directory-oidc",
     "https://docs.akeyless.io/docs/azure-active-directory-oidc.md",
-    "https://docs.akeyless.io/docs/azure-ad",
     "https://docs.akeyless.io/docs/azure-ad-dynamic-secrets",
     "https://docs.akeyless.io/docs/azure-kms.md",
     "https://docs.akeyless.io/docs/azure-targets",
@@ -270,7 +168,6 @@
     "https://docs.akeyless.io/docs/build-your-chain-of-trust",
     "https://docs.akeyless.io/docs/build-your-chain-of-trust.md",
     "https://docs.akeyless.io/docs/bulk-operations.md",
-    "https://docs.akeyless.io/docs/certificate-based-authentication",
     "https://docs.akeyless.io/docs/certificate-discovery",
     "https://docs.akeyless.io/docs/certificate-discovery.md",
     "https://docs.akeyless.io/docs/certificate-lifecycle-management",
@@ -287,6 +184,7 @@
     "https://docs.akeyless.io/docs/chef-infra-targets",
     "https://docs.akeyless.io/docs/classic-keys.md",
     "https://docs.akeyless.io/docs/claude-target",
+    "https://docs.akeyless.io/docs/cli",
     "https://docs.akeyless.io/docs/cli-profiles",
     "https://docs.akeyless.io/docs/cli-ref-auth#auth",
     "https://docs.akeyless.io/docs/cli-ref-auth#create",
@@ -415,7 +313,6 @@
     "https://docs.akeyless.io/docs/gateway-v500.md",
     "https://docs.akeyless.io/docs/gateway-zero-knowledge",
     "https://docs.akeyless.io/docs/gateway-zero-knowledge.md",
-    "https://docs.akeyless.io/docs/gcp-auth-method",
     "https://docs.akeyless.io/docs/gcp-dynamic-secrets",
     "https://docs.akeyless.io/docs/gcp-kms.md",
     "https://docs.akeyless.io/docs/gcp-rotated-secret",
@@ -456,10 +353,8 @@
     "https://docs.akeyless.io/docs/keycloak-target",
     "https://docs.akeyless.io/docs/kubectl-access",
     "https://docs.akeyless.io/docs/kubectl-access.md",
-    "https://docs.akeyless.io/docs/kubernetes-auth",
     "https://docs.akeyless.io/docs/kubernetes-setup-quickstart",
     "https://docs.akeyless.io/docs/kubernetes-targets",
-    "https://docs.akeyless.io/docs/ldap",
     "https://docs.akeyless.io/docs/ldap-dynamic-secret",
     "https://docs.akeyless.io/docs/ldap-target",
     "https://docs.akeyless.io/docs/legacy-telemetry-and-metrics",
@@ -469,6 +364,7 @@
     "https://docs.akeyless.io/docs/linked-target-rotated-secret",
     "https://docs.akeyless.io/docs/log-actions.md",
     "https://docs.akeyless.io/docs/manage-your-secrets-overview",
+    "https://docs.akeyless.io/docs/mcp",
     "https://docs.akeyless.io/docs/mcp-claude-desktop",
     "https://docs.akeyless.io/docs/mcp-claude-desktop.md",
     "https://docs.akeyless.io/docs/mcp-cursor",
@@ -480,16 +376,13 @@
     "https://docs.akeyless.io/docs/mcp.md",
     "https://docs.akeyless.io/docs/monitor-akeyless.md",
     "https://docs.akeyless.io/docs/multiple-accounts.md",
-    "https://docs.akeyless.io/docs/oauth20jwt",
     "https://docs.akeyless.io/docs/oidc-app-provider.md",
-    "https://docs.akeyless.io/docs/okta",
     "https://docs.akeyless.io/docs/okta-oidc",
     "https://docs.akeyless.io/docs/okta-oidc.md",
     "https://docs.akeyless.io/docs/okta-target",
     "https://docs.akeyless.io/docs/openai-dynamic-secrets",
     "https://docs.akeyless.io/docs/openai-rotated-secret",
     "https://docs.akeyless.io/docs/openai-target",
-    "https://docs.akeyless.io/docs/openid",
     "https://docs.akeyless.io/docs/operate-gateway",
     "https://docs.akeyless.io/docs/operate-gateway.md",
     "https://docs.akeyless.io/docs/passwords",
@@ -514,7 +407,6 @@
     "https://docs.akeyless.io/docs/runtime-caching",
     "https://docs.akeyless.io/docs/runtime-caching.md",
     "https://docs.akeyless.io/docs/salesforce-target",
-    "https://docs.akeyless.io/docs/saml",
     "https://docs.akeyless.io/docs/saml-auth-azure-ad",
     "https://docs.akeyless.io/docs/saml-auth-azure-ad.md",
     "https://docs.akeyless.io/docs/saml-auth-okta",
@@ -556,7 +448,6 @@
     "https://docs.akeyless.io/docs/teams-event-forwarder.md",
     "https://docs.akeyless.io/docs/terraform-centralized-deployment.md",
     "https://docs.akeyless.io/docs/terraform-distributed-deployment.md",
-    "https://docs.akeyless.io/docs/universal-identity",
     "https://docs.akeyless.io/docs/usage-reports.md",
     "https://docs.akeyless.io/docs/venafi-target",
     "https://docs.akeyless.io/docs/web-access-bastion-best-practices.md",
@@ -694,6 +585,7 @@
     "https://docs.akeyless.io/reference/detokenize",
     "https://docs.akeyless.io/reference/detokenizebatch",
     "https://docs.akeyless.io/reference/dynamics",
+    "https://docs.akeyless.io/reference/dynamicsecre",
     "https://docs.akeyless.io/reference/dynamicsecretcreateartifactory",
     "https://docs.akeyless.io/reference/dynamicsecretcreateaws",
     "https://docs.akeyless.io/reference/dynamicsecretcreateazure",
@@ -742,108 +634,48 @@
     "https://docs.akeyless.io/reference/dynamicsecretupdategke",
     "https://docs.akeyless.io/reference/dynamicsecretupdategoogleworkspace",
     "https://files.readme.io/574347a-API_key_auth.png",
+    "https://github.com/knowsuchagency/mcp2cli",
+    "https://mcpmarket.com/server/api-docs",
+    "https://mcpservers.org/servers/elifuzz/api-docs-mcp",
     "https://modelcontextprotocol.io/",
-    "https://tutorials.akeyless.io/docs",
     "https://updates.akeyless.io/",
     "https://updates.akeyless.io/en",
     "https://www",
-    "https://www.akeyless.io",
-    "https://www.akeyless.io/#",
-    "https://www.akeyless.io/#akeyless-in-the-devops-toolchain",
-    "https://www.akeyless.io/#comparison-akeyless-vs-other-developer-focused-tools",
-    "https://www.akeyless.io/#content",
-    "https://www.akeyless.io/#faqs-for-developers-using-akeyless",
-    "https://www.akeyless.io/#manage-cookies",
-    "https://www.akeyless.io/#what-makes-akeyless-a-developer-friendly-secrets-management-platform",
-    "https://www.akeyless.io/#why-developers-need-a-dedicated-secrets-manager",
     "https://www.akeyless.io/about/",
     "https://www.akeyless.io/ai_terms/",
-    "https://www.akeyless.io/akeyless-clients",
-    "https://www.akeyless.io/blog/",
-    "https://www.akeyless.io/blog/akeyless-developer-focused-secrets-management",
-    "https://www.akeyless.io/blog/akeyless-named-qumra-capitals-tomorrows-growth-companies",
-    "https://www.akeyless.io/blog/api-keys-ai-agents-iam-failure-gartner",
     "https://www.akeyless.io/blog/api-keys-ai-agents-iam-failure-gartner/",
-    "https://www.akeyless.io/blog/how-akeyless-stops-oauth-attacks-like-salesforce-drift",
     "https://www.akeyless.io/blog/how-to-achieve-cyber-resilience-act-compliance/",
-    "https://www.akeyless.io/blog/power-of-api-keys",
-    "https://www.akeyless.io/careers/",
     "https://www.akeyless.io/ccpa-privacy-notice/",
-    "https://www.akeyless.io/certificate-lifecycle-management/",
-    "https://www.akeyless.io/compare/",
-    "https://www.akeyless.io/contact-support/",
-    "https://www.akeyless.io/contact/",
-    "https://www.akeyless.io/dfc-technology/",
     "https://www.akeyless.io/ebooks/gartner-innovation-insights/",
-    "https://www.akeyless.io/ebooks/securing-secrets-at-scale/",
-    "https://www.akeyless.io/ebooks/state-of-ai-agent-identity-security-report/",
-    "https://www.akeyless.io/encryption-kms/",
-    "https://www.akeyless.io/encryption-kms/multi-cloud-kms-byok/",
     "https://www.akeyless.io/end-user-license-agreement/",
-    "https://www.akeyless.io/esg/",
     "https://www.akeyless.io/human-identity-security/",
-    "https://www.akeyless.io/industries/finance/",
-    "https://www.akeyless.io/industries/manufacturing/",
-    "https://www.akeyless.io/industries/retail/",
-    "https://www.akeyless.io/industries/technology/",
-    "https://www.akeyless.io/integrations/",
-    "https://www.akeyless.io/integrations/#browser-extension",
-    "https://www.akeyless.io/integrations/#ci-cd",
-    "https://www.akeyless.io/integrations/#code-management",
-    "https://www.akeyless.io/integrations/#configuration-management",
-    "https://www.akeyless.io/integrations/#identity-providers",
-    "https://www.akeyless.io/integrations/#infra-automation",
-    "https://www.akeyless.io/integrations/#kubernetes",
-    "https://www.akeyless.io/integrations/#notifications",
-    "https://www.akeyless.io/integrations/#sdk",
-    "https://www.akeyless.io/landing/become-a-partner/",
-    "https://www.akeyless.io/landing/partner-register-a-deal/",
-    "https://www.akeyless.io/landing/platform-demo/",
-    "https://www.akeyless.io/landing/product-tour/",
-    "https://www.akeyless.io/legal/",
     "https://www.akeyless.io/machine-identity-security/",
-    "https://www.akeyless.io/modern-pam/",
-    "https://www.akeyless.io/news/",
     "https://www.akeyless.io/news/category/in-the-news/",
     "https://www.akeyless.io/news/category/press-release/",
-    "https://www.akeyless.io/partners/",
-    "https://www.akeyless.io/password-management/",
-    "https://www.akeyless.io/podcast/devsec-for-scale-podcast-shift-left-developer-security-w-roy-avrahamy-akeyless-security",
-    "https://www.akeyless.io/podcast/devsec-for-scale-podcast-threat-modeling-for-developers-w-maran-gunasekaran-practical-devsecops",
     "https://www.akeyless.io/pricing/",
     "https://www.akeyless.io/privacy-policy/",
     "https://www.akeyless.io/resellerdataact/",
-    "https://www.akeyless.io/resources/",
     "https://www.akeyless.io/resources/category/blog/",
-    "https://www.akeyless.io/resources/category/case-studies/",
     "https://www.akeyless.io/resources/category/ebooks/",
     "https://www.akeyless.io/resources/category/keyconf/",
     "https://www.akeyless.io/resources/category/podcast/",
-    "https://www.akeyless.io/resources/category/videos/",
     "https://www.akeyless.io/resources/category/webinars/",
     "https://www.akeyless.io/resources/topics/ai/",
     "https://www.akeyless.io/resources/topics/devops/",
     "https://www.akeyless.io/resources/topics/infosec/",
     "https://www.akeyless.io/resources/topics/machine-iam/",
     "https://www.akeyless.io/resources/topics/security/",
-    "https://www.akeyless.io/secrets-management-glossary/",
-    "https://www.akeyless.io/secrets-management-glossary/api-key-management",
     "https://www.akeyless.io/secrets-management-glossary/certificate-lifecycle-management/",
     "https://www.akeyless.io/secrets-management-glossary/keyconf/",
     "https://www.akeyless.io/secrets-management-glossary/kubernetes-secrets/",
     "https://www.akeyless.io/secrets-management-glossary/non-human-identity-management/",
     "https://www.akeyless.io/secrets-management-glossary/zero-knowledge-encryption/",
     "https://www.akeyless.io/secrets-management/",
-    "https://www.akeyless.io/secrets-management/secretless-ai-agents/",
-    "https://www.akeyless.io/secrets-management/universal-secrets-connector-usc/",
     "https://www.akeyless.io/secure-ai-agents/",
-    "https://www.akeyless.io/secure-remote-access/secretless-developer-access",
     "https://www.akeyless.io/service-level-agreement/",
     "https://www.akeyless.io/sitemap_index.xml",
     "https://www.akeyless.io/sla-support-tiers-and-plans-limits/",
     "https://www.akeyless.io/submit-a-ticket/",
-    "https://www.akeyless.io/trust-center/",
-    "https://www.akeyless.io/webinars/",
     "https://www.akeyless.io/webinars/preparing-for-the-47-day-certificate-era/",
     "https://www.akeyless.io/webinars/what-the-data-reveals-about-ai-agent-identity-risk/"
   ]
