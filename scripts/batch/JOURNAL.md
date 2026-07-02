@@ -42,3 +42,15 @@
   remaining ~2,900 domains ≈ 32h — the morning TPM bump is the lever. When it
   lands: kill drive.sh, restart with concurrency 8-10 (resumable, skips done).
 - No push notification sent: nothing user-actionable; everything proceeding.
+
+## 06:40 update
+- batch-02 mid-flight (~242 results overall), checklist 238/238 passing after
+  two checker fixes (host-level grounding; negated default-cred text). Loop
+  failures 5 total, all TPM — drive.sh sweep pass recovers them at the end.
+- New deterministic guard: MCP urls that are auth/settings funnels demote to
+  docs (featurebase case).
+- Batch-02 output quality visibly better than batch-01 (locatorless http down
+  from ~50% to ~6% of surfaces; no dashboard/console surfaces in new results).
+- morning-rerun.txt at 39 domains (batch-01 vintage symptoms + featurebase).
+- Driver is nohup-detached (pid survives session restarts); TPM-bump monitor
+  armed. On bump: kill drive.sh, `bash scripts/batch/drive.sh <next-batch> 8`.
