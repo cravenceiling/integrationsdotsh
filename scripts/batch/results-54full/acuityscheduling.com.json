@@ -1,0 +1,250 @@
+{
+  "result": {
+    "version": 3,
+    "domain": "acuityscheduling.com",
+    "detect": {
+      "domain": "acuityscheduling.com",
+      "found": [],
+      "mcp": [],
+      "llmsTxt": false,
+      "errors": []
+    },
+    "usedLlm": true,
+    "discoveredAt": "2026-07-02T19:34:27.189Z",
+    "summary": "acuityscheduling.com exposes an HTTP API at https://acuityscheduling.com/api/v1 authenticated either by Acuity-issued Basic Auth credentials (User ID + API Key) or OAuth2 bearer tokens, plus a public unauthenticated /meta endpoint; no GraphQL, MCP, or CLI surfaces found.",
+    "credentials": {
+      "acuity_basic": {
+        "type": "basic",
+        "label": "Acuity API credentials (User ID + API Key)",
+        "generateUrl": "https://secure.acuityscheduling.com/app.php?action=settings&key=api",
+        "setup": "In your Acuity account, open [Integrations → API](https://secure.acuityscheduling.com/app.php?action=settings&key=api). Copy your numeric `User ID` and your `API Key`. Use them together for HTTP Basic Auth: `User ID` as the username and `API Key` as the password.",
+        "acquisition": "manual"
+      },
+      "acuity_oauth_client": {
+        "type": "oauth2",
+        "label": "Acuity OAuth2 client",
+        "generateUrl": "https://acuityscheduling.com/oauth2/register",
+        "setup": "Register an OAuth client at [Acuity OAuth2 client registration](https://acuityscheduling.com/oauth2/register). After registration, Acuity gives you a `client_id` and `client_secret`. Redirect users to `https://acuityscheduling.com/oauth2/authorize?response_type=code&scope=api-v1&client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI`, then exchange the returned code at `https://acuityscheduling.com/oauth2/token` for an access token. Use the resulting bearer `access_token` against the API.",
+        "acquisition": "manual"
+      }
+    },
+    "surfaces": [
+      {
+        "slug": "acuity-scheduling-api-v1",
+        "name": "Acuity Scheduling API v1",
+        "type": "http",
+        "docs": "https://developers.acuityscheduling.com/reference",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://developers.acuityscheduling.com/reference/quick-start.md",
+            "https://developers.acuityscheduling.com/reference/get-appointments.md",
+            "https://developers.acuityscheduling.com/reference/post-appointments.md",
+            "https://developers.acuityscheduling.com/docs/oauth2"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "acuity_basic",
+                  "mechanics": {
+                    "source": "spec",
+                    "scheme": "sec0"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://developers.acuityscheduling.com/reference/get-appointments.md",
+                  "https://developers.acuityscheduling.com/reference/post-appointments.md",
+                  "https://developers.acuityscheduling.com/reference/quick-start.md"
+                ]
+              }
+            },
+            {
+              "use": [
+                {
+                  "id": "acuity_oauth_client",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Bearer"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://developers.acuityscheduling.com/docs/oauth2"
+                ]
+              }
+            }
+          ]
+        },
+        "url": "https://acuityscheduling.com/api/v1"
+      }
+    ]
+  },
+  "discoveredAt": "2026-07-02T19:34:27.190Z",
+  "model": "loop-gpt-5.4",
+  "usage": {
+    "prompt_tokens": 78609,
+    "completion_tokens": 1318,
+    "total_tokens": 79927
+  },
+  "visited": [
+    "https://acuityscheduling.com/",
+    "https://app.acuityscheduling.com/schedule.php?owner=12746236",
+    "https://app.acuityscheduling.com/schedule.php?owner=17987785",
+    "https://app.acuityscheduling.com/schedule.php?owner=18097220",
+    "https://app.acuityscheduling.com/schedule.php?owner=23104706",
+    "https://app.acuityscheduling.com/schedule/a18f4ad1/category/MSK%2520(Musculoskeletal)%2520Scans",
+    "https://app.acuityscheduling.com/schedule/f281f585/?appointmentTypeIds[]=74476263",
+    "https://developers.acuityscheduling.com/",
+    "https://developers.acuityscheduling.com/docs/getting-started",
+    "https://developers.acuityscheduling.com/docs/oauth2",
+    "https://developers.acuityscheduling.com/docs/sdks",
+    "https://developers.acuityscheduling.com/docs/webhooks",
+    "https://developers.acuityscheduling.com/llms.txt",
+    "https://developers.acuityscheduling.com/openapi.json",
+    "https://developers.acuityscheduling.com/page/how-to-schedule-an-appointment-with-the-acuity-scheduling-api",
+    "https://developers.acuityscheduling.com/reference/get-appointments.md",
+    "https://developers.acuityscheduling.com/reference/meta.md",
+    "https://developers.acuityscheduling.com/reference/post-appointments",
+    "https://developers.acuityscheduling.com/reference/post-appointments.md",
+    "https://developers.acuityscheduling.com/reference/quick-start",
+    "https://developers.acuityscheduling.com/reference/quick-start.md",
+    "https://github.com/DEXSinc/acuityscheduling-api-client",
+    "https://github.com/DawidMyslak/n8n-node-mocker",
+    "https://github.com/agents-io/chatbotlite/blob/main/ROADMAP.md",
+    "https://github.com/maton-ai/api-gateway-skill/blob/main/SKILL.md",
+    "https://github.com/mddanishyusuf/profile-with-github/blob/master/publi-apis.json",
+    "https://github.com/medplum/medplum/blob/main/packages/docs/docs/integration/index.md",
+    "https://play.google.com/store/apps/details?id=com.acuityscheduling.app.android",
+    "https://www.facebook.com/acuityscheduling/",
+    "https://www.linkedin.com/company/acuity-scheduling",
+    "https://www.squarespace.com/scheduling",
+    "https://www.trustpilot.com/review/acuityscheduling.com"
+  ],
+  "grounding": [
+    "http://example.org/oauth2?code=AN_AUTHORIZATION_CODE",
+    "http://oauth.net/",
+    "http://php.net/manual/en/function.strtotime.php",
+    "http://status.acuityscheduling.com/",
+    "http://tools.ietf.org/html/rfc6749",
+    "https://AcuityScheduling.com",
+    "https://acuityscheduling.com/",
+    "https://acuityscheduling.com/api/v1",
+    "https://acuityscheduling.com/api/v1/appointments",
+    "https://acuityscheduling.com/api/v1/appointments.json",
+    "https://acuityscheduling.com/api/v1/appointments?admin=true",
+    "https://acuityscheduling.com/api/v1/appointments?max=25&calendarID=27238",
+    "https://acuityscheduling.com/api/v1/me",
+    "https://acuityscheduling.com/oauth2/authorize?response_type=code&scope=api-v1&client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI",
+    "https://acuityscheduling.com/oauth2/disconnect",
+    "https://acuityscheduling.com/oauth2/register",
+    "https://acuityscheduling.com/oauth2/token",
+    "https://acuityscheduling.com/schedule.php?owner=11145481&id[",
+    "https://acuityscheduling.com/signup.php",
+    "https://app.acuityscheduling.com/schedule.php?owner=12746236",
+    "https://app.acuityscheduling.com/schedule.php?owner=17987785",
+    "https://app.acuityscheduling.com/schedule.php?owner=18097220",
+    "https://app.acuityscheduling.com/schedule.php?owner=23104706",
+    "https://app.acuityscheduling.com/schedule/a18f4ad1/category/MSK%2520(Musculoskeletal)%2520Scans",
+    "https://app.acuityscheduling.com/schedule/f281f585/?appointmentTypeIds[]=74476263",
+    "https://developers.acuityscheduling.com/",
+    "https://developers.acuityscheduling.com/#about-oauth-20",
+    "https://developers.acuityscheduling.com/#content",
+    "https://developers.acuityscheduling.com/#dynamic-webhooks",
+    "https://developers.acuityscheduling.com/#integration",
+    "https://developers.acuityscheduling.com/#static-webhooks",
+    "https://developers.acuityscheduling.com/#verifying-webhook-requests",
+    "https://developers.acuityscheduling.com/#webhook-retries",
+    "https://developers.acuityscheduling.com/docs",
+    "https://developers.acuityscheduling.com/docs/custom-css",
+    "https://developers.acuityscheduling.com/docs/custom-css.md",
+    "https://developers.acuityscheduling.com/docs/custom-sidebar",
+    "https://developers.acuityscheduling.com/docs/embedding",
+    "https://developers.acuityscheduling.com/docs/embedding.md",
+    "https://developers.acuityscheduling.com/docs/get-availability-classes",
+    "https://developers.acuityscheduling.com/docs/get-availability-dates",
+    "https://developers.acuityscheduling.com/docs/get-availability-times",
+    "https://developers.acuityscheduling.com/docs/get-certificates",
+    "https://developers.acuityscheduling.com/docs/get-certificates-check",
+    "https://developers.acuityscheduling.com/docs/getting-started",
+    "https://developers.acuityscheduling.com/docs/getting-started.md",
+    "https://developers.acuityscheduling.com/docs/oauth2",
+    "https://developers.acuityscheduling.com/docs/quick-start",
+    "https://developers.acuityscheduling.com/docs/sdks",
+    "https://developers.acuityscheduling.com/docs/signup",
+    "https://developers.acuityscheduling.com/docs/support",
+    "https://developers.acuityscheduling.com/docs/tutorials",
+    "https://developers.acuityscheduling.com/docs/webhooks",
+    "https://developers.acuityscheduling.com/docs/webhooks#section-dynamic-webhooks",
+    "https://developers.acuityscheduling.com/docs/webhooks#section-static-webhooks",
+    "https://developers.acuityscheduling.com/docs/webhooks.md",
+    "https://developers.acuityscheduling.com/how-to-schedule-an-appointment-with-the-acuity-scheduling-api.md",
+    "https://developers.acuityscheduling.com/llms.txt",
+    "https://developers.acuityscheduling.com/openapi.json",
+    "https://developers.acuityscheduling.com/page/how-to-schedule-an-appointment-with-the-acuity-scheduling-api",
+    "https://developers.acuityscheduling.com/page/webhooks-webhooks-webhooks",
+    "https://developers.acuityscheduling.com/reference",
+    "https://developers.acuityscheduling.com/reference#get-appointments",
+    "https://developers.acuityscheduling.com/reference/appointments-addons",
+    "https://developers.acuityscheduling.com/reference/forms",
+    "https://developers.acuityscheduling.com/reference/get-appointments-id",
+    "https://developers.acuityscheduling.com/reference/get-appointments-id-payments.md",
+    "https://developers.acuityscheduling.com/reference/get-appointments.md",
+    "https://developers.acuityscheduling.com/reference/meta.md",
+    "https://developers.acuityscheduling.com/reference/ordersid",
+    "https://developers.acuityscheduling.com/reference/post-appointments",
+    "https://developers.acuityscheduling.com/reference/post-appointments.md",
+    "https://developers.acuityscheduling.com/reference/put-appointments-id.md",
+    "https://developers.acuityscheduling.com/reference/quick-start",
+    "https://developers.acuityscheduling.com/reference/quick-start#/get-appointments",
+    "https://developers.acuityscheduling.com/reference/quick-start#get-appointments",
+    "https://developers.acuityscheduling.com/reference/quick-start.md",
+    "https://developers.acuityscheduling.com/set-timezones-when-importing-appointments.md",
+    "https://developers.acuityscheduling.com/support.md",
+    "https://developers.acuityscheduling.com/v1.1/page/appointment-addons",
+    "https://developers.acuityscheduling.com/v1.1/reference#section-booking-as-an-admin",
+    "https://developers.acuityscheduling.com/webhooks-webhooks-webhooks.md",
+    "https://embed.acuityscheduling.com/js/embed.js",
+    "https://en.wikipedia.org/wiki/Basic_access_authentication",
+    "https://enterprise-scheduling.readme.io/reference/overview",
+    "https://example.acuityscheduling.com",
+    "https://example.com/webhook-callback",
+    "https://github.com/AcuityScheduling/acuity-js",
+    "https://github.com/AcuityScheduling/acuity-php",
+    "https://github.com/DEXSinc/acuityscheduling-api-client",
+    "https://github.com/DawidMyslak/n8n-node-mocker",
+    "https://github.com/agents-io/chatbotlite/blob/main/ROADMAP.md",
+    "https://github.com/maton-ai/api-gateway-skill/blob/main/SKILL.md",
+    "https://github.com/mddanishyusuf/profile-with-github/blob/master/publi-apis.json",
+    "https://github.com/medplum/medplum/blob/main/packages/docs/docs/integration/index.md",
+    "https://help.acuityscheduling.com/hc/en-us/articles/218724718-Add-ons-Adding-On-Extra-Services-Time-to-Appointments",
+    "https://help.acuityscheduling.com/hc/en-us/requests/new",
+    "https://packagist.org/packages/acuityscheduling/acuityscheduling",
+    "https://play.google.com/store/apps/details?id=com.acuityscheduling.app.android",
+    "https://secure.acuityscheduling.com/app.php?action=settings&key=api",
+    "https://secure.acuityscheduling.com/forms.php",
+    "https://secure.acuityscheduling.com/preferences.php?action=integrations#api",
+    "https://support.squarespace.com/hc/en-us/articles/360040093611",
+    "https://support.squarespace.com/hc/en-us/requests/new?ticket_form_id=360000461931",
+    "https://www.acuityscheduling.com/schedule.php?action=appt&owner=11145481&id[",
+    "https://www.facebook.com/acuityscheduling/",
+    "https://www.iana.org/time-zones",
+    "https://www.linkedin.com/company/acuity-scheduling",
+    "https://www.npmjs.com/package/acuityscheduling",
+    "https://www.php.net/manual/en/function.strtotime.php",
+    "https://www.squarespace.com/developer-terms",
+    "https://www.squarespace.com/privacy",
+    "https://www.squarespace.com/scheduling",
+    "https://www.trustpilot.com/review/acuityscheduling.com"
+  ]
+}

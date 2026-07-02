@@ -1,0 +1,273 @@
+{
+  "result": {
+    "version": 3,
+    "domain": "apiary.io",
+    "detect": {
+      "domain": "apiary.io",
+      "found": [],
+      "mcp": [],
+      "llmsTxt": false,
+      "errors": []
+    },
+    "usedLlm": true,
+    "discoveredAt": "2026-07-02T19:34:14.066Z",
+    "summary": "Mapped 2 developer surfaces for apiary.io: the authenticated Apiary HTTP API at https://api.apiary.io and the RubyGems `apiaryio` CLI (`apiary`), using Apiary-issued authorization tokens and account basic auth where documented.",
+    "credentials": {
+      "apiary_token": {
+        "type": "bearer",
+        "label": "Apiary authorization token",
+        "generateUrl": "https://login.apiary.io/tokens",
+        "setup": "Go to the [Apiary tokens page](https://login.apiary.io/tokens) while signed in and create an authorization token. The API docs say tokens can be managed there and used as `Authorization: Bearer <token>`. The CLI docs say to export it as `APIARY_API_KEY`. Keep it secret; the help page warns it grants fetch/publish access to your documentation.",
+        "acquisition": "manual"
+      },
+      "apiary_account_basic": {
+        "type": "basic",
+        "label": "Apiary account email/password",
+        "generateUrl": "https://login.apiary.io/register",
+        "setup": "Create or use an Apiary account via [sign up](https://login.apiary.io/register) or [sign in](https://login.apiary.io/). The Apiary API docs explicitly allow HTTP Basic authentication with your account email and password to create, list, or delete your own authorization tokens at `https://api.apiary.io/authorization`.",
+        "acquisition": "manual"
+      }
+    },
+    "surfaces": [
+      {
+        "slug": "apiary-api",
+        "name": "Apiary API",
+        "type": "http",
+        "docs": "https://apiary.docs.apiary.io/",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://apiary.docs.apiary.io/"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "apiary_token",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Bearer"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://apiary.docs.apiary.io/"
+                ]
+              }
+            },
+            {
+              "use": [
+                {
+                  "id": "apiary_account_basic",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Basic"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://apiary.docs.apiary.io/"
+                ]
+              }
+            },
+            {
+              "use": [
+                {
+                  "id": "apiary_token",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authentication",
+                    "scheme": "Token"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://apiary.docs.apiary.io/"
+                ]
+              }
+            }
+          ]
+        },
+        "url": "https://api.apiary.io"
+      },
+      {
+        "slug": "apiary-cli",
+        "name": "Apiary CLI",
+        "type": "cli",
+        "docs": "https://help.apiary.io/tools/apiary-cli/",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://help.apiary.io/tools/apiary-cli/"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "apiary_token",
+                  "mechanics": {
+                    "source": "cli",
+                    "env": [
+                      "APIARY_API_KEY"
+                    ]
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://help.apiary.io/tools/apiary-cli/"
+                ]
+              }
+            }
+          ]
+        },
+        "packages": [
+          {
+            "registryType": "rubygems",
+            "identifier": "apiaryio",
+            "runtimeHint": "ruby"
+          }
+        ],
+        "command": "apiary"
+      }
+    ]
+  },
+  "discoveredAt": "2026-07-02T19:34:14.066Z",
+  "model": "loop-gpt-5.4",
+  "usage": {
+    "prompt_tokens": 21570,
+    "completion_tokens": 769,
+    "total_tokens": 22339
+  },
+  "visited": [
+    "https://apiary.docs.apiary.io/",
+    "https://apiary.io/",
+    "https://apisyouwonthate.com/blog/goodbye-apiary-io/",
+    "https://github.com/apiaryio/apiary-client",
+    "https://help.apiary.io/tools/apiary-cli/",
+    "https://stackoverflow.com/questions/38848160/unable-to-fetch-apiary-apib-using-the-apiary-cli-fetch-command-even-though-i-am"
+  ],
+  "grounding": [
+    "http://api.example.com/",
+    "https://api.apiary.io/authorization",
+    "https://api.apiary.io/authorization/What%27s%20this%20token%20for%3F",
+    "https://api.apiary.io/blueprint/publish/publicpersonalapi",
+    "https://api.apiary.io/me",
+    "https://api.apiary.io/me/apis",
+    "https://api.apiary.io/me/teams/518bcf09a6e4580200000.../apis",
+    "https://apiary.docs.apiary.io",
+    "https://apiary.docs.apiary.io/",
+    "https://apiary.docs.apiary.io/create-api",
+    "https://apiary.docs.apiary.io/reference/api-list",
+    "https://apiary.docs.apiary.io/reference/api-list/team-api-list",
+    "https://apiary.docs.apiary.io/reference/api-list/team-api-list/get-team-api-list",
+    "https://apiary.docs.apiary.io/reference/api-list/user-api-list",
+    "https://apiary.docs.apiary.io/reference/api-list/user-api-list/get-user-api-list",
+    "https://apiary.docs.apiary.io/reference/authentication",
+    "https://apiary.docs.apiary.io/reference/authentication/authorization-tokens",
+    "https://apiary.docs.apiary.io/reference/authentication/authorization-tokens/create-an-authorization-token",
+    "https://apiary.docs.apiary.io/reference/authentication/authorization-tokens/delete-an-existing-authorization-token",
+    "https://apiary.docs.apiary.io/reference/authentication/authorization-tokens/get-existing-authorization-tokens",
+    "https://apiary.docs.apiary.io/reference/blueprint",
+    "https://apiary.docs.apiary.io/reference/blueprint/create-api-project",
+    "https://apiary.docs.apiary.io/reference/blueprint/create-api-project/create-api-project",
+    "https://apiary.docs.apiary.io/reference/blueprint/fetch-blueprint",
+    "https://apiary.docs.apiary.io/reference/blueprint/fetch-blueprint/fetch-blueprint",
+    "https://apiary.docs.apiary.io/reference/blueprint/publish-blueprint",
+    "https://apiary.docs.apiary.io/reference/blueprint/publish-blueprint/publish-blueprint",
+    "https://apiary.docs.apiary.io/reference/user-information",
+    "https://apiary.docs.apiary.io/reference/user-information/me",
+    "https://apiary.docs.apiary.io/reference/user-information/me/get-me",
+    "https://apiary.docs.apiary.io/traffic",
+    "https://apiary.io",
+    "https://apiary.io/",
+    "https://apiary.io/#navigation",
+    "https://apiary.io/#~",
+    "https://apiary.io/company",
+    "https://apiary.io/how-apiary-works",
+    "https://apiary.io/how-it-works",
+    "https://apiary.io/jobs",
+    "https://apiary.io/oracle",
+    "https://apiary.io/plans",
+    "https://apiary.io/privacy",
+    "https://apiary.io/products",
+    "https://apiary.io/tos",
+    "https://apiblueprint.org",
+    "https://apisyouwonthate.com/blog/goodbye-apiary-io/",
+    "https://blog.apiary.io/",
+    "https://docs.apiary.io/tools/apiary-cli/",
+    "https://dredd.readthedocs.org/",
+    "https://facebook.com/apiary.io",
+    "https://github.com/apiaryio",
+    "https://github.com/apiaryio/api-blueprint-sublime-plugin",
+    "https://github.com/apiaryio/apiary-client",
+    "https://github.com/apiaryio/dredd",
+    "https://github.com/apiaryio/gavel",
+    "https://help.apiary.io",
+    "https://help.apiary.io/",
+    "https://help.apiary.io/#--add---functions---rules",
+    "https://help.apiary.io/#--browser",
+    "https://help.apiary.io/#--fetch",
+    "https://help.apiary.io/#--full-report",
+    "https://help.apiary.io/#--json",
+    "https://help.apiary.io/#--json-1",
+    "https://help.apiary.io/#--message",
+    "https://help.apiary.io/#--output",
+    "https://help.apiary.io/#--output-1",
+    "https://help.apiary.io/#--path",
+    "https://help.apiary.io/#--path-1",
+    "https://help.apiary.io/#--port",
+    "https://help.apiary.io/#--push",
+    "https://help.apiary.io/#--server",
+    "https://help.apiary.io/#--watch",
+    "https://help.apiary.io/#fetching-published-documentation",
+    "https://help.apiary.io/#finding-the-name-of-your-api",
+    "https://help.apiary.io/#generating-an-authentication-token",
+    "https://help.apiary.io/#getting-started",
+    "https://help.apiary.io/#installation",
+    "https://help.apiary.io/#previewing-documentation-locally",
+    "https://help.apiary.io/#publishing-changes-to-apiaryio",
+    "https://help.apiary.io/#usage",
+    "https://help.apiary.io/#using-apiary-style-guide",
+    "https://help.apiary.io/javascript",
+    "https://help.apiary.io/tools/",
+    "https://help.apiary.io/tools/api-inspector/",
+    "https://help.apiary.io/tools/apiary-cli/",
+    "https://help.apiary.io/tools/apiary-editor/",
+    "https://help.apiary.io/tools/apiary-integrations/",
+    "https://help.apiary.io/tools/browser-jsagent/",
+    "https://help.apiary.io/tools/code-examples/",
+    "https://help.apiary.io/tools/github-sync/",
+    "https://help.apiary.io/tools/interactive-documentation/",
+    "https://help.apiary.io/tools/style-guide",
+    "https://help.apiary.io/tools/style-guide/#api-design-assertion-language",
+    "https://login.apiary.io/",
+    "https://login.apiary.io/auth/github",
+    "https://login.apiary.io/login",
+    "https://login.apiary.io/login?redirect=https%3A%2F%2Fapiary.docs.apiary.io%2F",
+    "https://login.apiary.io/register",
+    "https://login.apiary.io/tokens",
+    "https://stackoverflow.com/questions/38848160/unable-to-fetch-apiary-apib-using-the-apiary-cli-fetch-command-even-though-i-am",
+    "https://tools.ietf.org/html/rfc6750",
+    "https://twitter.com/apiaryio",
+    "https://www.oracle.com"
+  ]
+}

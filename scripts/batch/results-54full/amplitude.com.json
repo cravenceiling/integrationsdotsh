@@ -1,0 +1,911 @@
+{
+  "result": {
+    "version": 3,
+    "domain": "amplitude.com",
+    "detect": {
+      "domain": "amplitude.com",
+      "found": [
+        "llms.txt"
+      ],
+      "mcp": [],
+      "llmsTxt": true,
+      "errors": []
+    },
+    "usedLlm": true,
+    "discoveredAt": "2026-07-02T19:34:05.519Z",
+    "summary": "Recorded Amplitude’s public integration surface: 1 MCP server, 1 broad HTTP API surface spanning Analytics/Experiment/Admin APIs with multiple key types, and the Amplitude Wizard CLI with login or API-key auth.",
+    "credentials": {
+      "project_api_key": {
+        "type": "api_key",
+        "label": "Project API Key",
+        "generateUrl": "https://amplitude.com/docs/en/apis/authentication",
+        "setup": "In the Amplitude web app, go to **Settings** → **Projects**, select your project, then on the **General** tab use **Manage** next to **API Key** to view/copy it. Managers and Admins can generate, copy, and revoke keys. See [API Authentication](https://amplitude.com/docs/en/apis/authentication) and [Keys and Tokens](https://amplitude.com/docs/en/apis/keys-and-tokens)."
+      },
+      "project_secret_key": {
+        "type": "basic",
+        "label": "Project Secret Key",
+        "generateUrl": "https://amplitude.com/docs/en/apis/authentication",
+        "setup": "In the Amplitude web app, go to **Settings** → **Projects**, select your project, then on the **General** tab use **Manage** next to **Secret Key** to generate and copy it. Amplitude only shows a secret key when you generate it. See [API Authentication](https://amplitude.com/docs/en/apis/authentication) and [Keys and Tokens](https://amplitude.com/docs/en/apis/keys-and-tokens)."
+      },
+      "data_api_token": {
+        "type": "bearer",
+        "label": "Data API Token",
+        "generateUrl": "https://amplitude.com/docs/en/apis/keys-and-tokens",
+        "setup": "In Amplitude Data, go to **Data** → **Settings** → **API Tokens** to create or revoke a token. These tokens grant the same roles and permissions you have when logging in directly. See [Keys and Tokens](https://amplitude.com/docs/en/apis/keys-and-tokens)."
+      },
+      "experiment_deployment_key": {
+        "type": "api_key",
+        "label": "Experiment Deployment Key",
+        "generateUrl": "https://amplitude.com/docs/en/apis/keys-and-tokens",
+        "setup": "In Amplitude Experiment, create or open a deployment in **Experiment** → **Deployments** and copy its Deployment Key. Client-side keys are public and prefixed `client-`; server-side keys are private and prefixed `server-`. See [Keys and Tokens](https://amplitude.com/docs/en/apis/keys-and-tokens)."
+      },
+      "experiment_management_api_key": {
+        "type": "bearer",
+        "label": "Experiment Management API Key",
+        "generateUrl": "https://amplitude.com/docs/en/apis/experiment/experiment-management-api",
+        "setup": "In Amplitude Experiment, use **Management API** in the Experiment sidebar to create and manage Management API keys. See [Experiment Management API](https://amplitude.com/docs/en/apis/experiment/experiment-management-api) and [Keys and Tokens](https://amplitude.com/docs/en/apis/keys-and-tokens)."
+      },
+      "scim_key": {
+        "type": "bearer",
+        "label": "SCIM Key",
+        "generateUrl": "https://amplitude.com/docs/en/admin/account-management/scim-provision",
+        "setup": "Set up SCIM in Amplitude and rotate/copy the SCIM key in your organization's SCIM provisioning settings. SCIM is available on Enterprise plans. See [Set up SCIM provisioning in Amplitude](https://amplitude.com/docs/en/admin/account-management/scim-provision) and [Keys and Tokens](https://amplitude.com/docs/en/apis/keys-and-tokens)."
+      },
+      "org_api_key": {
+        "type": "basic",
+        "label": "Organization API Key",
+        "generateUrl": "https://amplitude.com/docs/en/apis/audit-logs",
+        "setup": "Find your Organization API key in **Organization settings** → **API Keys**. Some org-level APIs require it together with an Organization Secret Key. See [Audit Logs API](https://amplitude.com/docs/en/apis/audit-logs) and [Keys and Tokens](https://amplitude.com/docs/en/apis/keys-and-tokens)."
+      },
+      "amplitude_account_oauth": {
+        "type": "oauth2",
+        "label": "Amplitude account OAuth login",
+        "setup": "Authenticate to the remote MCP server by connecting your MCP client to `https://mcp.amplitude.com/mcp` (or EU `https://mcp.eu.amplitude.com/mcp`) and signing in with your Amplitude account when prompted. The docs state the server uses OAuth 2.0 and requires an active Amplitude account with project access. See [Amplitude MCP Server](https://amplitude.com/docs/en/amplitude-ai/amplitude-mcp) and [Other clients](https://amplitude.com/docs/en/amplitude-ai/amplitude-mcp/other-clients)."
+      },
+      "wizard_login_session": {
+        "type": "oauth2",
+        "label": "Amplitude Wizard CLI login session",
+        "generateUrl": "https://amplitude.com/docs/en/get-started/setup-wizard-cli",
+        "setup": "Run `npx @amplitude/wizard login` when the wizard prompts for authentication, then complete the browser sign-in flow and resume the command. The wizard can also expose the current token with `npx @amplitude/wizard auth token`. See [Amplitude Wizard CLI](https://amplitude.com/docs/en/get-started/setup-wizard-cli) and [llms-full.txt](https://amplitude.com/llms-full.txt)."
+      }
+    },
+    "surfaces": [
+      {
+        "slug": "amplitude-mcp-server",
+        "name": "Amplitude MCP Server",
+        "type": "mcp",
+        "docs": "https://amplitude.com/docs/en/amplitude-ai/amplitude-mcp",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://amplitude.com/docs/en/amplitude-ai/amplitude-mcp",
+            "https://amplitude.com/docs/en/amplitude-ai/amplitude-mcp/other-clients"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "amplitude_account_oauth",
+                  "mechanics": {
+                    "source": "well-known"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://amplitude.com/docs/en/amplitude-ai/amplitude-mcp",
+                  "https://amplitude.com/docs/en/amplitude-ai/amplitude-mcp/other-clients"
+                ]
+              }
+            }
+          ]
+        },
+        "url": "https://mcp.amplitude.com/mcp",
+        "transports": [
+          "streamable-http"
+        ]
+      },
+      {
+        "slug": "amplitude-apis",
+        "name": "Amplitude APIs",
+        "type": "http",
+        "docs": "https://amplitude.com/docs/en/apis",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://amplitude.com/docs/en/apis",
+            "https://amplitude.com/docs/en/apis/authentication",
+            "https://amplitude.com/docs/en/apis/keys-and-tokens",
+            "https://amplitude.com/docs/en/apis/analytics/http-v2",
+            "https://amplitude.com/docs/en/apis/analytics/dashboard-rest",
+            "https://amplitude.com/docs/en/apis/analytics/scim",
+            "https://amplitude.com/docs/en/apis/experiment/experiment-management-api",
+            "https://amplitude.com/docs/en/apis/experiment/experiment-evaluation-api",
+            "https://amplitude.com/docs/en/apis/audit-logs"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "project_api_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "body"
+                  }
+                },
+                {
+                  "id": "project_secret_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Basic"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://amplitude.com/docs/en/apis/authentication",
+                  "https://amplitude.com/docs/en/apis/keys-and-tokens",
+                  "https://amplitude.com/docs/en/apis/audit-logs"
+                ]
+              }
+            },
+            {
+              "use": [
+                {
+                  "id": "project_api_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "body"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://amplitude.com/docs/en/apis/analytics/http-v2",
+                  "https://amplitude.com/docs/en/apis/keys-and-tokens"
+                ]
+              }
+            },
+            {
+              "use": [
+                {
+                  "id": "project_secret_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Basic"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://amplitude.com/docs/en/apis/keys-and-tokens",
+                  "https://amplitude.com/docs/en/apis/analytics/dashboard-rest"
+                ]
+              }
+            },
+            {
+              "use": [
+                {
+                  "id": "data_api_token",
+                  "mechanics": {
+                    "source": "unknown"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://amplitude.com/docs/en/apis/keys-and-tokens"
+                ]
+              }
+            },
+            {
+              "use": [
+                {
+                  "id": "experiment_deployment_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Api-Key"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://amplitude.com/docs/en/apis/experiment/experiment-evaluation-api",
+                  "https://amplitude.com/docs/en/apis/keys-and-tokens"
+                ]
+              }
+            },
+            {
+              "use": [
+                {
+                  "id": "experiment_management_api_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Bearer"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://amplitude.com/docs/en/apis/experiment/experiment-management-api",
+                  "https://amplitude.com/docs/en/apis/keys-and-tokens"
+                ]
+              }
+            },
+            {
+              "use": [
+                {
+                  "id": "scim_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Bearer"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://amplitude.com/docs/en/apis/analytics/scim",
+                  "https://amplitude.com/docs/en/apis/keys-and-tokens"
+                ]
+              }
+            },
+            {
+              "use": [
+                {
+                  "id": "org_api_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Basic"
+                  }
+                },
+                {
+                  "id": "org_api_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Basic"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://amplitude.com/docs/en/apis/audit-logs",
+                  "https://amplitude.com/docs/en/apis/keys-and-tokens"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "amplitude-wizard-cli",
+        "name": "Amplitude Wizard CLI",
+        "type": "cli",
+        "docs": "https://amplitude.com/docs/en/get-started/setup-wizard-cli",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://amplitude.com/docs/en/get-started/setup-wizard-cli",
+            "https://amplitude.com/llms.txt",
+            "https://amplitude.com/llms-full.txt"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "wizard_login_session",
+                  "mechanics": {
+                    "source": "cli",
+                    "command": "npx @amplitude/wizard login",
+                    "env": [
+                      "AMPLITUDE_TOKEN",
+                      "AMPLITUDE_WIZARD_TOKEN"
+                    ]
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://amplitude.com/docs/en/get-started/setup-wizard-cli",
+                  "https://amplitude.com/llms-full.txt"
+                ]
+              }
+            },
+            {
+              "use": [
+                {
+                  "id": "project_api_key",
+                  "mechanics": {
+                    "source": "cli",
+                    "command": "npx @amplitude/wizard --api-key <key>",
+                    "env": [
+                      "AMPLITUDE_WIZARD_API_KEY"
+                    ]
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://amplitude.com/docs/en/get-started/setup-wizard-cli",
+                  "https://amplitude.com/llms.txt",
+                  "https://amplitude.com/llms-full.txt"
+                ]
+              }
+            }
+          ]
+        },
+        "packages": [
+          {
+            "registryType": "npm",
+            "identifier": "@amplitude/wizard",
+            "runtimeHint": "npx / Node.js 20+"
+          }
+        ],
+        "command": "amplitude-wizard"
+      }
+    ]
+  },
+  "discoveredAt": "2026-07-02T19:34:05.519Z",
+  "model": "loop-gpt-5.4",
+  "usage": {
+    "prompt_tokens": 150008,
+    "completion_tokens": 3111,
+    "total_tokens": 153119
+  },
+  "visited": [
+    "https://amplitude.com/docs/amplitude-ai/amplitude-mcp",
+    "https://amplitude.com/docs/amplitude-ai/amplitude-mcp/other-clients",
+    "https://amplitude.com/docs/apis",
+    "https://amplitude.com/docs/apis/analytics/dashboard-rest",
+    "https://amplitude.com/docs/apis/analytics/http-v2",
+    "https://amplitude.com/docs/apis/analytics/scim",
+    "https://amplitude.com/docs/apis/audit-logs",
+    "https://amplitude.com/docs/apis/authentication",
+    "https://amplitude.com/docs/apis/experiment/experiment-evaluation-api",
+    "https://amplitude.com/docs/apis/experiment/experiment-management-api",
+    "https://amplitude.com/docs/en/apis/keys-and-tokens",
+    "https://amplitude.com/docs/get-started/setup-wizard-cli",
+    "https://amplitude.com/llms-full.txt",
+    "https://amplitude.com/llms.txt",
+    "https://github.com/amplitude/wizard",
+    "https://lobehub.com/mcp/ncklrs-amplitude-mcp",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
+  ],
+  "grounding": [
+    "http://www.w3schools.com/tags/ref_urlencode.asp",
+    "https://academy.amplitude.com",
+    "https://amplitude.com",
+    "https://amplitude.com/#200",
+    "https://amplitude.com/#400",
+    "https://amplitude.com/#403-forbidden",
+    "https://amplitude.com/#413-payload-too-large",
+    "https://amplitude.com/#429-too-many-requests",
+    "https://amplitude.com/#503-service-unavailable",
+    "https://amplitude.com/#access-your-amplitude-data-from-the-tools-you-already-use",
+    "https://amplitude.com/#admin-controls",
+    "https://amplitude.com/#ai-agent-analytics",
+    "https://amplitude.com/#all-zero-device-ids-limit-ad-tracking-enabled",
+    "https://amplitude.com/#analysis-workflow",
+    "https://amplitude.com/#analytics-and-charts",
+    "https://amplitude.com/#analytics-keys",
+    "https://amplitude.com/#api-key",
+    "https://amplitude.com/#api-usage-limits",
+    "https://amplitude.com/#authorization",
+    "https://amplitude.com/#available-skills",
+    "https://amplitude.com/#available-tools-and-capabilities",
+    "https://amplitude.com/#body-parameters",
+    "https://amplitude.com/#choose-an-interface-for-ai-agents",
+    "https://amplitude.com/#common-issues",
+    "https://amplitude.com/#common-questions",
+    "https://amplitude.com/#common-use-cases",
+    "https://amplitude.com/#connect-amplitude-mcp-to-your-ai-client",
+    "https://amplitude.com/#considerations",
+    "https://amplitude.com/#conventions",
+    "https://amplitude.com/#cookie-settings",
+    "https://amplitude.com/#create-a-group",
+    "https://amplitude.com/#create-users",
+    "https://amplitude.com/#creation-and-editing-workflow",
+    "https://amplitude.com/#cursors",
+    "https://amplitude.com/#dashboards-and-notebooks",
+    "https://amplitude.com/#data-access",
+    "https://amplitude.com/#data-keys",
+    "https://amplitude.com/#delete-a-user",
+    "https://amplitude.com/#delete-groupsid",
+    "https://amplitude.com/#deployment-key",
+    "https://amplitude.com/#device-ids-and-user-ids-minimum-length",
+    "https://amplitude.com/#does-my-client-need-to-support-oauth-specifically",
+    "https://amplitude.com/#endpoint-costs",
+    "https://amplitude.com/#endpoints",
+    "https://amplitude.com/#environment-variables",
+    "https://amplitude.com/#evaluation-api",
+    "https://amplitude.com/#evaluation-example",
+    "https://amplitude.com/#evaluation-headers",
+    "https://amplitude.com/#evaluation-query-parameters",
+    "https://amplitude.com/#evaluation-response",
+    "https://amplitude.com/#event-deduplication",
+    "https://amplitude.com/#event-format",
+    "https://amplitude.com/#event-format-example",
+    "https://amplitude.com/#event-segmentation",
+    "https://amplitude.com/#example-progressive-discovery-flow",
+    "https://amplitude.com/#example-request",
+    "https://amplitude.com/#exit-codes",
+    "https://amplitude.com/#experiment-keys",
+    "https://amplitude.com/#experiments-and-feature-flags",
+    "https://amplitude.com/#export-data-tables",
+    "https://amplitude.com/#feedback",
+    "https://amplitude.com/#feedback-and-opportunities",
+    "https://amplitude.com/#filter-object-keys",
+    "https://amplitude.com/#find-your-api-key-and-secret-key",
+    "https://amplitude.com/#flags-api",
+    "https://amplitude.com/#flags-headers",
+    "https://amplitude.com/#flags-query-parameters",
+    "https://amplitude.com/#flags-response",
+    "https://amplitude.com/#funnel-analysis",
+    "https://amplitude.com/#get-active-and-new-user-counts",
+    "https://amplitude.com/#get-average-session-length",
+    "https://amplitude.com/#get-average-sessions-per-user",
+    "https://amplitude.com/#get-events-list",
+    "https://amplitude.com/#get-group-by-id",
+    "https://amplitude.com/#get-groups",
+    "https://amplitude.com/#get-results-from-an-existing-chart",
+    "https://amplitude.com/#get-session-length-distribution",
+    "https://amplitude.com/#get-user-by-id",
+    "https://amplitude.com/#get-users",
+    "https://amplitude.com/#getting-help",
+    "https://amplitude.com/#group-routes",
+    "https://amplitude.com/#guides-and-surveys",
+    "https://amplitude.com/#headers",
+    "https://amplitude.com/#how-do-i-connect-amplitude-mcp-to-an-unlisted-client",
+    "https://amplitude.com/#how-do-i-report-a-connection-issue-with-an-unlisted-client",
+    "https://amplitude.com/#how-do-i-verify-the-connection-works",
+    "https://amplitude.com/#how-to-get-an-organization-secret-key",
+    "https://amplitude.com/#information-for-partner-integrations",
+    "https://amplitude.com/#install-the-plugin",
+    "https://amplitude.com/#integrate-with-a-siem",
+    "https://amplitude.com/#investigate-security-incidents",
+    "https://amplitude.com/#is-an-eu-endpoint-available",
+    "https://amplitude.com/#key-flags",
+    "https://amplitude.com/#keys-overview",
+    "https://amplitude.com/#language-field",
+    "https://amplitude.com/#management-api-key",
+    "https://amplitude.com/#mcp-server-mode",
+    "https://amplitude.com/#options",
+    "https://amplitude.com/#org-level-api-key",
+    "https://amplitude.com/#other-keys",
+    "https://amplitude.com/#path-variables",
+    "https://amplitude.com/#plan-apply-and-verify",
+    "https://amplitude.com/#plugins",
+    "https://amplitude.com/#prerequisites",
+    "https://amplitude.com/#privacy-considerations",
+    "https://amplitude.com/#progressive-tool-discovery",
+    "https://amplitude.com/#query-examples",
+    "https://amplitude.com/#query-parameters",
+    "https://amplitude.com/#query-parameters-1",
+    "https://amplitude.com/#query-parameters-10",
+    "https://amplitude.com/#query-parameters-2",
+    "https://amplitude.com/#query-parameters-3",
+    "https://amplitude.com/#query-parameters-4",
+    "https://amplitude.com/#query-parameters-5",
+    "https://amplitude.com/#query-parameters-6",
+    "https://amplitude.com/#query-parameters-7",
+    "https://amplitude.com/#query-parameters-8",
+    "https://amplitude.com/#query-parameters-9",
+    "https://amplitude.com/#rate-limiting",
+    "https://amplitude.com/#rate-limits",
+    "https://amplitude.com/#real-time-active-users",
+    "https://amplitude.com/#regions",
+    "https://amplitude.com/#related-resources",
+    "https://amplitude.com/#remote-server",
+    "https://amplitude.com/#request",
+    "https://amplitude.com/#response",
+    "https://amplitude.com/#response-1",
+    "https://amplitude.com/#response-10",
+    "https://amplitude.com/#response-11",
+    "https://amplitude.com/#response-12",
+    "https://amplitude.com/#response-13",
+    "https://amplitude.com/#response-2",
+    "https://amplitude.com/#response-3",
+    "https://amplitude.com/#response-4",
+    "https://amplitude.com/#response-5",
+    "https://amplitude.com/#response-6",
+    "https://amplitude.com/#response-7",
+    "https://amplitude.com/#response-8",
+    "https://amplitude.com/#response-9",
+    "https://amplitude.com/#retention-analysis",
+    "https://amplitude.com/#retrieve-audit-events",
+    "https://amplitude.com/#revenue-lifetime-value",
+    "https://amplitude.com/#route-version",
+    "https://amplitude.com/#run-the-amplitude-wizard-cli-from-an-ai-agent",
+    "https://amplitude.com/#scim-key",
+    "https://amplitude.com/#scope-mcp-access-with-roles",
+    "https://amplitude.com/#secret-key",
+    "https://amplitude.com/#security-and-compliance",
+    "https://amplitude.com/#segment-definition",
+    "https://amplitude.com/#segment-definition-examples",
+    "https://amplitude.com/#send-feedback",
+    "https://amplitude.com/#server-error-500-502-504",
+    "https://amplitude.com/#session-replay-and-debugging",
+    "https://amplitude.com/#set-date-values",
+    "https://amplitude.com/#set-time-values",
+    "https://amplitude.com/#shared-query-parameters",
+    "https://amplitude.com/#status-codes",
+    "https://amplitude.com/#string-character-limit",
+    "https://amplitude.com/#support-compliance-reporting",
+    "https://amplitude.com/#supported-user-fields",
+    "https://amplitude.com/#taxonomy-and-tracking-plan",
+    "https://amplitude.com/#technical-specifications",
+    "https://amplitude.com/#things-to-try-after-your-data-is-flowing",
+    "https://amplitude.com/#timehistogramconfigbin-format",
+    "https://amplitude.com/#troubleshooting",
+    "https://amplitude.com/#typical-workflows",
+    "https://amplitude.com/#update-a-user-group",
+    "https://amplitude.com/#update-users",
+    "https://amplitude.com/#upload-limit",
+    "https://amplitude.com/#user-activity",
+    "https://amplitude.com/#user-composition",
+    "https://amplitude.com/#user-routes",
+    "https://amplitude.com/#user-search",
+    "https://amplitude.com/#users-cohorts-and-metrics",
+    "https://amplitude.com/#what-the-amplitude-wizard-cli-does-when-you-run-it",
+    "https://amplitude.com/#what-the-mcp-is-for",
+    "https://amplitude.com/#what-transport-protocol-does-the-amplitude-mcp-server-use",
+    "https://amplitude.com/#windows-os",
+    "https://amplitude.com/about",
+    "https://amplitude.com/acceptable-use-policy",
+    "https://amplitude.com/activation",
+    "https://amplitude.com/activation.md",
+    "https://amplitude.com/agent-prompt-library",
+    "https://amplitude.com/ai-agents",
+    "https://amplitude.com/ai-agents.md",
+    "https://amplitude.com/ai-assistant",
+    "https://amplitude.com/ai-assistant.md",
+    "https://amplitude.com/ai-feedback",
+    "https://amplitude.com/ai-feedback.md",
+    "https://amplitude.com/ai-visibility",
+    "https://amplitude.com/ai-visibility.md",
+    "https://amplitude.com/amp-champs",
+    "https://amplitude.com/amplitude-analytics",
+    "https://amplitude.com/amplitude-analytics.md",
+    "https://amplitude.com/amplitude-experiment",
+    "https://amplitude.com/amplitude-experiment.md",
+    "https://amplitude.com/api/2/audit-logs/76273",
+    "https://amplitude.com/api/2/audit-logs/{ORG_ID}",
+    "https://amplitude.com/blog",
+    "https://amplitude.com/careers",
+    "https://amplitude.com/contact",
+    "https://amplitude.com/customers",
+    "https://amplitude.com/customers/consumer-tech",
+    "https://amplitude.com/customers/e-commerce",
+    "https://amplitude.com/customers/financial-services",
+    "https://amplitude.com/customers/healthcare",
+    "https://amplitude.com/customers/media",
+    "https://amplitude.com/data-governance",
+    "https://amplitude.com/data-governance.md",
+    "https://amplitude.com/data-management",
+    "https://amplitude.com/data-management.md",
+    "https://amplitude.com/diversity-equity-inclusion",
+    "https://amplitude.com/docs",
+    "https://amplitude.com/docs/amplitude-ai/amplitude-mcp",
+    "https://amplitude.com/docs/amplitude-ai/amplitude-mcp/other-clients",
+    "https://amplitude.com/docs/api/content/get-started/setup-wizard-cli",
+    "https://amplitude.com/docs/apis",
+    "https://amplitude.com/docs/apis/analytics/attribution",
+    "https://amplitude.com/docs/apis/analytics/batch-event-upload",
+    "https://amplitude.com/docs/apis/analytics/behavioral-cohorts",
+    "https://amplitude.com/docs/apis/analytics/ccpa-dsar",
+    "https://amplitude.com/docs/apis/analytics/chart-annotations",
+    "https://amplitude.com/docs/apis/analytics/dashboard-rest",
+    "https://amplitude.com/docs/apis/analytics/event-streaming-metrics",
+    "https://amplitude.com/docs/apis/analytics/export",
+    "https://amplitude.com/docs/apis/analytics/group-identify",
+    "https://amplitude.com/docs/apis/analytics/http-v2",
+    "https://amplitude.com/docs/apis/analytics/identify",
+    "https://amplitude.com/docs/apis/analytics/lookup-table",
+    "https://amplitude.com/docs/apis/analytics/lookup-table-2",
+    "https://amplitude.com/docs/apis/analytics/releases",
+    "https://amplitude.com/docs/apis/analytics/scim",
+    "https://amplitude.com/docs/apis/analytics/session-replay",
+    "https://amplitude.com/docs/apis/analytics/taxonomy",
+    "https://amplitude.com/docs/apis/analytics/user-mapping",
+    "https://amplitude.com/docs/apis/analytics/user-privacy",
+    "https://amplitude.com/docs/apis/analytics/user-privacy-v2",
+    "https://amplitude.com/docs/apis/analytics/user-profile",
+    "https://amplitude.com/docs/apis/audit-logs",
+    "https://amplitude.com/docs/apis/authentication",
+    "https://amplitude.com/docs/apis/experiment/experiment-evaluation-api",
+    "https://amplitude.com/docs/apis/experiment/experiment-management-api",
+    "https://amplitude.com/docs/apis/experiment/experiment-management-api-deployments",
+    "https://amplitude.com/docs/apis/experiment/experiment-management-api-experiments",
+    "https://amplitude.com/docs/apis/experiment/experiment-management-api-flags",
+    "https://amplitude.com/docs/apis/experiment/experiment-management-api-holdouts",
+    "https://amplitude.com/docs/apis/experiment/experiment-management-api-mutexs",
+    "https://amplitude.com/docs/apis/experiment/experiment-management-api-version-endpoints",
+    "https://amplitude.com/docs/apis/guides-and-surveys/guides-and-surveys-api-localization",
+    "https://amplitude.com/docs/de",
+    "https://amplitude.com/docs/en",
+    "https://amplitude.com/docs/en/admin",
+    "https://amplitude.com/docs/en/admin/account-management/manage-permission-groups",
+    "https://amplitude.com/docs/en/admin/account-management/manage-your-api-keys-and-secret-keys",
+    "https://amplitude.com/docs/en/admin/account-management/scim-provision",
+    "https://amplitude.com/docs/en/amplitude-ai",
+    "https://amplitude.com/docs/en/amplitude-ai/ai-context",
+    "https://amplitude.com/docs/en/amplitude-ai/ai-controls",
+    "https://amplitude.com/docs/en/amplitude-ai/ai-feedback",
+    "https://amplitude.com/docs/en/amplitude-ai/amplitude-mcp",
+    "https://amplitude.com/docs/en/amplitude-ai/amplitude-mcp/chatgpt",
+    "https://amplitude.com/docs/en/amplitude-ai/amplitude-mcp/claude",
+    "https://amplitude.com/docs/en/amplitude-ai/amplitude-mcp/claude-code",
+    "https://amplitude.com/docs/en/amplitude-ai/amplitude-mcp/codex-cli",
+    "https://amplitude.com/docs/en/amplitude-ai/amplitude-mcp/cursor",
+    "https://amplitude.com/docs/en/amplitude-ai/amplitude-mcp/figma-make",
+    "https://amplitude.com/docs/en/amplitude-ai/amplitude-mcp/gemini-cli",
+    "https://amplitude.com/docs/en/amplitude-ai/amplitude-mcp/kiro",
+    "https://amplitude.com/docs/en/amplitude-ai/amplitude-mcp/lovable",
+    "https://amplitude.com/docs/en/amplitude-ai/amplitude-mcp/other-clients",
+    "https://amplitude.com/docs/en/amplitude-ai/amplitude-mcp/replit",
+    "https://amplitude.com/docs/en/amplitude-ai/docs-mcp-server",
+    "https://amplitude.com/docs/en/amplitude-ai/guides-surveys-mcp",
+    "https://amplitude.com/docs/en/amplitude-ai/preparing-data-for-ai-ingestion",
+    "https://amplitude.com/docs/en/amplitude-ai/privacy-and-security",
+    "https://amplitude.com/docs/en/analytics",
+    "https://amplitude.com/docs/en/analytics/charts/build-charts-add-user-segments#add-more-segments",
+    "https://amplitude.com/docs/en/apis",
+    "https://amplitude.com/docs/en/apis/analytics/ai-feedback",
+    "https://amplitude.com/docs/en/apis/analytics/attribution",
+    "https://amplitude.com/docs/en/apis/analytics/batch-event-upload",
+    "https://amplitude.com/docs/en/apis/analytics/behavioral-cohorts",
+    "https://amplitude.com/docs/en/apis/analytics/ccpa-dsar",
+    "https://amplitude.com/docs/en/apis/analytics/channel-classifiers",
+    "https://amplitude.com/docs/en/apis/analytics/chart-annotations",
+    "https://amplitude.com/docs/en/apis/analytics/dashboard-rest",
+    "https://amplitude.com/docs/en/apis/analytics/event-streaming-metrics",
+    "https://amplitude.com/docs/en/apis/analytics/export",
+    "https://amplitude.com/docs/en/apis/analytics/group-identify",
+    "https://amplitude.com/docs/en/apis/analytics/http-api-quickstart",
+    "https://amplitude.com/docs/en/apis/analytics/http-v2",
+    "https://amplitude.com/docs/en/apis/analytics/identify",
+    "https://amplitude.com/docs/en/apis/analytics/lookup-table",
+    "https://amplitude.com/docs/en/apis/analytics/lookup-table-2",
+    "https://amplitude.com/docs/en/apis/analytics/releases",
+    "https://amplitude.com/docs/en/apis/analytics/scim",
+    "https://amplitude.com/docs/en/apis/analytics/taxonomy",
+    "https://amplitude.com/docs/en/apis/analytics/user-mapping",
+    "https://amplitude.com/docs/en/apis/analytics/user-privacy",
+    "https://amplitude.com/docs/en/apis/analytics/user-privacy-v2",
+    "https://amplitude.com/docs/en/apis/analytics/user-profile",
+    "https://amplitude.com/docs/en/apis/audit-logs",
+    "https://amplitude.com/docs/en/apis/authentication",
+    "https://amplitude.com/docs/en/apis/experiment/experiment-evaluation-api",
+    "https://amplitude.com/docs/en/apis/experiment/experiment-management-api",
+    "https://amplitude.com/docs/en/apis/experiment/experiment-management-api-deployments",
+    "https://amplitude.com/docs/en/apis/experiment/experiment-management-api-experiments",
+    "https://amplitude.com/docs/en/apis/experiment/experiment-management-api-flags",
+    "https://amplitude.com/docs/en/apis/experiment/experiment-management-api-holdouts",
+    "https://amplitude.com/docs/en/apis/experiment/experiment-management-api-mutexs",
+    "https://amplitude.com/docs/en/apis/experiment/experiment-management-api-version-endpoints",
+    "https://amplitude.com/docs/en/apis/keys-and-tokens",
+    "https://amplitude.com/docs/en/assistant",
+    "https://amplitude.com/docs/en/data",
+    "https://amplitude.com/docs/en/faq",
+    "https://amplitude.com/docs/en/feature-experiment",
+    "https://amplitude.com/docs/en/feature-experiment/data-model",
+    "https://amplitude.com/docs/en/feature-experiment/data-model#deployments",
+    "https://amplitude.com/docs/en/feature-experiment/data-model#full-user-definition",
+    "https://amplitude.com/docs/en/feature-experiment/remote-evaluation",
+    "https://amplitude.com/docs/en/get-started",
+    "https://amplitude.com/docs/en/get-started/amplitude-quickstart",
+    "https://amplitude.com/docs/en/get-started/setup-wizard-cli",
+    "https://amplitude.com/docs/en/get-started/stripe-projects",
+    "https://amplitude.com/docs/en/guides-and-surveys",
+    "https://amplitude.com/docs/en/heatmaps",
+    "https://amplitude.com/docs/en/partners/create-an-event-ingestion-integration#test-and-submit-the-integration",
+    "https://amplitude.com/docs/en/sdks",
+    "https://amplitude.com/docs/en/sdks/analytics/browser/browser-sdk-2",
+    "https://amplitude.com/docs/en/sdks/analytics/browser/browser-unified-sdk",
+    "https://amplitude.com/docs/en/session-replay",
+    "https://amplitude.com/docs/en/wave",
+    "https://amplitude.com/docs/en/web-experiment",
+    "https://amplitude.com/docs/en/zoning-insights",
+    "https://amplitude.com/docs/es",
+    "https://amplitude.com/docs/es-latam",
+    "https://amplitude.com/docs/fr",
+    "https://amplitude.com/docs/get-started/setup-wizard-cli",
+    "https://amplitude.com/docs/ja",
+    "https://amplitude.com/docs/ko",
+    "https://amplitude.com/docs/pt",
+    "https://amplitude.com/docs/pt-br",
+    "https://amplitude.com/events",
+    "https://amplitude.com/feature-experimentation",
+    "https://amplitude.com/feature-management",
+    "https://amplitude.com/feature-management.md",
+    "https://amplitude.com/get-started",
+    "https://amplitude.com/glossary",
+    "https://amplitude.com/guides-and-surveys",
+    "https://amplitude.com/guides-and-surveys.md",
+    "https://amplitude.com/heatmaps",
+    "https://amplitude.com/heatmaps.md",
+    "https://amplitude.com/legal",
+    "https://amplitude.com/llms-full.txt",
+    "https://amplitude.com/llms.txt",
+    "https://amplitude.com/mcp",
+    "https://amplitude.com/mcp.md",
+    "https://amplitude.com/newsroom",
+    "https://amplitude.com/partners",
+    "https://amplitude.com/partners/affiliate",
+    "https://amplitude.com/partners/directory",
+    "https://amplitude.com/pricing",
+    "https://amplitude.com/privacy",
+    "https://amplitude.com/product-analytics",
+    "https://amplitude.com/product-updates",
+    "https://amplitude.com/resources",
+    "https://amplitude.com/resources/forrester-tei-report",
+    "https://amplitude.com/resources/forrester-wave-digital-analytics-solutions",
+    "https://amplitude.com/resources/forrester-wave-feature-management",
+    "https://amplitude.com/resources/g2-product-analytics-report",
+    "https://amplitude.com/session-replay",
+    "https://amplitude.com/session-replay.md",
+    "https://amplitude.com/sitemap-llms.txt",
+    "https://amplitude.com/terms",
+    "https://amplitude.com/vs/adobe-analytics",
+    "https://amplitude.com/vs/contentsquare",
+    "https://amplitude.com/vs/fullstory",
+    "https://amplitude.com/vs/google-analytics",
+    "https://amplitude.com/vs/heap",
+    "https://amplitude.com/vs/launchdarkly",
+    "https://amplitude.com/vs/mixpanel",
+    "https://amplitude.com/vs/optimizely",
+    "https://amplitude.com/vs/pendo",
+    "https://amplitude.com/vs/posthog",
+    "https://amplitude.com/web-analytics",
+    "https://amplitude.com/web-analytics.md",
+    "https://amplitude.com/web-experimentation",
+    "https://amplitude.com/web-experimentation.md",
+    "https://analytics.amplitude.com",
+    "https://analytics.amplitude.com/org_name/cohort/XYXxxzz",
+    "https://analytics.eu.amplitude.com",
+    "https://api.eu.amplitude.com",
+    "https://api.lab.amplitude.com/v1/",
+    "https://api.lab.eu.amplitude.com/v1/",
+    "https://api2.amplitude.com",
+    "https://api2.amplitude.com/2/httpapi",
+    "https://app.amplitude.com/",
+    "https://archiveprogram.github.com",
+    "https://community.amplitude.com",
+    "https://core.amplitude.com",
+    "https://core.eu.amplitude.com",
+    "https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.2.2",
+    "https://docs.anthropic.com/en/docs/build-with-claude/mcp",
+    "https://docs.cursor.com/context/model-context-protocol",
+    "https://docs.github.com",
+    "https://docs.github.com/search-github/github-code-search/understanding-github-code-search-syntax",
+    "https://docs.google.com/forms/d/e/1FAIpQLSeFgRd8607Y2Gzidva5ChEri2tk7wvl7vofUIwxcM_2aD2Nqw/viewform?usp=header",
+    "https://experiment.amplitude.com",
+    "https://experiment.eu.amplitude.com",
+    "https://github.blog",
+    "https://github.blog/changelog",
+    "https://github.com/#start-of-content",
+    "https://github.com/accelerator",
+    "https://github.com/amplitude",
+    "https://github.com/amplitude/mcp-marketplace/tree/main/plugins/amplitude",
+    "https://github.com/amplitude/wizard",
+    "https://github.com/amplitude/wizard#readme",
+    "https://github.com/amplitude/wizard/actions",
+    "https://github.com/amplitude/wizard/branches",
+    "https://github.com/amplitude/wizard/commit/b83903b3071561a55745121ff03c16d10e43ce6f",
+    "https://github.com/amplitude/wizard/commit/c7cc9561cecdc87fd8f81ba82e462f9cf224b22a",
+    "https://github.com/amplitude/wizard/commits/main/",
+    "https://github.com/amplitude/wizard/commits?author=amplitude-release-bot%5Bbot%5D",
+    "https://github.com/amplitude/wizard/issues",
+    "https://github.com/amplitude/wizard/projects",
+    "https://github.com/amplitude/wizard/pull/865",
+    "https://github.com/amplitude/wizard/pulls",
+    "https://github.com/amplitude/wizard/pulse",
+    "https://github.com/amplitude/wizard/security",
+    "https://github.com/amplitude/wizard/tags",
+    "https://github.com/amplitude/wizard/tree/main/.claude",
+    "https://github.com/collections",
+    "https://github.com/customer-stories",
+    "https://github.com/enterprise",
+    "https://github.com/enterprise/startups",
+    "https://github.com/features",
+    "https://github.com/features/actions",
+    "https://github.com/features/ai/github-app",
+    "https://github.com/features/code-review",
+    "https://github.com/features/codespaces",
+    "https://github.com/features/copilot",
+    "https://github.com/features/copilot/copilot-business",
+    "https://github.com/features/issues",
+    "https://github.com/login?return_to=%2Famplitude%2Fwizard",
+    "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2Famplitude%2Fwizard",
+    "https://github.com/marketplace",
+    "https://github.com/mcp",
+    "https://github.com/modelcontextprotocol/quickstart-resources",
+    "https://github.com/modelcontextprotocol/servers",
+    "https://github.com/ndjson/ndjson-spec",
+    "https://github.com/orgs/community/discussions",
+    "https://github.com/partners",
+    "https://github.com/premium-support",
+    "https://github.com/pricing",
+    "https://github.com/resources",
+    "https://github.com/resources/articles",
+    "https://github.com/resources/articles?topic=ai",
+    "https://github.com/resources/articles?topic=devops",
+    "https://github.com/resources/articles?topic=security",
+    "https://github.com/resources/articles?topic=software-development",
+    "https://github.com/resources/events",
+    "https://github.com/resources/whitepapers",
+    "https://github.com/security/advanced-security",
+    "https://github.com/security/advanced-security/code-security",
+    "https://github.com/security/advanced-security/secret-protection",
+    "https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E&source=header-repo&source_repo=amplitude%2Fwizard",
+    "https://github.com/solutions",
+    "https://github.com/solutions/executive-insights",
+    "https://github.com/solutions/industry",
+    "https://github.com/solutions/industry/financial-services",
+    "https://github.com/solutions/industry/government",
+    "https://github.com/solutions/industry/healthcare",
+    "https://github.com/solutions/industry/manufacturing",
+    "https://github.com/solutions/industry/nonprofits",
+    "https://github.com/solutions/use-case",
+    "https://github.com/solutions/use-case/app-modernization",
+    "https://github.com/solutions/use-case/ci-cd",
+    "https://github.com/solutions/use-case/devops",
+    "https://github.com/solutions/use-case/devsecops",
+    "https://github.com/sponsors",
+    "https://github.com/team",
+    "https://github.com/topics",
+    "https://github.com/trending",
+    "https://github.com/trust-center",
+    "https://github.com/why-github",
+    "https://help.amplitude.com",
+    "https://ir.amplitude.com",
+    "https://lobehub.com/mcp/ncklrs-amplitude-mcp",
+    "https://maintainers.github.com",
+    "https://mcp.amplitude.com/mcp",
+    "https://mcp.amplitude.com/mcp?discovery=progressive",
+    "https://mcp.eu.amplitude.com/mcp",
+    "https://mcp.eu.amplitude.com/mcp?discovery=progressive",
+    "https://modelcontextprotocol.io",
+    "https://securitylab.github.com",
+    "https://skills.github.com",
+    "https://stars.github.com",
+    "https://status.amplitude.com",
+    "https://support.github.com",
+    "https://www.iban.com/currency-codes",
+    "https://www.postman.com/amplitude-dev-docs/amplitude-developers/folder/20044411-4e4ab138-2055-4ed8-be5f-2b28c4c17c7f",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
+  ]
+}

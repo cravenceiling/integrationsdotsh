@@ -1,0 +1,179 @@
+{
+  "result": {
+    "version": 3,
+    "domain": "anyscale.com",
+    "detect": {
+      "domain": "anyscale.com",
+      "found": [],
+      "mcp": [],
+      "llmsTxt": false,
+      "errors": []
+    },
+    "usedLlm": true,
+    "discoveredAt": "2026-07-02T19:34:09.874Z",
+    "summary": "Found Anyscale’s public developer surfaces as a Managed Ray HTTP API at `https://console.anyscale.com/api/v2` (Swagger docs discovered, auth mechanics not confirmed), plus the `anyscale` CLI and documented SDK usage authenticated with Anyscale-issued user or service-account API keys.",
+    "credentials": {
+      "user_api_key": {
+        "type": "api_key",
+        "label": "User API key",
+        "generateUrl": "https://docs.anyscale.com/auth/api-keys",
+        "setup": "In the Anyscale console, go to [Manage API keys](https://docs.anyscale.com/auth/api-keys) and create an API key for your user account. For CLI/SDK use, set it as `ANYSCALE_CLI_TOKEN` as shown in the docs. The auth overview at [Authentication and authorization](https://docs.anyscale.com/auth) describes API-key-based authentication for Anyscale clients.",
+        "acquisition": "manual"
+      },
+      "service_account_api_key": {
+        "type": "api_key",
+        "label": "Service account API key",
+        "generateUrl": "https://docs.anyscale.com/auth/service-accounts",
+        "setup": "Create a service account and then click **Create API key** as described in [Anyscale service accounts](https://docs.anyscale.com/auth/service-accounts). The docs note the key can be configured for automation via environment variables/commands printed after creation.",
+        "acquisition": "manual"
+      }
+    },
+    "surfaces": [
+      {
+        "slug": "anyscale-managed-ray-api",
+        "name": "Anyscale Managed Ray API",
+        "type": "http",
+        "docs": "https://console.anyscale.com/api/v2/docs",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://console.anyscale.com/api/v2/docs"
+          ]
+        },
+        "auth": {
+          "status": "unknown"
+        },
+        "url": "https://console.anyscale.com/api/v2"
+      },
+      {
+        "slug": "anyscale-cli",
+        "name": "Anyscale CLI",
+        "type": "cli",
+        "docs": "https://docs.anyscale.com/reference/quickstart-cli",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.anyscale.com/reference/quickstart-cli",
+            "https://docs.anyscale.com/auth/api-keys",
+            "https://docs.anyscale.com/auth"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "user_api_key",
+                  "mechanics": {
+                    "source": "cli",
+                    "env": [
+                      "ANYSCALE_CLI_TOKEN"
+                    ]
+                  }
+                },
+                {
+                  "id": "service_account_api_key",
+                  "mechanics": {
+                    "source": "cli",
+                    "env": [
+                      "ANYSCALE_CLI_TOKEN"
+                    ]
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.anyscale.com/reference/quickstart-cli",
+                  "https://docs.anyscale.com/auth/api-keys"
+                ]
+              }
+            }
+          ]
+        },
+        "packages": [
+          {
+            "registryType": "pip",
+            "identifier": "anyscale"
+          }
+        ],
+        "command": "anyscale"
+      },
+      {
+        "slug": "anyscale-python-sdk",
+        "name": "Anyscale Python SDK",
+        "type": "http",
+        "docs": "https://docs.anyscale.com/reference/quickstart-sdk",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.anyscale.com/reference/quickstart-sdk",
+            "https://docs.anyscale.com/auth/api-keys"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "user_api_key",
+                  "mechanics": {
+                    "source": "unknown"
+                  }
+                },
+                {
+                  "id": "service_account_api_key",
+                  "mechanics": {
+                    "source": "unknown"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.anyscale.com/reference/quickstart-sdk",
+                  "https://docs.anyscale.com/auth/api-keys"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "discoveredAt": "2026-07-02T19:34:09.874Z",
+  "model": "loop-gpt-5.4",
+  "usage": {
+    "prompt_tokens": 24345,
+    "completion_tokens": 1034,
+    "total_tokens": 25379
+  },
+  "visited": [
+    "https://console.anyscale.com/api/v2/docs",
+    "https://docs.anyscale.com/auth",
+    "https://docs.anyscale.com/auth/api-keys",
+    "https://docs.anyscale.com/auth/service-accounts",
+    "https://docs.anyscale.com/get-started",
+    "https://docs.anyscale.com/reference",
+    "https://docs.anyscale.com/reference/cli/image",
+    "https://docs.anyscale.com/reference/cli/job",
+    "https://docs.anyscale.com/reference/cli/service",
+    "https://docs.anyscale.com/reference/quickstart-cli",
+    "https://docs.anyscale.com/reference/quickstart-sdk"
+  ],
+  "grounding": [
+    "https://console.anyscale.com/api/v2/docs",
+    "https://docs.anyscale.com/auth",
+    "https://docs.anyscale.com/auth/api-keys",
+    "https://docs.anyscale.com/auth/service-accounts",
+    "https://docs.anyscale.com/get-started",
+    "https://docs.anyscale.com/reference",
+    "https://docs.anyscale.com/reference/cli/image",
+    "https://docs.anyscale.com/reference/cli/job",
+    "https://docs.anyscale.com/reference/cli/service",
+    "https://docs.anyscale.com/reference/quickstart-cli",
+    "https://docs.anyscale.com/reference/quickstart-sdk"
+  ]
+}
