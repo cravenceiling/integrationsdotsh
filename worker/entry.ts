@@ -17,7 +17,7 @@ import yogaWasmModule from "satori/yoga.wasm?module";
 import { apiHandler } from "./api.ts";
 import { setChat, setWebBackend, discoverWithProgress, preserveSlugs } from "./operations.ts";
 import { contextWeb, naiveWeb } from "../src/lib/contextdev.ts";
-import { registrableDomain } from "../src/lib/favicon.ts";
+import { isJunkDomain, registrableDomain } from "../src/lib/favicon.ts";
 import { renderOgPng, type OgFonts, type OgImageData } from "../src/lib/og.tsx";
 import type { Surface } from "../src/lib/surface-view.ts";
 import type { Credential, DiscoveryDoc } from "../src/lib/surface-view.ts";
@@ -26,7 +26,7 @@ import { McpDurableObject } from "./mcp-do.ts";
 
 // Bump when detect/discover output shape or logic changes, so the edge Cache API
 // (which survives deploys) stops serving results produced by the old code.
-const CACHE_VERSION = "16"; // 16: live spec validation changes discover output
+const CACHE_VERSION = "17"; // 17: conventions scorecard + integrations.json detect output
 
 // The discovery-loop model. gpt-5.4 drives the agentic tool-calling loop
 // (search/sitemap/scrape/report). (Note: gpt-5.x rejects `reasoning_effort`
@@ -215,6 +215,26 @@ const json = (body: unknown, status = 200, headers: Record<string, string> = {})
     status,
     headers: { "content-type": "application/json; charset=utf-8", "access-control-allow-origin": "*", ...headers },
   });
+
+const TRAILING_SLASH_SKIP_PREFIXES = ["/api/", "/og/", "/_i/", "/logo/"];
+
+function trailingSlashRedirect(request: Request, url: URL): Response | null {
+  if (request.method !== "GET" || url.pathname.endsWith("/")) return null;
+  if (TRAILING_SLASH_SKIP_PREFIXES.some((prefix) => url.pathname.startsWith(prefix))) return null;
+  const segments = url.pathname.split("/").filter(Boolean);
+  if (segments.length < 1 || segments.length > 2) return null;
+  // Page paths here are /{domain} and /{domain}/{slug} — the first segment is
+  // dotted (gitlab.com), so "dot = file" is wrong. A path is page-like when
+  // its first segment parses as a registrable domain and its last segment
+  // isn't a file (no dot, or the whole segment IS the domain).
+  const first = segments[0];
+  const last = segments[segments.length - 1];
+  if (!registrableDomain(first)) return null;
+  if (last !== first && last.includes(".")) return null;
+  const target = new URL(url);
+  target.pathname = `${url.pathname}/`;
+  return Response.redirect(target.toString(), 301);
+}
 
 /** Fire-and-forget server-side PostHog capture. Browser pageviews come from
  * posthog-js (src/lib/analytics.ts); this covers the callers that never run
@@ -481,6 +501,9 @@ export function createExports(manifest: SSRManifest) {
       return Response.redirect(new URL(`/${ssrLeak[1]}/`, url.origin).toString(), 301);
     }
 
+    const slashRedirect = trailingSlashRedirect(request, url);
+    if (slashRedirect) return slashRedirect;
+
     // Domain page with a STORED discovery → SSR it with the map baked in
     // (src/pages/ssr/[domain].astro) instead of the prerendered asset, so
     // returning visitors don't get the idle-button flash while the island
@@ -488,7 +511,7 @@ export function createExports(manifest: SSRManifest) {
     const domainMatch = /^\/([^/]+)\/?$/.exec(url.pathname);
     if (request.method === "GET" && domainMatch && domainMatch[1].includes(".")) {
       const domain = decodeURIComponent(domainMatch[1]).trim().toLowerCase();
-      if (await env.DISCOVERY.get(domain)) {
+      if (!isJunkDomain(domain) && await env.DISCOVERY.get(domain)) {
         const ssrUrl = new URL(`/ssr/${encodeURIComponent(domain)}/`, url.origin);
         return handle(manifest, app, new Request(ssrUrl, request) as never, env as never, ctx as never);
       }

@@ -11,7 +11,7 @@
  *   - Surface     (by `type`: http | graphql | mcp | cli)
  *   - Credential  (by `type`: Nango auth-mode vocabulary)
  *   - Mechanics   (by `source`: spec | well-known | metadata | http | cli | unknown)
- *   - Basis  (by `via`: detected | discovered)
+ *   - Basis  (by `via`: detected | discovered | declared)
  *
  * Surfaces get a server-assigned `slug` at record time (slugified name,
  * deduped) — identity and URL segment. The model never produces it; the wire
@@ -63,7 +63,8 @@ export interface WebBackend {
 /** How we learned a thing exists — a trust/verifiability axis. */
 export type Basis =
   | { via: "detected"; signal: string; verifiedAt?: string } // re-verifiable machine signal
-  | { via: "discovered"; evidence: string[] }; // doc URLs the agent read
+  | { via: "discovered"; evidence: string[] } // doc URLs the agent read
+  | { via: "declared"; source: string }; // owner-published integrations.json
 
 /** How ONE credential binds to a surface — where the binding resolves from. */
 export type Mechanics =
@@ -272,6 +273,7 @@ export async function discover(
   emit?: Emit,
 ): Promise<DiscoveryResult | null> {
   const seed = seedFacts(domain, detect);
+  const ownerDeclaration = ownerDeclarationPrompt(detect);
   const catalogSeed = catalogSeeds(domain);
   const messages: unknown[] = [
     { role: "system", content: SYSTEM },
@@ -281,6 +283,7 @@ export async function discover(
         `Service domain: ${domain}\n` +
         `Detected by automated probes: ${detect.found.length ? detect.found.join(", ") : "nothing"}.\n` +
         (seed.length ? `Seed facts (authoritative):\n- ${seed.join("\n- ")}\n` : "") +
+        (ownerDeclaration ? `${ownerDeclaration}\n` : "") +
         (catalogSeed.length ? `Catalog facts (authoritative — from curated registries; verify and include these surfaces):\n- ${catalogSeed.join("\n- ")}\n` : "") +
         (web.canSearch ? `\nStart with web_search for "${domain}".` : `\nStart from https://${domain}/docs or https://developer.${domain}/.`),
     },
@@ -418,6 +421,17 @@ function seedFacts(domain: string, detect: DetectionResult): string[] {
   if (detect.apiCatalog?.docs?.length) facts.push(`Docs linked from api-catalog: ${detect.apiCatalog.docs.join(", ")}`);
   if (detect.llmsTxt) facts.push(`A plain-text llms.txt exists at https://${domain}/llms.txt — a fallback to scrape only if web_search doesn't surface the developer docs.`);
   return facts;
+}
+
+function ownerDeclarationPrompt(detect: DetectionResult): string {
+  const declared = detect.integrationsJson;
+  if (!declared?.result) return "";
+  const json = JSON.stringify(declared.result, null, 2).slice(0, 20000);
+  return (
+    `Owner declaration from ${declared.url}:\n` +
+    "The site owner declares the following (respect it as their statement of intent; enrich with docs; where our verified knowledge conflicts, note the discrepancy in the surface notes rather than silently dropping either).\n" +
+    `${json}\n`
+  );
 }
 
 function hostPath(url: string): string {
@@ -603,6 +617,117 @@ function normalizeVariables(v: unknown): Surface["variables"] {
   return out.length ? out : undefined;
 }
 
+function declaredBasis(source: string): Basis {
+  return { via: "declared", source };
+}
+
+function cloneJson<T>(value: T): T {
+  return JSON.parse(JSON.stringify(value)) as T;
+}
+
+function markDeclaredSurface(surface: Surface, source: string): Surface {
+  const basis = declaredBasis(source);
+  surface.basis = basis;
+  if (surface.auth.status === "none") {
+    surface.auth.basis = basis;
+  } else if (surface.auth.status === "required") {
+    for (const entry of surface.auth.entries) entry.basis = basis;
+  }
+  return surface;
+}
+
+function surfaceLocator(s: Surface): string {
+  const packageId = s.packages?.[0]?.identifier;
+  return `${s.type}|${(s.spec || s.url || s.command || packageId || s.name).toLowerCase()}`;
+}
+
+function entryKey(entry: AuthEntry): string {
+  return entry.use
+    .map((use) => `${use.id}:${JSON.stringify(use.mechanics)}`)
+    .sort()
+    .join("+");
+}
+
+function isDetectedBasis(basis: Basis | undefined): boolean {
+  return basis?.via === "detected";
+}
+
+function addNote(surface: Surface, note: string): void {
+  if (!note || surface.notes?.includes(note)) return;
+  surface.notes = surface.notes ? `${surface.notes}\n${note}` : note;
+}
+
+function mergeDeclaredAuth(existing: Surface, declared: Surface): void {
+  if (declared.auth.status === "unknown") return;
+  if (existing.auth.status === "unknown") {
+    existing.auth = declared.auth;
+    return;
+  }
+  if (existing.auth.status === "none" && declared.auth.status === "none") {
+    if (!isDetectedBasis(existing.auth.basis)) existing.auth.basis = declared.auth.basis;
+    return;
+  }
+  if (existing.auth.status === "required" && declared.auth.status === "required") {
+    const seen = new Map(existing.auth.entries.map((entry) => [entryKey(entry), entry]));
+    for (const entry of declared.auth.entries) {
+      const key = entryKey(entry);
+      const match = seen.get(key);
+      if (!match) {
+        existing.auth.entries.push(entry);
+      } else if (!isDetectedBasis(match.basis)) {
+        match.basis = entry.basis;
+      }
+    }
+    return;
+  }
+  addNote(existing, `Owner integrations.json declares auth status "${declared.auth.status}"; verified discovery kept "${existing.auth.status}".`);
+}
+
+function mergeDeclaredSurface(existing: Surface, declared: Surface): void {
+  if (!isDetectedBasis(existing.basis)) existing.basis = declared.basis;
+  for (const key of ["docs", "spec", "url", "command"] as const) {
+    const declaredValue = declared[key];
+    if (!declaredValue) continue;
+    if (!existing[key]) {
+      (existing as unknown as Record<string, unknown>)[key] = declaredValue;
+    } else if (existing[key] !== declaredValue) {
+      addNote(existing, `Owner integrations.json also declares ${key}: ${declaredValue}.`);
+    }
+  }
+  if (!existing.transports && declared.transports) existing.transports = declared.transports;
+  if (!existing.packages && declared.packages) existing.packages = declared.packages;
+  if (!existing.requiredHeaders && declared.requiredHeaders) existing.requiredHeaders = declared.requiredHeaders;
+  if (!existing.variables && declared.variables) existing.variables = declared.variables;
+  if (declared.notes) addNote(existing, declared.notes);
+  mergeDeclaredAuth(existing, declared);
+}
+
+function mergeDeclared(r: DiscoveryResult, detect: DetectionResult, emit?: Emit): void {
+  const declared = detect.integrationsJson;
+  if (!declared?.result) return;
+  const source = declared.url;
+  for (const [id, credential] of Object.entries(declared.result.credentials ?? {})) {
+    if (!r.credentials[id]) {
+      r.credentials[id] = cloneJson(credential) as Credential;
+      emit?.({ kind: "credential", id, credential: r.credentials[id] });
+    }
+  }
+  const byLocator = new Map(r.surfaces.map((surface) => [surfaceLocator(surface), surface]));
+  for (const rawSurface of declared.result.surfaces ?? []) {
+    const surface = markDeclaredSurface(cloneJson(rawSurface) as Surface, source);
+    if (!surface.slug) surface.slug = assignSlug(surface.name || "Declared surface", r.surfaces);
+    const existing = byLocator.get(surfaceLocator(surface));
+    if (existing) {
+      mergeDeclaredSurface(existing, surface);
+      continue;
+    }
+    surface.slug = assignSlug(surface.slug || surface.name || "Declared surface", r.surfaces);
+    r.surfaces.push(surface);
+    byLocator.set(surfaceLocator(surface), surface);
+    emit?.({ kind: "surface", surface });
+  }
+}
+
 /** Overlay detect's deterministic signals as basis:"detected". A detected
  * OAuth credential, plus the MCP and OpenAPI surfaces detect found, are
  * authoritative; anything newly added is emitted so the client stays in sync. */
@@ -660,6 +785,8 @@ function merge(r: DiscoveryResult, detect: DetectionResult, emit?: Emit): Discov
       emit?.({ kind: "surface", surface: s });
     }
   }
+
+  mergeDeclared(r, detect, emit);
 
   if (!r.summary && r.surfaces.length) {
     r.summary = `Exposes ${[...new Set(r.surfaces.map((s) => s.type))].join(", ")} for this service.`;

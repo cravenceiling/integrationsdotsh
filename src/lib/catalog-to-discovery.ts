@@ -18,6 +18,7 @@ import type { Integration } from "./types.ts";
 import { DISCOVERY_VERSION } from "./discovery-schema.ts";
 import type { Surface as SurfaceView } from "./surface-view.ts";
 import { assignSlug } from "./discover.ts";
+import { isJunkDomain } from "./favicon.ts";
 
 const REG_BASIS = { via: "detected" as const, signal: "registry" };
 
@@ -94,4 +95,16 @@ export function catalogDiscovery(domain: string, records: Integration[]) {
     if (s) surfaces.push({ ...s, slug: slugs.get(r.id)! });
   }
   return { version: DISCOVERY_VERSION, domain, summary: "", credentials: {}, surfaces };
+}
+
+/** Records grouped the same way the baseline `/disc/{domain}.json` files are
+ * emitted. Preserve input order: slug assignment depends on this order. */
+export function baselineDiscoveryGroups(records: Integration[], domainOf: (record: Integration) => string | undefined): Map<string, Integration[]> {
+  const groups = new Map<string, Integration[]>();
+  for (const r of records) {
+    const domain = domainOf(r);
+    if (!domain || isJunkDomain(domain)) continue;
+    (groups.get(domain) ?? groups.set(domain, []).get(domain)!).push(r);
+  }
+  return groups;
 }

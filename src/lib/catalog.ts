@@ -6,7 +6,7 @@
  * uses (no ad-hoc grouping in templates). Built over the enriched index.
  */
 import { index } from "./data.ts";
-import { faviconUrl } from "./favicon.ts";
+import { faviconUrl, isJunkDomain } from "./favicon.ts";
 import type { Kind } from "./types.ts";
 
 export interface DomainSummary {
@@ -26,6 +26,7 @@ const DOMAINS: DomainSummary[] = (() => {
   for (const r of index) {
     const d = r.domain || r.slug;
     if (!d) continue;
+    if (isJunkDomain(d)) continue;
     let g = map.get(d);
     if (!g) {
       g = { domain: d, icon: faviconUrl(d), total: 0, formats: {}, popularity: 0, devtool: false, description: "" };

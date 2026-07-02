@@ -11,7 +11,7 @@
 import Base from "~/layouts/Base.astro";
 import Breadcrumb from "~/components/Breadcrumb.astro";
 import Setup from "~/components/surface/Setup.tsx";
-import { faviconFor } from "~/lib/favicon.ts";
+import { faviconFor, isJunkDomain } from "~/lib/favicon.ts";
 import {
   SURFACE_TYPE_LABEL,
   cliLoginFor,
@@ -19,6 +19,7 @@ import {
   hostOf,
   credCta,
   mechanicsLine,
+  type Basis,
   type Credential,
   type DiscoveryDoc,
   type Surface,
@@ -41,7 +42,7 @@ const find = (doc?: DiscoveryDoc | null) => (doc?.surfaces ?? []).find((s) => s.
 let surface: Surface | undefined;
 let creds: Record<string, Credential> = {};
 
-if (looksLikeDomain && runtime) {
+if (looksLikeDomain && !isJunkDomain(domain) && runtime) {
   // Live discovery (KV) wins; fall back to the baseline discovery document.
   const raw = await runtime.env.DISCOVERY.get(domain);
   if (raw) {
@@ -104,11 +105,46 @@ if (surface.docs && surface.docs !== surface.spec) detailRows.push({ label: "Doc
 const fromApisGuru = typeof surface.spec === "string" && hostOf(surface.spec) === "api.apis.guru";
 
 const title = `${surface.name} — ${typeLabel}`;
-const description = `${surface.name} on ${domain}: a ${typeLabel} surface and how to authenticate.`;
+const clipDescription = (s: string) => {
+  const clean = s.replace(/\s+/g, " ").trim();
+  if (clean.length <= 159) return clean;
+  const clipped = clean.slice(0, 156).replace(/\s+\S*$/, "");
+  return `${clipped || clean.slice(0, 156)}...`;
+};
+const canonicalPath = `/${domain}/${slug}/`;
+const canonical = new URL(canonicalPath, Astro.site).href;
+const description = clipDescription(`${surface.name} on ${domain}: ${typeLabel} endpoint, auth methods, and setup.`);
+const provLabel = (basis: Basis) => (basis.via === "detected" ? "detected" : basis.via === "declared" ? "declared" : "discovered");
+const provClass = (basis: Basis) => (basis.via === "detected" ? "disc-prov-det" : basis.via === "declared" ? "disc-prov-decl" : "disc-prov-disc");
+const provTitle = (basis: Basis) => {
+  if (basis.via === "detected") return `Detected via ${basis.signal} — re-verifiable`;
+  if (basis.via === "declared") return "Declared by the site owner via integrations.json";
+  return basis.evidence?.length ? `Read from: ${basis.evidence.join(", ")}` : "Read from docs";
+};
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "registry", item: new URL("/", Astro.site).href },
+      { "@type": "ListItem", position: 2, name: domain, item: new URL(`/${domain}/`, Astro.site).href },
+      { "@type": "ListItem", position: 3, name: surface.name, item: canonical },
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: surface.name,
+    applicationCategory: "DeveloperApplication",
+    operatingSystem: "Any",
+    url: canonical,
+    ...(surface.docs ? { sameAs: surface.docs } : {}),
+  },
+];
 Astro.response.headers.set("cache-control", "public, max-age=60");
 ---
 
-<Base title={title} description={description} path={`/${domain}/${slug}/`} ogImagePath={`/og/${encodeURIComponent(domain)}/${encodeURIComponent(slug)}.png`}>
+<Base title={title} description={description} path={canonicalPath} ogImagePath={`/og/${encodeURIComponent(domain)}/${encodeURIComponent(slug)}.png`} jsonLd={jsonLd}>
   <div class="container">
     <Breadcrumb segments={[{ label: "registry", href: "/" }, { label: domain, href: `/${domain}/` }, { label: surface.name }]} />
 
@@ -121,11 +157,7 @@ Astro.response.headers.set("cache-control", "public, max-age=60");
         <h1>{surface.name}</h1>
         <p class="meta">
           <span>{typeLabel}</span>
-          {surface.basis.via === "detected" ? (
-            <span class="disc-prov disc-prov-det" title={`Detected via ${surface.basis.signal} — re-verifiable`}>detected</span>
-          ) : (
-            <span class="disc-prov disc-prov-disc" title={surface.basis.evidence?.length ? `Read from: ${surface.basis.evidence.join(", ")}` : "Read from docs"}>discovered</span>
-          )}
+          <span class={`disc-prov ${provClass(surface.basis)}`} title={provTitle(surface.basis)}>{provLabel(surface.basis)}</span>
         </p>
       </div>
     </header>
@@ -143,11 +175,7 @@ Astro.response.headers.set("cache-control", "public, max-age=60");
       {surface.auth.status === "none" && (
         <div class="auth-row auth-none">
           <span class="auth-use">No auth — public</span>
-          {surface.auth.basis.via === "detected" ? (
-            <span class="disc-prov disc-prov-det prov-end" title={`Detected via ${surface.auth.basis.signal} — re-verifiable`}>detected</span>
-          ) : (
-            <span class="disc-prov disc-prov-disc prov-end">discovered</span>
-          )}
+          <span class={`disc-prov ${provClass(surface.auth.basis)} prov-end`} title={provTitle(surface.auth.basis)}>{provLabel(surface.auth.basis)}</span>
         </div>
       )}
       {surface.auth.status === "required" &&
@@ -164,11 +192,7 @@ Astro.response.headers.set("cache-control", "public, max-age=60");
                 </>
               ))}
             </span>
-            {e.basis.via === "detected" ? (
-              <span class="disc-prov disc-prov-det prov-end" title={`Detected via ${e.basis.signal} — re-verifiable`}>detected</span>
-            ) : (
-              <span class="disc-prov disc-prov-disc prov-end" title={e.basis.evidence?.length ? `Read from: ${e.basis.evidence.join(", ")}` : "Read from docs"}>discovered</span>
-            )}
+            <span class={`disc-prov ${provClass(e.basis)} prov-end`} title={provTitle(e.basis)}>{provLabel(e.basis)}</span>
           </div>
         ))}
     </section>

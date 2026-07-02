@@ -20,7 +20,7 @@ describe("buildSections", () => {
     expect(entries.map((entry) => entry.name)).toEqual([
       "Vercel MCP server",
       "Vercel REST API",
-      "Vercel CLI `vercel api`",
+      "Vercel CLI",
     ]);
     expect(entries).toHaveLength(3);
     expect(new Set(entries.map((entry) => entry.href)).size).toBe(3);

@@ -7,16 +7,10 @@
  * produce baseline surfaces here. Emitted at build via getStaticPaths.
  */
 import type { APIRoute } from "astro";
-import type { Integration } from "~/lib/types.ts";
 import { all, domainById } from "~/lib/data.ts";
-import { catalogDiscovery } from "~/lib/catalog-to-discovery.ts";
+import { baselineDiscoveryGroups, catalogDiscovery } from "~/lib/catalog-to-discovery.ts";
 
-const groups = new Map<string, Integration[]>();
-for (const r of all) {
-  const domain = domainById.get(r.id) || r.slug;
-  if (!domain) continue;
-  (groups.get(domain) ?? groups.set(domain, []).get(domain)!).push(r);
-}
+const groups = baselineDiscoveryGroups(all, (r) => domainById.get(r.id) || r.slug);
 
 export function getStaticPaths() {
   return [...groups.keys()].map((domain) => ({ params: { domain } }));

@@ -13,12 +13,14 @@ interface Props {
   path?: string;
   /** Absolute-path OG image URL, e.g. "/og/todoist.com.png". */
   ogImagePath?: string;
+  jsonLd?: object | object[];
 }
 const {
   title,
   description = "Services your agent can reach — official APIs, GraphQL endpoints, and MCP servers, with structured credential facts.",
   path,
   ogImagePath,
+  jsonLd,
 } = Astro.props;
 const canonical = path ? new URL(path, Astro.site).href : undefined;
 const ogImage = ogImagePath ? new URL(ogImagePath, Astro.site).href : undefined;
@@ -35,6 +37,7 @@ const ogImage = ogImagePath ? new URL(ogImagePath, Astro.site).href : undefined;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="integrations.sh" />
     {canonical && <meta property="og:url" content={canonical} />}
     {ogImage && <meta property="og:image" content={ogImage} />}
     {ogImage && <meta property="og:image:width" content="1200" />}
@@ -45,12 +48,53 @@ const ogImage = ogImagePath ? new URL(ogImagePath, Astro.site).href : undefined;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/svg+xml" href="/favicon-light.svg" media="(prefers-color-scheme: dark)" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="preload" href="/fonts/geist-400.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/geist-mono-400.woff" as="font" type="font/woff" crossorigin />
+    <style is:inline>
+      @font-face {
+        font-family: "Geist";
+        src: url("/fonts/geist-400.woff") format("woff");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Geist";
+        src: url("/fonts/geist-500.woff") format("woff");
+        font-weight: 500;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Geist";
+        src: url("/fonts/geist-600.woff") format("woff");
+        font-weight: 600;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Geist Mono";
+        src: url("/fonts/geist-mono-400.woff") format("woff");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Geist Mono";
+        src: url("/fonts/geist-mono-500.woff") format("woff");
+        font-weight: 500;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Geist Mono";
+        src: url("/fonts/geist-mono-600.woff") format("woff");
+        font-weight: 600;
+        font-style: normal;
+        font-display: swap;
+      }
+    </style>
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
     <script is:inline set:html={ANALYTICS_JS} />
   </head>
   <body>

@@ -10,6 +10,7 @@
  * enters the client bundle).
  */
 import { useEffect, useState } from "react";
+import { buildConventionRows, type ConventionRow } from "../lib/conventions.ts";
 import type { Credential, DiscoveryResult } from "../lib/discovery-schema.ts";
 import { buildSections, type DiscoverData, type SurfaceEntry } from "../lib/surface-sections.ts";
 import { cliLoginFor, credCta, hostOf, type AuthStatus, type Basis, type Surface } from "../lib/surface-view.ts";
@@ -26,11 +27,78 @@ function Prov({ p }: { p: Basis }) {
       </span>
     );
   }
+  if (p.via === "declared") {
+    return (
+      <span className="disc-prov disc-prov-decl" title="Declared by the site owner via integrations.json">
+        declared
+      </span>
+    );
+  }
   const n = p.evidence?.length ?? 0;
   return (
     <span className="disc-prov disc-prov-disc" title={n ? `Read from: ${p.evidence.join(", ")}` : "Read from docs"}>
       discovered
     </span>
+  );
+}
+
+function ConventionDetail({ row, onRun }: { row: ConventionRow; onRun: () => void }) {
+  if (row.status === "found") {
+    return row.valueUrl ? (
+      <a className="conv-link" href={row.valueUrl} target="_blank" rel="noopener noreferrer">
+        {row.detail}
+      </a>
+    ) : (
+      <span>{row.detail}</span>
+    );
+  }
+  const learn = row.docsHref && row.status === "missing";
+  if (row.status === "unprobed") {
+    return (
+      <span>
+        This stored result predates this probe. <button className="conv-action" onClick={onRun}>Map integration surface</button> to update this entry.
+      </span>
+    );
+  }
+  return (
+    <span>
+      {learn ? (
+        <>
+          Nothing at {row.path}. <a className="conv-link" href={row.docsHref}>Publish one</a> and{" "}
+          <button className="conv-action" onClick={onRun}>Map integration surface</button> to update this entry.
+        </>
+      ) : (
+        <>
+          Nothing at {row.path}. Publish one and{" "}
+          <button className="conv-action" onClick={onRun}>Map integration surface</button> to update this entry.
+        </>
+      )}
+    </span>
+  );
+}
+
+function Conventions({ rows, onRun }: { rows: ConventionRow[]; onRun: () => void }) {
+  const found = rows.filter((row) => row.status === "found").length;
+  return (
+    <section className="disc-sec disc-conv" id="conventions">
+      <div className="sec-header">
+        <span className="sec-label">Conventions</span>
+        <span className="sec-note">{found}/{rows.length}</span>
+      </div>
+      <ul className="conv-list">
+        {rows.map((row) => (
+          <li className="conv-row" key={row.key}>
+            <code className="conv-label">{row.label}</code>
+            <span className={`conv-status conv-status-${row.status}`} aria-label={row.status}>
+              {row.status === "found" ? "✓" : row.status === "missing" ? "✗" : "—"}
+            </span>
+            <span className="conv-detail">
+              <ConventionDetail row={row} onRun={onRun} />
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 
@@ -155,6 +223,7 @@ export default function Surfaces({
   const activeData: DiscoverData | null =
     state === "loading" ? { credentials: liveCreds, surfaces: liveSurfaces } : state === "done" ? data : null;
   const built = buildSections(activeData, domain);
+  const conventions = buildConventionRows(activeData?.detect, domain);
   const creds: Creds = activeData?.credentials ?? {};
   const credIdsOf = (auth?: AuthStatus): string[] =>
     auth?.status === "required" ? auth.entries.flatMap((e) => e.use.map((u) => u.id)) : [];
@@ -206,6 +275,8 @@ export default function Surfaces({
           </ul>
         </section>
       ))}
+
+      <Conventions rows={conventions} onRun={run} />
 
       {credList.length > 0 && (
         <section className="disc-sec disc-creds">

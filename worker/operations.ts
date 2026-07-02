@@ -18,6 +18,8 @@ export const DetectParams = Schema.Struct({ domain: Schema.String });
 export const DetectionResult = Schema.Struct({
   domain: Schema.String,
   found: Schema.Array(Schema.String),
+  probed: Schema.optional(Schema.Array(Schema.String)),
+  integrationsJson: Schema.optional(Schema.NullOr(Schema.Unknown)),
   apiCatalog: Schema.optional(Schema.Unknown),
   apiSchema: Schema.optional(Schema.Unknown),
   auth: Schema.optional(Schema.Unknown),
@@ -29,7 +31,7 @@ export const DetectionResult = Schema.Struct({
 });
 
 export const DETECT_DESCRIPTION =
-  "Detect a domain's agent-readiness: well-known manifests (api-catalog, MCP " +
+  "Detect a domain's agent-readiness: well-known manifests (integrations.json, api-catalog, MCP " +
   "server-card, agent-card, agent-skills, llms.txt) plus live capability " +
   "detection — MCP self-onboarding (DCR/CIMD) and the live OpenAPI schema.";
 

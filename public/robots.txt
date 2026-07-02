@@ -6,3 +6,4 @@ Disallow: /disc/
 Disallow: /_i/
 
 Sitemap: https://integrations.sh/sitemap-index.xml
+Sitemap: https://integrations.sh/sitemap-surfaces.xml

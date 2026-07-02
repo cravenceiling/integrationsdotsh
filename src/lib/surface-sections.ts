@@ -2,7 +2,7 @@ import { KIND_ORDER, SECTION_LABEL } from "./domain-labels.ts";
 import type { DiscoveryResult } from "./discovery-schema.ts";
 import type { DiscoveryDoc, Surface } from "./surface-view.ts";
 
-export type DiscoverData = Partial<Pick<DiscoveryResult, "summary" | "description">> & DiscoveryDoc;
+export type DiscoverData = Partial<Pick<DiscoveryResult, "summary" | "description">> & DiscoveryDoc & { detect?: unknown };
 
 type SectionKind = (typeof KIND_ORDER)[number];
 

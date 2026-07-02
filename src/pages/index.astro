@@ -14,9 +14,20 @@ const counts = {
 };
 const TLABEL: Record<string, string> = { mcp: "MCP", openapi: "API", graphql: "GraphQL", cli: "CLI" };
 const mono = (d: string) => (d[0] || "?").toUpperCase();
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "integrations.sh",
+  url: "https://integrations.sh/",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: "https://integrations.sh/?q={search_term_string}",
+    "query-input": "required name=search_term_string",
+  },
+};
 ---
 
-<Base title="integrations.sh — the registry of everything your agent can reach" path="/" ogImagePath="/og.png">
+<Base title="integrations.sh — the registry of everything your agent can reach" path="/" ogImagePath="/og.png" jsonLd={jsonLd}>
   <div class="container">
     <section class="hero">
       <h1>The registry of everything your agent can reach.</h1>

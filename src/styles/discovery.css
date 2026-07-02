@@ -25,6 +25,19 @@ a.disc-ename:hover { text-decoration: underline; text-underline-offset: 3px; }
 .disc-prov { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.03em; text-transform: uppercase; padding: 1px 5px; border-radius: 4px; cursor: default; }
 .disc-prov-det { color: var(--gray-700); border: 1px solid var(--gray-200); }
 .disc-prov-disc { color: var(--gray-400); }
+.disc-prov-decl { color: var(--gray-700); border: 1px solid var(--gray-200); background: var(--gray-25); }
+.disc-conv { margin-top: 38px; }
+.conv-list { list-style: none; padding: 0; margin: 0; }
+.conv-row { display: grid; grid-template-columns: minmax(142px, 0.38fr) 24px minmax(0, 1fr); gap: 12px; align-items: baseline; padding: 12px 0; border-bottom: 1px solid var(--gray-100); }
+.conv-label { font-size: 12px; color: var(--gray-700); background: transparent; padding: 0; border-radius: 0; word-break: break-word; }
+.conv-status { font-family: var(--font-mono); font-size: 12px; color: var(--gray-400); text-align: center; }
+.conv-status-found { color: #2f7d4a; }
+.conv-status-missing, .conv-status-unprobed { color: var(--gray-400); }
+.conv-detail { min-width: 0; font-size: 13px; color: var(--gray-500); line-height: 1.55; overflow-wrap: anywhere; }
+.conv-link { color: var(--gray-1000); text-decoration: underline; text-underline-offset: 2px; }
+.conv-link:hover { color: var(--gray-500); }
+.conv-action { appearance: none; border: 0; background: transparent; padding: 0; margin: 0; font: inherit; color: var(--gray-1000); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.conv-action:hover { color: var(--gray-500); }
 .disc-creds { margin-top: 26px; padding-top: 6px; }
 .disc-cred { border: 1px solid var(--gray-100); border-radius: 10px; padding: 14px 18px; margin-bottom: 10px; }
 /* Breathing room between a section header's hairline and the first card —
@@ -46,3 +59,10 @@ a.disc-ename:hover { text-decoration: underline; text-underline-offset: 3px; }
 .disc-ic { font-family: var(--font-mono); font-size: 12px; color: var(--gray-700); background: var(--gray-25); border: 1px solid var(--gray-100); border-radius: 4px; padding: 0 4px; }
 .disc-link { color: var(--gray-1000); text-decoration: none; }
 .disc-link:hover { text-decoration: underline; text-underline-offset: 2px; }
+@media (prefers-color-scheme: dark) {
+  .conv-status-found { color: #74b989; }
+}
+@media (max-width: 640px) {
+  .conv-row { grid-template-columns: minmax(0, 1fr) 22px; gap: 6px 10px; }
+  .conv-detail { grid-column: 1 / -1; }
+}

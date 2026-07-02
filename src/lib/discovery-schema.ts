@@ -28,6 +28,8 @@
  *     two unrelated key sets).
  *   - `Basis.detected` gains optional `verifiedAt` — re-verifiable facts age
  *     independently of the run that first found them.
+ *   - `Basis.declared` marks surfaces/auth the site owner published via
+ *     `/.well-known/integrations.json`.
  *   - `StoredDiscovery` — the KV row envelope, previously untyped and
  *     re-declared inline by every reader.
  */
@@ -47,7 +49,11 @@ export const Basis = Schema.Union([
     via: Schema.Literal("discovered"),
     evidence: Schema.Array(Schema.String).annotate({ description: "Doc URLs the agent read to confirm this. Point-in-time, prose-derived." }),
   }),
-]).annotate({ description: "How we learned a thing exists. `detected` = asserted by a machine signal (high trust, re-verifiable); `discovered` = the agent read it from docs." });
+  Schema.Struct({
+    via: Schema.Literal("declared"),
+    source: Schema.String.annotate({ description: "The owner-published integrations.json URL that declared this surface or auth entry." }),
+  }),
+]).annotate({ description: "How we learned a thing exists. `detected` = asserted by a machine signal (high trust, re-verifiable); `discovered` = the agent read it from docs; `declared` = published by the site owner." });
 
 // ── Mechanics — how a credential binds to a surface (where it resolves from) ───
 export const Mechanics = Schema.Union([
@@ -233,6 +239,16 @@ export const DiscoveryResult = Schema.Struct({
   surfaces: Schema.Array(Surface).annotate({ description: "Typed surface inventory (http/graphql/mcp/cli)." }),
 }).annotate({ description: "The integrations.sh discovery result (v3): a global credential registry + a typed list of surfaces." });
 
+/** Owner-authored subset accepted at `/.well-known/integrations.json`.
+ * Nested values use the exact same wire schemas as DiscoveryResult v3; the
+ * domain and discoveredAt/model envelope remain registry-owned. */
+export const OwnerDeclaredDiscovery = Schema.Struct({
+  version: Schema.Literal(DISCOVERY_VERSION),
+  summary: Schema.optional(Schema.String),
+  credentials: Schema.optional(Schema.Record(Schema.String, Credential)),
+  surfaces: Schema.optional(Schema.Array(Surface)),
+}).annotate({ description: "Owner-authored subset of DiscoveryResult v3 accepted at /.well-known/integrations.json." });
+
 /** The KV row for a domain — the ONE envelope entry.ts writes and every
  * render-time reader (surface page, SSR domain page, /api/{domain}/discovery)
  * parses. Previously untyped and re-declared inline by each consumer. */
@@ -252,4 +268,5 @@ export type AuthEntry = typeof AuthEntry.Type;
 export type AuthStatus = typeof AuthStatus.Type;
 export type Surface = typeof Surface.Type;
 export type DiscoveryResult = typeof DiscoveryResult.Type;
+export type OwnerDeclaredDiscovery = typeof OwnerDeclaredDiscovery.Type;
 export type StoredDiscovery = typeof StoredDiscovery.Type;
