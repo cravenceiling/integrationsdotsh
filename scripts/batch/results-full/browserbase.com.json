@@ -1,0 +1,426 @@
+{
+  "result": {
+    "version": 3,
+    "domain": "browserbase.com",
+    "detect": {
+      "domain": "browserbase.com",
+      "found": [
+        "llms.txt"
+      ],
+      "mcp": [],
+      "llmsTxt": true,
+      "errors": []
+    },
+    "usedLlm": true,
+    "discoveredAt": "2026-07-02T11:02:57.312Z",
+    "summary": "Browserbase exposes one authenticated REST API, a Streamable HTTP MCP server, and the `browse` CLI; all use the Browserbase API key.",
+    "credentials": {
+      "bb_api_key": {
+        "type": "api_key",
+        "label": "Browserbase API key",
+        "generateUrl": "https://www.browserbase.com/overview",
+        "setup": "Go to the [Browserbase dashboard](https://www.browserbase.com/overview) and copy your API key from the account settings/input shown in the docs. Use it as the `BROWSERBASE_API_KEY` environment variable for SDKs and CLI, and as the `x-bb-api-key` HTTP header for REST calls.",
+        "acquisition": "manual"
+      }
+    },
+    "surfaces": [
+      {
+        "slug": "browserbase-rest-api",
+        "name": "Browserbase REST API",
+        "type": "http",
+        "docs": "https://docs.browserbase.com/reference/api/overview",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.browserbase.com/reference/api/overview",
+            "https://docs.browserbase.com/reference/introduction",
+            "https://docs.browserbase.com/reference/sdk/nodejs",
+            "https://docs.browserbase.com/reference/sdk/python"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "bb_api_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "x-bb-api-key",
+                    "scheme": "Bearer"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.browserbase.com/reference/api/overview",
+                  "https://docs.browserbase.com/reference/sdk/nodejs",
+                  "https://docs.browserbase.com/reference/sdk/python"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "browserbase-mcp-server",
+        "name": "Browserbase MCP Server",
+        "type": "mcp",
+        "docs": "https://docs.browserbase.com/integrations/mcp/introduction",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.browserbase.com/integrations/mcp/introduction",
+            "https://docs.browserbase.com/integrations/mcp/setup",
+            "https://www.browserbase.com/mcp"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "bb_api_key",
+                  "mechanics": {
+                    "source": "well-known"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.browserbase.com/integrations/mcp/setup",
+                  "https://www.browserbase.com/mcp"
+                ]
+              }
+            }
+          ]
+        },
+        "url": "https://mcp.browserbase.com/mcp",
+        "transports": [
+          "streamable-http"
+        ]
+      },
+      {
+        "slug": "browse-cli",
+        "name": "Browse CLI",
+        "type": "cli",
+        "docs": "https://docs.browserbase.com/integrations/skills/browse-cli",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.browserbase.com/integrations/skills/browse-cli",
+            "https://www.browserbase.com/browse-cli"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "bb_api_key",
+                  "mechanics": {
+                    "source": "cli",
+                    "command": "export BROWSERBASE_API_KEY=\"your_api_key\"",
+                    "env": [
+                      "BROWSERBASE_API_KEY"
+                    ]
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.browserbase.com/integrations/skills/browse-cli",
+                  "https://www.browserbase.com/browse-cli"
+                ]
+              }
+            }
+          ]
+        },
+        "packages": [
+          {
+            "registryType": "npm",
+            "identifier": "browse",
+            "runtimeHint": "node"
+          }
+        ],
+        "command": "browse"
+      }
+    ]
+  },
+  "discoveredAt": "2026-07-02T11:02:57.313Z",
+  "model": "loop-gpt-5.4-mini",
+  "usage": {
+    "prompt_tokens": 136039,
+    "completion_tokens": 1004,
+    "total_tokens": 137043
+  },
+  "visited": [
+    "https://docs.browserbase.com/integrations/mcp/introduction",
+    "https://docs.browserbase.com/integrations/mcp/setup",
+    "https://docs.browserbase.com/integrations/skills/browse-cli",
+    "https://docs.browserbase.com/llms.txt",
+    "https://docs.browserbase.com/reference/api/overview",
+    "https://docs.browserbase.com/reference/introduction",
+    "https://docs.browserbase.com/reference/sdk/nodejs",
+    "https://docs.browserbase.com/reference/sdk/overview",
+    "https://docs.browserbase.com/reference/sdk/python",
+    "https://www.browserbase.com/browse-cli",
+    "https://www.browserbase.com/mcp"
+  ],
+  "grounding": [
+    "http://localhost:8931/mcp",
+    "http://proxy.example.com:8080",
+    "https://api.browserbase.com/v1/sessions/${sessionId}",
+    "https://browse.sh",
+    "https://browserbase.com/overview",
+    "https://browserbase.com/sessions/${session.id}",
+    "https://browserbase.com/sessions/{session.id}",
+    "https://docs.browserbase.com",
+    "https://docs.browserbase.com/#all-configuration-options",
+    "https://docs.browserbase.com/#api-reference",
+    "https://docs.browserbase.com/#authentication",
+    "https://docs.browserbase.com/#available-tools",
+    "https://docs.browserbase.com/#basic-usage",
+    "https://docs.browserbase.com/#browse-sh",
+    "https://docs.browserbase.com/#browser-automation",
+    "https://docs.browserbase.com/#choose-the-right-skill",
+    "https://docs.browserbase.com/#cloud-apis",
+    "https://docs.browserbase.com/#command-surface",
+    "https://docs.browserbase.com/#common-configuration-examples",
+    "https://docs.browserbase.com/#common-workflows",
+    "https://docs.browserbase.com/#content-area",
+    "https://docs.browserbase.com/#core-benefits",
+    "https://docs.browserbase.com/#endpoint",
+    "https://docs.browserbase.com/#functions",
+    "https://docs.browserbase.com/#further-reading",
+    "https://docs.browserbase.com/#get-full-control-of-browsers-via-the-apis",
+    "https://docs.browserbase.com/#get-started-with-python-and-node-js",
+    "https://docs.browserbase.com/#getting-started",
+    "https://docs.browserbase.com/#installation",
+    "https://docs.browserbase.com/#installation-methods",
+    "https://docs.browserbase.com/#key-features",
+    "https://docs.browserbase.com/#local-command-line-flags",
+    "https://docs.browserbase.com/#optional",
+    "https://docs.browserbase.com/#param-action",
+    "https://docs.browserbase.com/#param-instruction",
+    "https://docs.browserbase.com/#param-instruction-1",
+    "https://docs.browserbase.com/#param-session-id",
+    "https://docs.browserbase.com/#param-url",
+    "https://docs.browserbase.com/#prerequisites",
+    "https://docs.browserbase.com/#proxy-configuration",
+    "https://docs.browserbase.com/#query-parameters-hosted-streamable-http",
+    "https://docs.browserbase.com/#quick-installation",
+    "https://docs.browserbase.com/#required-for-tool-calls",
+    "https://docs.browserbase.com/#session-configuration",
+    "https://docs.browserbase.com/#skills",
+    "https://docs.browserbase.com/#understanding-browser-sessions",
+    "https://docs.browserbase.com/#use-cases",
+    "https://docs.browserbase.com/#verify-installation",
+    "https://docs.browserbase.com/.cursor/BUGBOT.md",
+    "https://docs.browserbase.com/account/billing/plan-management.md",
+    "https://docs.browserbase.com/account/billing/plans.md",
+    "https://docs.browserbase.com/account/enterprise/byos-setup-guide.md",
+    "https://docs.browserbase.com/account/enterprise/security.md",
+    "https://docs.browserbase.com/account/enterprise/zero-data-retention.md",
+    "https://docs.browserbase.com/account/team/roles.md",
+    "https://docs.browserbase.com/account/team/sso.md",
+    "https://docs.browserbase.com/cursor://anysphere.cursor-deeplink/mcp/install?name=browserbase&config=eyJ1cmwiOiJodHRwczovL21jcC5icm93c2VyYmFzZS5jb20vbWNwP2Jyb3dzZXJiYXNlQXBpS2V5PVlPVVJfQlJPV1NFUkJBU0VfQVBJX0tFWSJ9",
+    "https://docs.browserbase.com/integrations/1password/director.md",
+    "https://docs.browserbase.com/integrations/1password/introduction.md",
+    "https://docs.browserbase.com/integrations/1password/quickstart.md",
+    "https://docs.browserbase.com/integrations/agent-browser/introduction.md",
+    "https://docs.browserbase.com/integrations/agent-browser/quickstart.md",
+    "https://docs.browserbase.com/integrations/agentkit/introduction.md",
+    "https://docs.browserbase.com/integrations/agentkit/quickstart.md",
+    "https://docs.browserbase.com/integrations/agno/introduction.md",
+    "https://docs.browserbase.com/integrations/agno/quickstart.md",
+    "https://docs.browserbase.com/integrations/anthropic/managed-agents/introduction.md",
+    "https://docs.browserbase.com/integrations/anthropic/managed-agents/quickstart.md",
+    "https://docs.browserbase.com/integrations/braintrust/introduction.md",
+    "https://docs.browserbase.com/integrations/braintrust/typescript.md",
+    "https://docs.browserbase.com/integrations/browseruse/introduction.md",
+    "https://docs.browserbase.com/integrations/browseruse/python.md",
+    "https://docs.browserbase.com/integrations/crew-ai/build-a-flight-booker.md",
+    "https://docs.browserbase.com/integrations/crew-ai/introduction.md",
+    "https://docs.browserbase.com/integrations/crew-ai/python.md",
+    "https://docs.browserbase.com/integrations/get-started",
+    "https://docs.browserbase.com/integrations/get-started.md",
+    "https://docs.browserbase.com/integrations/google-adk/introduction.md",
+    "https://docs.browserbase.com/integrations/google-adk/setup.md",
+    "https://docs.browserbase.com/integrations/hermes-agent/introduction.md",
+    "https://docs.browserbase.com/integrations/hermes-agent/setup.md",
+    "https://docs.browserbase.com/integrations/ibm/introduction.md",
+    "https://docs.browserbase.com/integrations/ibm/quickstart.md",
+    "https://docs.browserbase.com/integrations/inngest/introduction.md",
+    "https://docs.browserbase.com/integrations/inngest/quickstart.md",
+    "https://docs.browserbase.com/integrations/inngest/stagehand.md",
+    "https://docs.browserbase.com/integrations/langchain/deepagents.md",
+    "https://docs.browserbase.com/integrations/langchain/introduction.md",
+    "https://docs.browserbase.com/integrations/langchain/python.md",
+    "https://docs.browserbase.com/integrations/mastra/introduction.md",
+    "https://docs.browserbase.com/integrations/mastra/quickstart",
+    "https://docs.browserbase.com/integrations/mastra/quickstart.md",
+    "https://docs.browserbase.com/integrations/mcp/introduction",
+    "https://docs.browserbase.com/integrations/mcp/introduction#browserbase-mcp-server",
+    "https://docs.browserbase.com/integrations/mcp/introduction.md",
+    "https://docs.browserbase.com/integrations/mcp/setup",
+    "https://docs.browserbase.com/integrations/mcp/setup#browserbase-mcp-server-setup",
+    "https://docs.browserbase.com/integrations/mcp/setup.md",
+    "https://docs.browserbase.com/integrations/mongo-db/introduction",
+    "https://docs.browserbase.com/integrations/mongo-db/introduction.md",
+    "https://docs.browserbase.com/integrations/mongo-db/quickstart.md",
+    "https://docs.browserbase.com/integrations/n8n/introduction.md",
+    "https://docs.browserbase.com/integrations/n8n/quickstart.md",
+    "https://docs.browserbase.com/integrations/openai-cua/introduction.md",
+    "https://docs.browserbase.com/integrations/openclaw/introduction.md",
+    "https://docs.browserbase.com/integrations/openclaw/setup.md",
+    "https://docs.browserbase.com/integrations/prime-intellect/evals.md",
+    "https://docs.browserbase.com/integrations/prime-intellect/introduction.md",
+    "https://docs.browserbase.com/integrations/prime-intellect/rl-training.md",
+    "https://docs.browserbase.com/integrations/skills/browse-cli",
+    "https://docs.browserbase.com/integrations/skills/browse-cli.md",
+    "https://docs.browserbase.com/integrations/skills/browserbase-cli",
+    "https://docs.browserbase.com/integrations/skills/github-action.md",
+    "https://docs.browserbase.com/integrations/skills/introduction.md",
+    "https://docs.browserbase.com/integrations/stripe/introduction.md",
+    "https://docs.browserbase.com/integrations/stripe/quickstart.md",
+    "https://docs.browserbase.com/integrations/temporal/introduction.md",
+    "https://docs.browserbase.com/integrations/temporal/quickstart.md",
+    "https://docs.browserbase.com/integrations/trigger/introduction.md",
+    "https://docs.browserbase.com/integrations/trigger/quickstart.md",
+    "https://docs.browserbase.com/integrations/val-town/introduction.md",
+    "https://docs.browserbase.com/integrations/val-town/slack-scout.md",
+    "https://docs.browserbase.com/integrations/vercel/browsegpt.md",
+    "https://docs.browserbase.com/integrations/vercel/introduction.md",
+    "https://docs.browserbase.com/integrations/vercel/puppeteer.md",
+    "https://docs.browserbase.com/integrations/vercel/quickstart.md",
+    "https://docs.browserbase.com/integrations/x402/agentkit.md",
+    "https://docs.browserbase.com/integrations/x402/introduction.md",
+    "https://docs.browserbase.com/integrations/x402/quickstart.md",
+    "https://docs.browserbase.com/llms.txt",
+    "https://docs.browserbase.com/optimizations/concurrency/overview",
+    "https://docs.browserbase.com/optimizations/concurrency/overview.md",
+    "https://docs.browserbase.com/optimizations/cost/cost-optimization.md",
+    "https://docs.browserbase.com/optimizations/cost/measuring-usage.md",
+    "https://docs.browserbase.com/optimizations/latency/multi-region.md",
+    "https://docs.browserbase.com/optimizations/latency/speed-optimization.md",
+    "https://docs.browserbase.com/platform/agents/examples.md",
+    "https://docs.browserbase.com/platform/agents/how-it-works.md",
+    "https://docs.browserbase.com/platform/agents/integrate-api-sdk.md",
+    "https://docs.browserbase.com/platform/agents/managing-files.md",
+    "https://docs.browserbase.com/platform/agents/optimizing-agents.md",
+    "https://docs.browserbase.com/platform/agents/overview.md",
+    "https://docs.browserbase.com/platform/browser/core-features/browser-extensions.md",
+    "https://docs.browserbase.com/platform/browser/core-features/contexts.md",
+    "https://docs.browserbase.com/platform/browser/core-features/overview.md",
+    "https://docs.browserbase.com/platform/browser/core-features/session-metadata.md",
+    "https://docs.browserbase.com/platform/browser/core-features/viewports.md",
+    "https://docs.browserbase.com/platform/browser/files/downloads.md",
+    "https://docs.browserbase.com/platform/browser/files/overview.md",
+    "https://docs.browserbase.com/platform/browser/files/pdfs.md",
+    "https://docs.browserbase.com/platform/browser/files/screenshots.md",
+    "https://docs.browserbase.com/platform/browser/files/uploads.md",
+    "https://docs.browserbase.com/platform/browser/getting-started/create-browser-session",
+    "https://docs.browserbase.com/platform/browser/getting-started/create-browser-session.md",
+    "https://docs.browserbase.com/platform/browser/getting-started/deploying-browser-session.md",
+    "https://docs.browserbase.com/platform/browser/getting-started/manage-browser-session",
+    "https://docs.browserbase.com/platform/browser/getting-started/using-browser-session",
+    "https://docs.browserbase.com/platform/browser/observability/observability",
+    "https://docs.browserbase.com/platform/fetch/overview",
+    "https://docs.browserbase.com/platform/model-gateway/overview",
+    "https://docs.browserbase.com/platform/search/overview",
+    "https://docs.browserbase.com/reference/api/create-a-context",
+    "https://docs.browserbase.com/reference/api/create-a-session",
+    "https://docs.browserbase.com/reference/api/get-project-usage",
+    "https://docs.browserbase.com/reference/api/overview",
+    "https://docs.browserbase.com/reference/api/run-an-agent",
+    "https://docs.browserbase.com/reference/introduction",
+    "https://docs.browserbase.com/reference/sdk/nodejs",
+    "https://docs.browserbase.com/reference/sdk/overview",
+    "https://docs.browserbase.com/reference/sdk/python",
+    "https://docs.browserbase.com/use-cases/agents",
+    "https://docs.browserbase.com/use-cases/automating-form-submissions",
+    "https://docs.browserbase.com/use-cases/building-automated-tests",
+    "https://docs.browserbase.com/use-cases/web-data-retrieval",
+    "https://docs.browserbase.com/welcome/getting-started",
+    "https://docs.browserbase.com/welcome/getting-started#overview-dashboard",
+    "https://docs.browserbase.com/welcome/introduction",
+    "https://docs.browserbase.com/welcome/what-is-browserbase",
+    "https://docs.stagehand.dev/",
+    "https://example.com",
+    "https://github.com/browserbase",
+    "https://github.com/browserbase/mcp-server-browserbase",
+    "https://github.com/browserbase/mcp-server-browserbase.git",
+    "https://github.com/browserbase/sdk-node/blob/main/api.md",
+    "https://github.com/browserbase/sdk-node/tree/main/examples",
+    "https://github.com/browserbase/sdk-python/blob/main/api.md",
+    "https://github.com/browserbase/sdk-python/tree/main/examples",
+    "https://github.com/browserbase/skills",
+    "https://github.com/browserbase/stagehand/tree/main/packages/cli#readme",
+    "https://mcp.browserbase.com/mcp",
+    "https://mcp.browserbase.com/mcp?browserbaseApiKey=YOUR_BROWSERBASE_API_KEY",
+    "https://mcp.browserbase.com/mcp?browserbaseApiKey=YOUR_BROWSERBASE_API_KEY&modelName=openai/gpt-4.1&modelApiKey=YOUR_MODEL_API_KEY",
+    "https://modelcontextprotocol.io/introduction",
+    "https://modelcontextprotocol.io/specification/2025-03-26/basic/transports#streamable-http",
+    "https://news.ycombinator.com/",
+    "https://portal.usepylon.com/browserbase/forms/talk-to-an-engineer",
+    "https://pypi.org/project/browserbase/",
+    "https://status.browserbase.com/",
+    "https://trust.browserbase.com",
+    "https://www.browserbase.com",
+    "https://www.browserbase.com/",
+    "https://www.browserbase.com/#codeSnippet-tabs-panel-0",
+    "https://www.browserbase.com/#main",
+    "https://www.browserbase.com/agents",
+    "https://www.browserbase.com/blog",
+    "https://www.browserbase.com/browse-cli",
+    "https://www.browserbase.com/browsers",
+    "https://www.browserbase.com/careers",
+    "https://www.browserbase.com/changelog",
+    "https://www.browserbase.com/contact",
+    "https://www.browserbase.com/customer-stories",
+    "https://www.browserbase.com/enterprise",
+    "https://www.browserbase.com/identity",
+    "https://www.browserbase.com/industry/ai",
+    "https://www.browserbase.com/industry/fintech",
+    "https://www.browserbase.com/industry/gtm",
+    "https://www.browserbase.com/industry/healthcare",
+    "https://www.browserbase.com/industry/legal",
+    "https://www.browserbase.com/industry/supply-chain",
+    "https://www.browserbase.com/mcp",
+    "https://www.browserbase.com/models",
+    "https://www.browserbase.com/observability",
+    "https://www.browserbase.com/overview",
+    "https://www.browserbase.com/partner",
+    "https://www.browserbase.com/pricing",
+    "https://www.browserbase.com/privacy-policy",
+    "https://www.browserbase.com/runtime",
+    "https://www.browserbase.com/search",
+    "https://www.browserbase.com/sessions",
+    "https://www.browserbase.com/sign-in",
+    "https://www.browserbase.com/sign-up",
+    "https://www.browserbase.com/sign-up?redirect=%2Fget-started&utm_source=docs&utm_medium=nav&utm_campaign=docs_signup_cta",
+    "https://www.browserbase.com/solutions/accessing-web-data",
+    "https://www.browserbase.com/solutions/browser-agents",
+    "https://www.browserbase.com/solutions/testing",
+    "https://www.browserbase.com/solutions/workflow-automation",
+    "https://www.browserbase.com/stagehand",
+    "https://www.browserbase.com/templates",
+    "https://www.browserbase.com/terms-of-service",
+    "https://www.browserbase.com/use-cases",
+    "https://www.instagram.com/browserbase",
+    "https://www.linkedin.com/company/browserbasehq",
+    "https://www.linkedin.com/company/browserbasehq/",
+    "https://www.mintlify.com?utm_campaign=poweredBy&utm_medium=referral&utm_source=browserbase",
+    "https://www.npmjs.com/package/@browserbasehq/sdk",
+    "https://www.youtube.com/@browserbase",
+    "https://x.com/browserbase"
+  ]
+}

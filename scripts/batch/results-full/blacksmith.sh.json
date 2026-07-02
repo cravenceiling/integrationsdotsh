@@ -1,0 +1,325 @@
+{
+  "result": {
+    "version": 3,
+    "domain": "blacksmith.sh",
+    "detect": {
+      "domain": "blacksmith.sh",
+      "found": [],
+      "mcp": [],
+      "llmsTxt": false,
+      "errors": []
+    },
+    "usedLlm": true,
+    "discoveredAt": "2026-07-02T10:56:35.117Z",
+    "summary": "Blacksmith exposes a GitHub-authenticated dashboard/console, GitHub Actions/runner integrations, and a GitHub-authenticated Testbox CLI; no GraphQL or MCP surface was found.",
+    "credentials": {
+      "github_account": {
+        "type": "oauth2",
+        "label": "GitHub account login",
+        "generateUrl": "https://github.com/signup",
+        "setup": "Use your own GitHub account. Blacksmith supports login only through GitHub; org members inherit access from their GitHub organization membership. Sign in at [app.blacksmith.sh](https://app.blacksmith.sh) and complete the GitHub authorization flow.",
+        "acquisition": "manual"
+      }
+    },
+    "surfaces": [
+      {
+        "slug": "blacksmith-dashboard-console",
+        "name": "Blacksmith Dashboard / Console",
+        "type": "http",
+        "docs": "https://app.blacksmith.sh",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.blacksmith.sh/introduction/quickstart",
+            "https://docs.blacksmith.sh/introduction/settings",
+            "https://docs.blacksmith.sh/blacksmith-administration/permissions",
+            "https://docs.blacksmith.sh/blacksmith-observability/dashboard"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "github_account",
+                  "mechanics": {
+                    "source": "http",
+                    "scheme": "GitHub login"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.blacksmith.sh/introduction/quickstart",
+                  "https://docs.blacksmith.sh/introduction/settings",
+                  "https://docs.blacksmith.sh/blacksmith-administration/permissions",
+                  "https://docs.blacksmith.sh/blacksmith-observability/dashboard"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "blacksmith-testbox-cli",
+        "name": "Blacksmith Testbox CLI",
+        "type": "cli",
+        "docs": "https://docs.blacksmith.sh/blacksmith-testbox/cli",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.blacksmith.sh/blacksmith-testbox/overview",
+            "https://docs.blacksmith.sh/blacksmith-testbox/cli"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "github_account",
+                  "mechanics": {
+                    "source": "cli",
+                    "command": "blacksmith testbox init"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.blacksmith.sh/blacksmith-testbox/overview",
+                  "https://docs.blacksmith.sh/blacksmith-testbox/cli"
+                ]
+              }
+            }
+          ]
+        },
+        "command": "blacksmith"
+      },
+      {
+        "slug": "blacksmith-github-actions-integration",
+        "name": "Blacksmith GitHub Actions Integration",
+        "type": "http",
+        "docs": "https://docs.blacksmith.sh/introduction/quickstart",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.blacksmith.sh/introduction/quickstart",
+            "https://docs.blacksmith.sh/blacksmith-administration/permissions",
+            "https://docs.blacksmith.sh/blacksmith-caching/dependencies-actions",
+            "https://docs.blacksmith.sh/blacksmith-runners/overview",
+            "https://docs.blacksmith.sh/blacksmith-testbox/overview"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "github_account",
+                  "mechanics": {
+                    "source": "http",
+                    "scheme": "GitHub login"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.blacksmith.sh/introduction/quickstart",
+                  "https://docs.blacksmith.sh/blacksmith-administration/permissions",
+                  "https://docs.blacksmith.sh/blacksmith-caching/dependencies-actions",
+                  "https://docs.blacksmith.sh/blacksmith-runners/overview",
+                  "https://docs.blacksmith.sh/blacksmith-testbox/overview"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "blacksmith-runner-surface",
+        "name": "Blacksmith Runner Surface",
+        "type": "http",
+        "docs": "https://docs.blacksmith.sh/blacksmith-runners/overview",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.blacksmith.sh/blacksmith-runners/overview",
+            "https://docs.blacksmith.sh/introduction/quickstart",
+            "https://docs.blacksmith.sh/blacksmith-administration/permissions"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "github_account",
+                  "mechanics": {
+                    "source": "http",
+                    "scheme": "GitHub login"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.blacksmith.sh/blacksmith-runners/overview",
+                  "https://docs.blacksmith.sh/introduction/quickstart",
+                  "https://docs.blacksmith.sh/blacksmith-administration/permissions"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "discoveredAt": "2026-07-02T10:56:35.118Z",
+  "model": "loop-gpt-5.4-mini",
+  "usage": {
+    "prompt_tokens": 168610,
+    "completion_tokens": 1321,
+    "total_tokens": 169931
+  },
+  "visited": [
+    "https://docs.blacksmith.sh/api-reference/openapi.json",
+    "https://docs.blacksmith.sh/blacksmith-administration/permissions",
+    "https://docs.blacksmith.sh/blacksmith-administration/scale-apps",
+    "https://docs.blacksmith.sh/blacksmith-caching/dependencies-actions",
+    "https://docs.blacksmith.sh/blacksmith-observability/dashboard",
+    "https://docs.blacksmith.sh/blacksmith-runners/overview",
+    "https://docs.blacksmith.sh/blacksmith-testbox/cli",
+    "https://docs.blacksmith.sh/blacksmith-testbox/overview",
+    "https://docs.blacksmith.sh/introduction/quickstart",
+    "https://docs.blacksmith.sh/introduction/settings",
+    "https://docs.blacksmith.sh/llms.txt",
+    "https://github.com/toolprint/mcp-graphql-forge",
+    "https://mcpservers.org/servers/ctkadvisors/graphql-mcp",
+    "https://www.blacksmith.sh/",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
+  ],
+  "grounding": [
+    "https://app.blacksmith.sh",
+    "https://app.blacksmith.sh/?support=open",
+    "https://app.blacksmith.sh?support=open",
+    "https://docs.blacksmith.sh/",
+    "https://docs.blacksmith.sh/#agent-integration",
+    "https://docs.blacksmith.sh/#arm-runners",
+    "https://docs.blacksmith.sh/#basics",
+    "https://docs.blacksmith.sh/#blacksmith-auth-login",
+    "https://docs.blacksmith.sh/#blacksmith-testbox-init",
+    "https://docs.blacksmith.sh/#blacksmith-testbox-run",
+    "https://docs.blacksmith.sh/#blacksmith-testbox-status",
+    "https://docs.blacksmith.sh/#blacksmith-testbox-stop",
+    "https://docs.blacksmith.sh/#blacksmith-testbox-warmup",
+    "https://docs.blacksmith.sh/#branch-protected-caches",
+    "https://docs.blacksmith.sh/#caches",
+    "https://docs.blacksmith.sh/#content-area",
+    "https://docs.blacksmith.sh/#costs",
+    "https://docs.blacksmith.sh/#faq",
+    "https://docs.blacksmith.sh/#free-upgrades",
+    "https://docs.blacksmith.sh/#get-started",
+    "https://docs.blacksmith.sh/#how-it-works",
+    "https://docs.blacksmith.sh/#installing-scale-apps",
+    "https://docs.blacksmith.sh/#jobs",
+    "https://docs.blacksmith.sh/#key-permission-controls",
+    "https://docs.blacksmith.sh/#macos",
+    "https://docs.blacksmith.sh/#macos-runners",
+    "https://docs.blacksmith.sh/#opt-out",
+    "https://docs.blacksmith.sh/#overview",
+    "https://docs.blacksmith.sh/#permissions",
+    "https://docs.blacksmith.sh/#pre-installed-packages",
+    "https://docs.blacksmith.sh/#pricing",
+    "https://docs.blacksmith.sh/#runner-tags",
+    "https://docs.blacksmith.sh/#ubuntu-arm",
+    "https://docs.blacksmith.sh/#ubuntu-x64",
+    "https://docs.blacksmith.sh/#what-they-are-used-for",
+    "https://docs.blacksmith.sh/#when-to-use-testboxes",
+    "https://docs.blacksmith.sh/#windows-x64-public-beta",
+    "https://docs.blacksmith.sh/#x64-runners",
+    "https://docs.blacksmith.sh/about/data-processing-addendum",
+    "https://docs.blacksmith.sh/about/data-processing-addendum.md",
+    "https://docs.blacksmith.sh/about/privacy-policy",
+    "https://docs.blacksmith.sh/about/privacy-policy.md",
+    "https://docs.blacksmith.sh/about/sub-processors",
+    "https://docs.blacksmith.sh/about/sub-processors.md",
+    "https://docs.blacksmith.sh/about/support-terms",
+    "https://docs.blacksmith.sh/about/support-terms.md",
+    "https://docs.blacksmith.sh/about/terms-of-service",
+    "https://docs.blacksmith.sh/about/terms-of-service.md",
+    "https://docs.blacksmith.sh/api-reference/openapi.json",
+    "https://docs.blacksmith.sh/blacksmith-administration/network-allowlisting",
+    "https://docs.blacksmith.sh/blacksmith-administration/network-allowlisting.md",
+    "https://docs.blacksmith.sh/blacksmith-administration/permissions",
+    "https://docs.blacksmith.sh/blacksmith-administration/permissions.md",
+    "https://docs.blacksmith.sh/blacksmith-administration/scale-apps",
+    "https://docs.blacksmith.sh/blacksmith-administration/scale-apps.md",
+    "https://docs.blacksmith.sh/blacksmith-caching/dependencies-actions",
+    "https://docs.blacksmith.sh/blacksmith-caching/dependencies-actions.md",
+    "https://docs.blacksmith.sh/blacksmith-caching/dependencies-sticky-disks",
+    "https://docs.blacksmith.sh/blacksmith-caching/dependencies-sticky-disks.md",
+    "https://docs.blacksmith.sh/blacksmith-caching/docker-builds",
+    "https://docs.blacksmith.sh/blacksmith-caching/docker-builds.md",
+    "https://docs.blacksmith.sh/blacksmith-caching/docker-container-caching",
+    "https://docs.blacksmith.sh/blacksmith-caching/docker-container-caching.md",
+    "https://docs.blacksmith.sh/blacksmith-caching/git-checkout-caching",
+    "https://docs.blacksmith.sh/blacksmith-caching/git-checkout-caching.md",
+    "https://docs.blacksmith.sh/blacksmith-observability/dashboard",
+    "https://docs.blacksmith.sh/blacksmith-observability/dashboard.md",
+    "https://docs.blacksmith.sh/blacksmith-observability/history",
+    "https://docs.blacksmith.sh/blacksmith-observability/history.md",
+    "https://docs.blacksmith.sh/blacksmith-observability/logs",
+    "https://docs.blacksmith.sh/blacksmith-observability/logs.md",
+    "https://docs.blacksmith.sh/blacksmith-observability/metrics",
+    "https://docs.blacksmith.sh/blacksmith-observability/metrics.md",
+    "https://docs.blacksmith.sh/blacksmith-observability/monitors",
+    "https://docs.blacksmith.sh/blacksmith-observability/monitors.md",
+    "https://docs.blacksmith.sh/blacksmith-observability/ssh-access",
+    "https://docs.blacksmith.sh/blacksmith-observability/ssh-access.md",
+    "https://docs.blacksmith.sh/blacksmith-observability/test-analytics",
+    "https://docs.blacksmith.sh/blacksmith-observability/test-analytics.md",
+    "https://docs.blacksmith.sh/blacksmith-runners/overview",
+    "https://docs.blacksmith.sh/blacksmith-runners/overview#runner-tags",
+    "https://docs.blacksmith.sh/blacksmith-runners/overview.md",
+    "https://docs.blacksmith.sh/blacksmith-runners/static-ip",
+    "https://docs.blacksmith.sh/blacksmith-runners/static-ip.md",
+    "https://docs.blacksmith.sh/blacksmith-testbox/cli",
+    "https://docs.blacksmith.sh/blacksmith-testbox/cli.md",
+    "https://docs.blacksmith.sh/blacksmith-testbox/overview",
+    "https://docs.blacksmith.sh/blacksmith-testbox/overview.md",
+    "https://docs.blacksmith.sh/introduction/quickstart",
+    "https://docs.blacksmith.sh/introduction/quickstart.md",
+    "https://docs.blacksmith.sh/introduction/settings",
+    "https://docs.blacksmith.sh/introduction/settings.md",
+    "https://docs.blacksmith.sh/introduction/why-blacksmith",
+    "https://docs.blacksmith.sh/introduction/why-blacksmith.md",
+    "https://docs.blacksmith.sh/llms.txt",
+    "https://docs.github.com/en/actions/reference/dependency-caching-reference#restrictions-for-accessing-a-cache",
+    "https://get.blacksmith.sh",
+    "https://github.com/actions/runner-images",
+    "https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2204-Readme.md",
+    "https://github.com/actions/runner-images/blob/main/images/windows/Windows2025-Readme.md",
+    "https://github.com/apps/blacksmith-sh-scale-1",
+    "https://github.com/apps/blacksmith-sh-scale-2",
+    "https://github.com/apps/blacksmith-sh-scale-3",
+    "https://github.com/toolprint/mcp-graphql-forge",
+    "https://linkedin.com/company/blac",
+    "https://linkedin.com/company/blacksmithrun",
+    "https://mcpservers.org/servers/ctkadvisors/graphql-mcp",
+    "https://status.blacksmith.sh",
+    "https://twitter.com/useblacksmith",
+    "https://www.blacksmith.sh/",
+    "https://www.blacksmith.sh/pricing",
+    "https://www.blacksmith.sh/security",
+    "https://www.mintlify.com?utm_campaign=poweredBy&utm_medium=referral&utm_source=blacksmith",
+    "https://www.youtube.com/@useblacksmith",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
+  ]
+}
