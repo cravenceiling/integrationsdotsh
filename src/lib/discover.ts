@@ -321,6 +321,13 @@ export async function discover(
           }
           progress(`Validated spec ${hostPath(s.spec)} (${result.kind})`);
         }
+        // Dangling credential references break the surface's whole auth story.
+        if (s.auth.status === "required") {
+          const missing = s.auth.entries.flatMap((e) => e.use.map((u) => u.id)).filter((id) => !credentials[id]);
+          if (missing.length) {
+            return `auth references undefined credential id(s): ${missing.join(", ")}. Call record_credential for each first (or use authStatus "unknown" if the credential isn't a real user-minted one), then re-record this surface.`;
+          }
+        }
         const key = `${s.type}|${(s.spec || s.url || s.name).toLowerCase()}`;
         if (surfaceKeys.has(key)) return `Already recorded ${s.name}.`;
         surfaceKeys.add(key);
