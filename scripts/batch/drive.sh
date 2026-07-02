@@ -10,7 +10,7 @@ cd "$(dirname "$0")/../.."
 
 START="${1:-1}"
 CONC="${2:-2}"
-OUT=scripts/batch/results-full
+OUT="${3:-scripts/batch/results-full}"
 MODEL=gpt-5.4
 MAX_FAIL_PCT=25   # loop failures (rate limits, crashes) per batch
 MAX_CHECK_PCT=20  # checklist failures per batch
