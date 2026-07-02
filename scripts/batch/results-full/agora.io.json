@@ -1,0 +1,398 @@
+{
+  "result": {
+    "version": 3,
+    "domain": "agora.io",
+    "detect": {
+      "domain": "agora.io",
+      "found": [
+        "llms.txt"
+      ],
+      "mcp": [],
+      "llmsTxt": true,
+      "errors": []
+    },
+    "usedLlm": true,
+    "discoveredAt": "2026-07-02T10:16:14.822Z",
+    "summary": "Agora exposes three documented REST HTTP surfaces requiring Basic auth via Customer ID + Customer Secret, plus a public streamable-HTTP MCP server at https://mcp.agora.io.",
+    "credentials": {
+      "agora_customer_id_secret": {
+        "type": "basic",
+        "label": "Agora Customer ID + Customer Secret",
+        "generateUrl": "https://console.agora.io/v2",
+        "setup": "In [Agora Console](https://console.agora.io/v2), open **Developer Toolkit** > **RESTful API**. Click **Add a secret** to generate a Customer ID and Customer Secret. Download the `key_and_secret.txt` file from the **Customer Secret** column; the secret is shown only once, so store it securely. Use the pair to build a Basic HTTP `Authorization` header (`Authorization: Basic <base64(Customer ID:Customer Secret)>`).",
+        "acquisition": "manual"
+      }
+    },
+    "surfaces": [
+      {
+        "slug": "agora-console-rest-api",
+        "name": "Agora Console REST API",
+        "type": "http",
+        "docs": "https://docs.agora.io/en/api-reference/api-ref/console/solutions-agora-console-rest-api",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.agora.io/en/iot/reference/agora-console-rest-api"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "agora_customer_id_secret",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Basic"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.agora.io/en/iot/reference/agora-console-rest-api"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "agora-signaling-rest-api",
+        "name": "Agora Signaling REST API",
+        "type": "http",
+        "docs": "https://docs.agora.io/en/api-reference/api-ref/signaling",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.agora.io/en/signaling/rest-api/restful-authentication"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "agora_customer_id_secret",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Basic"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.agora.io/en/signaling/rest-api/restful-authentication"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "agora-analytics-rest-api",
+        "name": "Agora Analytics REST API",
+        "type": "http",
+        "docs": "https://docs.agora.io/en/api-reference/api-ref/agora-analytics/analytics-rest-api",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.agora.io/en/agora-analytics/reference/restful-authentication"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "agora_customer_id_secret",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Basic"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.agora.io/en/agora-analytics/reference/restful-authentication"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "agora-mcp",
+        "name": "Agora MCP",
+        "type": "mcp",
+        "docs": "https://docs.agora.io/en/cloud-recording/get-started/mcp",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.agora.io/en/cloud-recording/get-started/mcp"
+          ]
+        },
+        "auth": {
+          "status": "none",
+          "basis": {
+            "via": "discovered",
+            "evidence": [
+              "https://docs.agora.io/en/cloud-recording/get-started/mcp"
+            ]
+          }
+        },
+        "url": "https://mcp.agora.io",
+        "transports": [
+          "streamable-http"
+        ]
+      }
+    ]
+  },
+  "discoveredAt": "2026-07-02T10:16:14.823Z",
+  "model": "loop-gpt-5.4-mini",
+  "usage": {
+    "prompt_tokens": 53477,
+    "completion_tokens": 906,
+    "total_tokens": 54383
+  },
+  "visited": [
+    "https://docs.agora.io/en/",
+    "https://docs.agora.io/en/agora-analytics/reference/restful-authentication",
+    "https://docs.agora.io/en/api-reference",
+    "https://docs.agora.io/en/cloud-recording/get-started/mcp",
+    "https://docs.agora.io/en/iot/reference/agora-console-rest-api",
+    "https://docs.agora.io/en/signaling/rest-api/restful-authentication"
+  ],
+  "grounding": [
+    "https://agents.md",
+    "https://agoraio.zendesk.com/hc/en-us",
+    "https://api-ref.agora.io/en/chat-sdk/android/1.x/index.html",
+    "https://api-ref.agora.io/en/chat-sdk/flutter/1.x/agora_chat_sdk/index.html",
+    "https://api-ref.agora.io/en/chat-sdk/ios/1.x/index.html",
+    "https://api-ref.agora.io/en/chat-sdk/react-native/1.x/index.html",
+    "https://api-ref.agora.io/en/chat-sdk/unity/1.x/index.html",
+    "https://api-ref.agora.io/en/chat-sdk/web/1.x/index.html",
+    "https://api-ref.agora.io/en/chat-sdk/windows/1.x/index.html",
+    "https://api-ref.agora.io/en/flexible-classroom-sdk/android/2.x/index.html",
+    "https://api-ref.agora.io/en/flexible-classroom-sdk/electron/2.x/index.html",
+    "https://api-ref.agora.io/en/flexible-classroom-sdk/ios/2.x/index.html",
+    "https://api-ref.agora.io/en/flexible-classroom-sdk/web/2.x/index.html",
+    "https://api-ref.agora.io/en/interactive-whiteboard-sdk/android/2.x/index.html",
+    "https://api-ref.agora.io/en/interactive-whiteboard-sdk/ios/2.x/index.html",
+    "https://api-ref.agora.io/en/interactive-whiteboard-sdk/web/2.x/index.html",
+    "https://api-ref.agora.io/en/iot-sdk/android/1.x/index.html",
+    "https://api-ref.agora.io/en/iot-sdk/linux/1.x/index.html",
+    "https://api-ref.agora.io/en/mediaplayer-kit/android/1.x/index.html",
+    "https://api-ref.agora.io/en/mediaplayer-kit/ios/1.x/index.html",
+    "https://api-ref.agora.io/en/mediaplayer-kit/macos/1.x/index.html",
+    "https://api-ref.agora.io/en/mediaplayer-kit/windows/1.x/index.html",
+    "https://api-ref.agora.io/en/on-premise-recording-sdk/linux-cpp/3.x/index.html",
+    "https://api-ref.agora.io/en/on-premise-recording-sdk/linux-java/3.x/index.html",
+    "https://api-ref.agora.io/en/server-gateway-sdk/linux-cpp/4.x/index.html",
+    "https://api-ref.agora.io/en/server-gateway-sdk/linux-java/4.x/index.html",
+    "https://api-ref.agora.io/en/video-sdk/android/4.x/index.html",
+    "https://api-ref.agora.io/en/video-sdk/blueprint/4.x/index.html",
+    "https://api-ref.agora.io/en/video-sdk/cpp/4.x/index.html",
+    "https://api-ref.agora.io/en/video-sdk/electron/4.x/index.html",
+    "https://api-ref.agora.io/en/video-sdk/flutter/6.x/index.html",
+    "https://api-ref.agora.io/en/video-sdk/ios/4.x/index.html",
+    "https://api-ref.agora.io/en/video-sdk/macos/4.x/index.html",
+    "https://api-ref.agora.io/en/video-sdk/react-native/4.x/index.html",
+    "https://api-ref.agora.io/en/video-sdk/reactjs/2.x/index.html",
+    "https://api-ref.agora.io/en/video-sdk/unity/4.x/index.html",
+    "https://api-ref.agora.io/en/video-sdk/unreal-engine/4.x/index.html",
+    "https://api-ref.agora.io/en/video-sdk/web/4.x/index.html",
+    "https://api-ref.agora.io/en/video-sdk/windows-csharp/3.x/index.html",
+    "https://api.agora.io/dev/v1/project",
+    "https://api.agora.io/dev/v1/project?id=7sdnf3xRH&name=project1",
+    "https://api.agora.io/dev/v1/projects",
+    "https://api.agora.io/dev/v1/reset_signkey",
+    "https://api.agora.io/dev/v1/signkey",
+    "https://claude.com/product/claude-code",
+    "https://console.agora.io/",
+    "https://console.agora.io/v2",
+    "https://discord.gg/QfgBCvuX4d",
+    "https://docs-legacy.agora.io/en",
+    "https://docs.agora.io/#",
+    "https://docs.agora.io/#agentsmd",
+    "https://docs.agora.io/#authentication",
+    "https://docs.agora.io/#basic-authentication-sample-code",
+    "https://docs.agora.io/#basic-information",
+    "https://docs.agora.io/#build-an-agent",
+    "https://docs.agora.io/#build-real-time-applications",
+    "https://docs.agora.io/#call-frequency-limit",
+    "https://docs.agora.io/#create-a-project",
+    "https://docs.agora.io/#data-format",
+    "https://docs.agora.io/#disable-or-enable-a-project",
+    "https://docs.agora.io/#domain",
+    "https://docs.agora.io/#ensure-service-reliability",
+    "https://docs.agora.io/#generate-an-authorization-header-using-a-third-party-tool",
+    "https://docs.agora.io/#generate-customer-id-and-customer-secret",
+    "https://docs.agora.io/#get-a-specified-project",
+    "https://docs.agora.io/#get-all-projects",
+    "https://docs.agora.io/#get-help",
+    "https://docs.agora.io/#get-project-usage",
+    "https://docs.agora.io/#getting-started",
+    "https://docs.agora.io/#implement-basic-http-authentication",
+    "https://docs.agora.io/#installation",
+    "https://docs.agora.io/#prototype",
+    "https://docs.agora.io/#prototype-1",
+    "https://docs.agora.io/#prototype-2",
+    "https://docs.agora.io/#related-pages",
+    "https://docs.agora.io/#request-example",
+    "https://docs.agora.io/#request-example-1",
+    "https://docs.agora.io/#request-example-2",
+    "https://docs.agora.io/#request-parameters",
+    "https://docs.agora.io/#request-parameters-1",
+    "https://docs.agora.io/#response-example",
+    "https://docs.agora.io/#response-example-1",
+    "https://docs.agora.io/#response-example-2",
+    "https://docs.agora.io/#response-parameters",
+    "https://docs.agora.io/#response-parameters-1",
+    "https://docs.agora.io/#response-parameters-2",
+    "https://docs.agora.io/#response-status-codes",
+    "https://docs.agora.io/#sdks-and-apis",
+    "https://docs.agora.io/#solutions",
+    "https://docs.agora.io/#start-with-ai-tools",
+    "https://docs.agora.io/en/",
+    "https://docs.agora.io/en/agora-analytics/reference/restful-authentication",
+    "https://docs.agora.io/en/ai",
+    "https://docs.agora.io/en/ai/device-kit/start-here/quickstart",
+    "https://docs.agora.io/en/ai/get-started/quickstart",
+    "https://docs.agora.io/en/api-reference",
+    "https://docs.agora.io/en/api-reference/api-ref",
+    "https://docs.agora.io/en/api-reference/api-ref/agora-analytics/analytics-rest-api",
+    "https://docs.agora.io/en/api-reference/api-ref/agora-analytics/analytics-restful-authentication",
+    "https://docs.agora.io/en/api-reference/api-ref/broadcast-streaming",
+    "https://docs.agora.io/en/api-reference/api-ref/cloud-recording",
+    "https://docs.agora.io/en/api-reference/api-ref/cloud-transcoding",
+    "https://docs.agora.io/en/api-reference/api-ref/console/solutions-agora-console-rest-api",
+    "https://docs.agora.io/en/api-reference/api-ref/conversational-ai",
+    "https://docs.agora.io/en/api-reference/api-ref/conversational-ai/authentication#basic-http-authentication",
+    "https://docs.agora.io/en/api-reference/api-ref/extensions-marketplace/provisioning",
+    "https://docs.agora.io/en/api-reference/api-ref/flexible-classroom/classroom-rest-api",
+    "https://docs.agora.io/en/api-reference/api-ref/im",
+    "https://docs.agora.io/en/api-reference/api-ref/media-pull",
+    "https://docs.agora.io/en/api-reference/api-ref/media-push",
+    "https://docs.agora.io/en/api-reference/api-ref/on-premise-recording",
+    "https://docs.agora.io/en/api-reference/api-ref/rtc",
+    "https://docs.agora.io/en/api-reference/api-ref/rtmp-gateway",
+    "https://docs.agora.io/en/api-reference/api-ref/server-sdk/go",
+    "https://docs.agora.io/en/api-reference/api-ref/server-sdk/python",
+    "https://docs.agora.io/en/api-reference/api-ref/server-sdk/typescript",
+    "https://docs.agora.io/en/api-reference/api-ref/signaling",
+    "https://docs.agora.io/en/api-reference/api-ref/signaling/android",
+    "https://docs.agora.io/en/api-reference/api-ref/signaling/authentication",
+    "https://docs.agora.io/en/api-reference/api-ref/signaling/channel-events",
+    "https://docs.agora.io/en/api-reference/api-ref/signaling/channel-message",
+    "https://docs.agora.io/en/api-reference/api-ref/signaling/flutter",
+    "https://docs.agora.io/en/api-reference/api-ref/signaling/ios",
+    "https://docs.agora.io/en/api-reference/api-ref/signaling/linux-cpp",
+    "https://docs.agora.io/en/api-reference/api-ref/signaling/linux-java",
+    "https://docs.agora.io/en/api-reference/api-ref/signaling/macos",
+    "https://docs.agora.io/en/api-reference/api-ref/signaling/message-history",
+    "https://docs.agora.io/en/api-reference/api-ref/signaling/peer-to-peer-message",
+    "https://docs.agora.io/en/api-reference/api-ref/signaling/react-native",
+    "https://docs.agora.io/en/api-reference/api-ref/signaling/unity",
+    "https://docs.agora.io/en/api-reference/api-ref/signaling/user-events",
+    "https://docs.agora.io/en/api-reference/api-ref/signaling/web",
+    "https://docs.agora.io/en/api-reference/api-ref/signaling/windows-cpp",
+    "https://docs.agora.io/en/api-reference/api-ref/speech-to-text",
+    "https://docs.agora.io/en/api-reference/api-ref/uikit-sdk/android",
+    "https://docs.agora.io/en/api-reference/api-ref/uikit-sdk/ios",
+    "https://docs.agora.io/en/api-reference/api-ref/uikit-sdk/web",
+    "https://docs.agora.io/en/api-reference/api-ref/whiteboard",
+    "https://docs.agora.io/en/api-reference/faq",
+    "https://docs.agora.io/en/api-reference/faq/account",
+    "https://docs.agora.io/en/api-reference/faq/account/billing_free",
+    "https://docs.agora.io/en/api-reference/faq/integration",
+    "https://docs.agora.io/en/api-reference/faq/integration/system_volume",
+    "https://docs.agora.io/en/api-reference/faq/other",
+    "https://docs.agora.io/en/api-reference/faq/product",
+    "https://docs.agora.io/en/api-reference/faq/quality",
+    "https://docs.agora.io/en/api-reference/faq/quality/ios_bluetooth",
+    "https://docs.agora.io/en/api-reference/faq/quality/video_blank",
+    "https://docs.agora.io/en/api-reference/recipes",
+    "https://docs.agora.io/en/api-reference/sdks",
+    "https://docs.agora.io/en/api-reference/sdks?platform=android",
+    "https://docs.agora.io/en/api-reference/sdks?platform=ios",
+    "https://docs.agora.io/en/api-reference/sdks?platform=web",
+    "https://docs.agora.io/en/cloud-recording/get-started/mcp",
+    "https://docs.agora.io/en/introduction",
+    "https://docs.agora.io/en/introduction/account",
+    "https://docs.agora.io/en/introduction/agora-cli",
+    "https://docs.agora.io/en/introduction/agora-mcp",
+    "https://docs.agora.io/en/introduction/agora-skills",
+    "https://docs.agora.io/en/introduction/console-setup",
+    "https://docs.agora.io/en/introduction/core-concepts",
+    "https://docs.agora.io/en/introduction/firewall",
+    "https://docs.agora.io/en/introduction/glossary",
+    "https://docs.agora.io/en/introduction/security-privacy",
+    "https://docs.agora.io/en/introduction/start-with-ai",
+    "https://docs.agora.io/en/iot/reference/agora-console-rest-api",
+    "https://docs.agora.io/en/realtime-media/broadcast-streaming",
+    "https://docs.agora.io/en/realtime-media/cloud-recording",
+    "https://docs.agora.io/en/realtime-media/cloud-recording/manage-agora-account",
+    "https://docs.agora.io/en/realtime-media/cloud-recording/skills",
+    "https://docs.agora.io/en/realtime-media/im",
+    "https://docs.agora.io/en/realtime-media/marketplace",
+    "https://docs.agora.io/en/realtime-media/media-pull",
+    "https://docs.agora.io/en/realtime-media/media-push",
+    "https://docs.agora.io/en/realtime-media/on-premise-recording",
+    "https://docs.agora.io/en/realtime-media/overview",
+    "https://docs.agora.io/en/realtime-media/rtc-server-sdk",
+    "https://docs.agora.io/en/realtime-media/rtm",
+    "https://docs.agora.io/en/realtime-media/rtmp-gateway",
+    "https://docs.agora.io/en/realtime-media/speech-to-text",
+    "https://docs.agora.io/en/realtime-media/transcoding",
+    "https://docs.agora.io/en/realtime-media/video",
+    "https://docs.agora.io/en/realtime-media/voice",
+    "https://docs.agora.io/en/realtime-media/whiteboard",
+    "https://docs.agora.io/en/signaling/rest-api/restful-authentication",
+    "https://docs.agora.io/en/solutions",
+    "https://github.com/AgoraIO/docs-portal/blob/main/content/docs/en/introduction/index.mdx",
+    "https://github.com/AgoraIO/docs-portal/blob/main/content/docs/en/realtime-media/cloud-recording/mcp.mdx",
+    "https://github.com/AgoraIO/docs-portal/edit/main/content/docs/en/introduction/index.mdx",
+    "https://github.com/AgoraIO/docs-portal/edit/main/content/docs/en/realtime-media/cloud-recording/mcp.mdx",
+    "https://github.com/google-gemini/gemini-cli",
+    "https://investor.agora.io/",
+    "https://mcp.agora.io",
+    "https://medium.com/agora-io",
+    "https://openai.com/codex/",
+    "https://sso.agora.io/en/signup",
+    "https://stackoverflow.com/search?q=agora.io",
+    "https://status.agora.io/",
+    "https://www.agora.io/en/about-us/",
+    "https://www.agora.io/en/acceptable-use-policy/",
+    "https://www.agora.io/en/agora-management/",
+    "https://www.agora.io/en/careers/",
+    "https://www.agora.io/en/compliance/",
+    "https://www.agora.io/en/events/",
+    "https://www.agora.io/en/newsroom/",
+    "https://www.agora.io/en/partner-gallery/",
+    "https://www.agora.io/en/pricing/",
+    "https://www.agora.io/en/privacy-policy/",
+    "https://www.agora.io/en/products/",
+    "https://www.agora.io/en/sitemap/",
+    "https://www.agora.io/en/solutions",
+    "https://www.agora.io/en/success-stories/",
+    "https://www.agora.io/en/support-plans/",
+    "https://www.agora.io/en/talk-to-us/",
+    "https://www.agora.io/en/terms-of-service/",
+    "https://www.agora.io/en/the-agora-platform-advantage/",
+    "https://www.agora.io/en/trust-safety-with-agora/",
+    "https://www.cursor.com/",
+    "https://www.debugbear.com/basic-auth-header-generator"
+  ]
+}

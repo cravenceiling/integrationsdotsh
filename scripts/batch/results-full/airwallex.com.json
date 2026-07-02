@@ -1,0 +1,313 @@
+{
+  "result": {
+    "version": 3,
+    "domain": "airwallex.com",
+    "detect": {
+      "domain": "airwallex.com",
+      "found": [
+        "llms.txt"
+      ],
+      "mcp": [],
+      "llmsTxt": true,
+      "errors": []
+    },
+    "usedLlm": true,
+    "discoveredAt": "2026-07-02T10:18:25.931Z",
+    "summary": "Airwallex exposes one authenticated HTTP API, an authenticated sandbox Developer MCP, a public Docs MCP, and an authenticated Airwallex CLI; all authenticated surfaces use user-minted OAuth.",
+    "credentials": {
+      "awx_oauth": {
+        "type": "oauth2",
+        "label": "Airwallex OAuth authorization",
+        "generateUrl": "https://www.airwallex.com/app/login",
+        "setup": "Sign in with an Airwallex account that has an **Owner**, **Admin**, or **Finance Admin** role, then complete the OAuth consent flow when prompted by the CLI or MCP connector. For sandbox, use the sandbox login flow from [Get started in sandbox](https://demo.airwallex.com/signup/us/sandbox) or the sandbox auth flow in the docs. This credential is minted by the user for their own account; do not use shared or example logins.",
+        "acquisition": "manual"
+      }
+    },
+    "surfaces": [
+      {
+        "slug": "airwallex-api",
+        "name": "Airwallex API",
+        "type": "http",
+        "docs": "https://www.airwallex.com/docs/api",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://www.airwallex.com/docs/api"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "awx_oauth",
+                  "mechanics": {
+                    "source": "spec",
+                    "scheme": "oauth2"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://www.airwallex.com/docs/api"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "airwallex-developer-mcp",
+        "name": "Airwallex Developer MCP",
+        "type": "mcp",
+        "docs": "https://www.airwallex.com/docs/developer-tools/ai/developer-connector",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://www.airwallex.com/docs/developer-tools/ai/developer-connector"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "awx_oauth",
+                  "mechanics": {
+                    "source": "well-known"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://www.airwallex.com/docs/developer-tools/ai/developer-connector"
+                ]
+              }
+            }
+          ]
+        },
+        "url": "https://mcp-demo.airwallex.com/developer",
+        "transports": [
+          "streamable-http"
+        ]
+      },
+      {
+        "slug": "airwallex-docs-mcp",
+        "name": "Airwallex Docs MCP",
+        "type": "mcp",
+        "basis": {
+          "via": "discovered",
+          "evidence": []
+        },
+        "auth": {
+          "status": "none",
+          "basis": {
+            "via": "discovered",
+            "evidence": [
+              "https://www.airwallex.com/docs/developer-tools/ai/developer-connector",
+              "https://www.airwallex.com/docs/developer-tools/ai/build-with-ai"
+            ]
+          }
+        }
+      },
+      {
+        "slug": "airwallex-cli",
+        "name": "Airwallex CLI",
+        "type": "cli",
+        "docs": "https://www.airwallex.com/docs/developer-tools/cli",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://www.airwallex.com/docs/developer-tools/cli"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "awx_oauth",
+                  "mechanics": {
+                    "source": "cli",
+                    "command": "airwallex auth login"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://www.airwallex.com/docs/developer-tools/cli"
+                ]
+              }
+            },
+            {
+              "use": [
+                {
+                  "id": "awx_oauth",
+                  "mechanics": {
+                    "source": "cli",
+                    "command": "airwallex auth login --prod"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://www.airwallex.com/docs/developer-tools/cli"
+                ]
+              }
+            }
+          ]
+        },
+        "command": "airwallex"
+      }
+    ]
+  },
+  "discoveredAt": "2026-07-02T10:18:25.932Z",
+  "model": "loop-gpt-5.4-mini",
+  "usage": {
+    "prompt_tokens": 107775,
+    "completion_tokens": 932,
+    "total_tokens": 108707
+  },
+  "visited": [
+    "https://docs.fireflies.ai/getting-started/docs-mcp-server",
+    "https://www.airwallex.com/docs/api",
+    "https://www.airwallex.com/docs/developer-tools/ai",
+    "https://www.airwallex.com/docs/developer-tools/ai/agentos",
+    "https://www.airwallex.com/docs/developer-tools/ai/agentos/build-with-agentos",
+    "https://www.airwallex.com/docs/developer-tools/ai/developer-connector",
+    "https://www.airwallex.com/docs/developer-tools/cli",
+    "https://www.apollographql.com/blog/building-mcp-tools-with-graphql-a-better-way-to-connect-llms-to-your-api",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
+  ],
+  "grounding": [
+    "http://www.w3.org/2000/svg",
+    "https://airwallex.com/app/integrations/home",
+    "https://demo.airwallex.com/app/login/sandbox?region=global",
+    "https://demo.airwallex.com/signup/sandbox",
+    "https://demo.airwallex.com/signup/us/sandbox",
+    "https://docs.fireflies.ai/getting-started/docs-mcp-server",
+    "https://github.com/airwallex/airwallex-marketplace",
+    "https://github.com/airwallex/airwallex-marketplace/tree/master/plugins/airwallex-agentos/skills/awx-best-practices",
+    "https://github.com/airwallex/airwallex-marketplace/tree/master/plugins/airwallex-agentos/skills/beneficiary-creation",
+    "https://github.com/airwallex/airwallex-marketplace/tree/master/plugins/airwallex-agentos/skills/card-provisioning",
+    "https://github.com/airwallex/airwallex-marketplace/tree/master/plugins/airwallex-agentos/skills/contract-to-billing",
+    "https://github.com/airwallex/airwallex-marketplace/tree/master/plugins/airwallex-agentos/skills/manage-cashflow",
+    "https://github.com/airwallex/airwallex-payment-android",
+    "https://github.com/airwallex/airwallex-payment-ios",
+    "https://googleads.g.doubleclick.net/pagead/viewthroughconversion/740716433/?random=1782987437505&amp;cv=11&amp;fst=1782987437505&amp;bg=ffffff&amp;guid=ON&amp;async=1&amp;gtm=45be66u1z878802382za20gzb78802382zd78802382xea&amp;gcd=13l3l3l3l1l1&amp;dma=0&amp;tag_exp=115938466~115938468~118897921~118897931~119027224~119576881~119576885~119576891~119576895&amp;u_w=1920&amp;u_h=1080&amp;url=https%3A%2F%2Fwww.airwallex.com%2Fdocs%2Fapi%2Fintroduction&amp;rcb=18&amp;frm=0&amp;tiba=Airwallex%20Docs&amp;hn=www.googleadservices.com&amp;npa=0&amp;pscdl=noapi&amp;auid=1541532052.1782987437&amp;uaa=x86&amp;uab=64&amp;uafvl=Not%253BA%253DBrand%3B8.0.0.0%7CChromium%3B150.0.7871.46%7CGoogle%2520Chrome%3B150.0.7871.46&amp;uamb=0&amp;uam=&amp;uap=Linux&amp;uapv=&amp;uaw=0&amp;_tu=CA&amp;ept=9&amp;rfmt=3&amp;fmt=4",
+    "https://help.airwallex.com/hc/en-gb/requests/new",
+    "https://js.partnerstack.com/v1/",
+    "https://llmstxt.org/",
+    "https://mcp-demo.airwallex.com/developer",
+    "https://mcp-demo.airwallex.com/docs",
+    "https://mcp.airwallex.com/mcp",
+    "https://static.airwallex.com/developer-tools/airwallex-cli/install.sh",
+    "https://static.airwallex.com/webapp/fraud/device-fingerprint/sardine-iframe.html?sessionKey=3eb2547ba9adcf47605fadf235f038b7e191f007&amp;flowName=corporate+site&amp;flowType=login&amp;__domain__=https%3A%2F%2Fwww.airwallex.com&amp;partnerId=7f486174",
+    "https://static.airwallex.com/webapp/fraud/device-fingerprint/webapp.js",
+    "https://www.airwallex.com",
+    "https://www.airwallex.com/#agent-usage",
+    "https://www.airwallex.com/#agentos",
+    "https://www.airwallex.com/#airwallex-agentos-mcp",
+    "https://www.airwallex.com/#airwallex-developer-mcp",
+    "https://www.airwallex.com/#authenticate",
+    "https://www.airwallex.com/#available-mcp-tools",
+    "https://www.airwallex.com/#before-you-begin",
+    "https://www.airwallex.com/#benefits",
+    "https://www.airwallex.com/#choose-the-right-tool",
+    "https://www.airwallex.com/#deauthorize-and-uninstall",
+    "https://www.airwallex.com/#developer-connectors",
+    "https://www.airwallex.com/#developer-mcp-vs.-docs-mcp",
+    "https://www.airwallex.com/#docs-ai-assistant",
+    "https://www.airwallex.com/#follow-prompting-best-practices",
+    "https://www.airwallex.com/#install",
+    "https://www.airwallex.com/#install-agentos",
+    "https://www.airwallex.com/#install-developer-mcp",
+    "https://www.airwallex.com/#install-docs-mcp",
+    "https://www.airwallex.com/#limitations",
+    "https://www.airwallex.com/#next-steps",
+    "https://www.airwallex.com/#other-agents",
+    "https://www.airwallex.com/#plain-text-documentation",
+    "https://www.airwallex.com/#review-available-developer-connectors-mcp-tools",
+    "https://www.airwallex.com/#see-also",
+    "https://www.airwallex.com/#skills",
+    "https://www.airwallex.com/#telemetry",
+    "https://www.airwallex.com/#troubleshoot-common-issues",
+    "https://www.airwallex.com/#troubleshooting",
+    "https://www.airwallex.com/#use-the-cli-with-ai-agents",
+    "https://www.airwallex.com/#verify-your-connection",
+    "https://www.airwallex.com/#which-agentos-connector-do-i-need",
+    "https://www.airwallex.com/#who-can-install",
+    "https://www.airwallex.com/#who-it",
+    "https://www.airwallex.com/app/login",
+    "https://www.airwallex.com/docs",
+    "https://www.airwallex.com/docs/",
+    "https://www.airwallex.com/docs/api",
+    "https://www.airwallex.com/docs/developer-too",
+    "https://www.airwallex.com/docs/developer-tools/ai",
+    "https://www.airwallex.com/docs/developer-tools/ai/agentos",
+    "https://www.airwallex.com/docs/developer-tools/ai/agentos#airwallex-agentos-mcp",
+    "https://www.airwallex.com/docs/developer-tools/ai/agentos#safety-and-responsibility",
+    "https://www.airwallex.com/docs/developer-tools/ai/agentos#skills",
+    "https://www.airwallex.com/docs/developer-tools/ai/agentos#which-agentos-connector-do-i-need",
+    "https://www.airwallex.com/docs/developer-tools/ai/agentos.md",
+    "https://www.airwallex.com/docs/developer-tools/ai/agentos/build-with-agentos",
+    "https://www.airwallex.com/docs/developer-tools/ai/build-with-ai",
+    "https://www.airwallex.com/docs/developer-tools/ai/developer-connector",
+    "https://www.airwallex.com/docs/developer-tools/ai/developer-connector#install-developer-mcp",
+    "https://www.airwallex.com/docs/developer-tools/ai/developer-connector#install-docs-mcp",
+    "https://www.airwallex.com/docs/developer-tools/ai/developer-mcp",
+    "https://www.airwallex.com/docs/developer-tools/api",
+    "https://www.airwallex.com/docs/developer-tools/cli",
+    "https://www.airwallex.com/docs/developer-tools/cli#who-can-install",
+    "https://www.airwallex.com/docs/developer-tools/open-banking/airwallex-open-banking-overview",
+    "https://www.airwallex.com/docs/developer-tools/open-banking/api-integration-summary",
+    "https://www.airwallex.com/docs/developer-tools/overview",
+    "https://www.airwallex.com/docs/developer-tools/partner-connections/get-started",
+    "https://www.airwallex.com/docs/developer-tools/partner-connections/implement-your-authorization-flow",
+    "https://www.airwallex.com/docs/developer-tools/partner-connections/integration-guides",
+    "https://www.airwallex.com/docs/developer-tools/partner-connections/notifications-and-workflow-automation",
+    "https://www.airwallex.com/docs/developer-tools/partner-connections/oauth-permissions",
+    "https://www.airwallex.com/docs/developer-tools/partner-connections/oauth-permissions#user-roles-that-can-grant-oauth-consent",
+    "https://www.airwallex.com/docs/developer-tools/partner-connections/oauth-scopes",
+    "https://www.airwallex.com/docs/developer-tools/partner-connections/partners-overview",
+    "https://www.airwallex.com/docs/developer-tools/partner-connections/troubleshooting-oauth-errors",
+    "https://www.airwallex.com/docs/developer-tools/release-phases",
+    "https://www.airwallex.com/docs/developer-tools/sandbox-environment",
+    "https://www.airwallex.com/docs/developer-tools/sandbox-environment/connected-accounts",
+    "https://www.airwallex.com/docs/developer-tools/sandbox-environment/deposits",
+    "https://www.airwallex.com/docs/developer-tools/sandbox-environment/issuing",
+    "https://www.airwallex.com/docs/developer-tools/sandbox-environment/linked-accounts",
+    "https://www.airwallex.com/docs/developer-tools/sandbox-environment/payments",
+    "https://www.airwallex.com/docs/developer-tools/sandbox-environment/payouts",
+    "https://www.airwallex.com/docs/developer-tools/sandbox-environment/risk",
+    "https://www.airwallex.com/docs/developer-tools/sandbox-environment/sandbox-settings",
+    "https://www.airwallex.com/docs/developer-tools/sdks",
+    "https://www.airwallex.com/docs/developer-tools/security/pgp-public-key-to-encrypt-card-data",
+    "https://www.airwallex.com/docs/developer-tools/security/securing-connections-to-airwallex",
+    "https://www.airwallex.com/docs/developer-tools/webhooks/listen-for-webhook-events",
+    "https://www.airwallex.com/docs/developer-tools/webhooks/view-and-re-trigger-webhook-events",
+    "https://www.airwallex.com/docs/developer-tools/webhooks/webhooks-overview",
+    "https://www.airwallex.com/docs/js",
+    "https://www.airwallex.com/docs/js/",
+    "https://www.airwallex.com/docs/llms.txt",
+    "https://www.airwallex.com/terms/cookie-policy",
+    "https://www.apollographql.com/blog/building-mcp-tools-with-graphql-a-better-way-to-connect-llms-to-your-api",
+    "https://www.googletagmanager.com/gtag/destination?id=AW-740716433&amp;cx=c&amp;gtm=4e66u1",
+    "https://www.googletagmanager.com/gtag/js?id=DC-15640667",
+    "https://www.googletagmanager.com/gtag/js?id=G-J1TGSTQ102&amp;cx=c&amp;gtm=4e66u1",
+    "https://www.googletagmanager.com/gtm.js?id",
+    "https://www.googletagmanager.com/gtm.js?id=",
+    "https://www.googletagmanager.com/gtm.js?id=GTM-KHZBJZCL",
+    "https://www.googletagmanager.com/gtm.js?id=GTM-NJXVXZH&amp;gtm_auth=&amp;gtm_preview=&amp;gtm_cookies_win=x",
+    "https://www.googletagmanager.com/ns.html?id=GTM-NJXVXZH&gtm_auth=&gtm_preview=&gtm_cookies_win=x",
+    "https://www.kapa.ai",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
+  ]
+}

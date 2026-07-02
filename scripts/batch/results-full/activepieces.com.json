@@ -1,0 +1,273 @@
+{
+  "result": {
+    "version": 3,
+    "domain": "activepieces.com",
+    "detect": {
+      "domain": "activepieces.com",
+      "found": [
+        "mcp"
+      ],
+      "mcp": [
+        {
+          "url": "https://www.activepieces.com/.well-known/mcp/server-card.json",
+          "source": "server-card"
+        }
+      ],
+      "llmsTxt": false,
+      "errors": []
+    },
+    "usedLlm": true,
+    "discoveredAt": "2026-07-02T10:10:58.969Z",
+    "summary": "Activepieces exposes a Platform API authenticated by API key and a built-in MCP server using OAuth-backed client auth.",
+    "credentials": {
+      "activepieces_api_key": {
+        "type": "bearer",
+        "label": "Activepieces Platform API key",
+        "generateUrl": "https://www.activepieces.com/docs/endpoints/overview",
+        "setup": "Go to the [Platform Dashboard](https://cloud.activepieces.com) and create an API key under the platform controls. The docs note API keys are currently for Platform and Enterprise editions. Send it as `Authorization: Bearer <API_KEY>`.",
+        "acquisition": "manual"
+      }
+    },
+    "surfaces": [
+      {
+        "slug": "activepieces-platform-api",
+        "name": "Activepieces Platform API",
+        "type": "http",
+        "docs": "https://www.activepieces.com/docs/endpoints/overview",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://www.activepieces.com/docs/endpoints/overview"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "activepieces_api_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Bearer"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://www.activepieces.com/docs/endpoints/overview"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "activepieces-mcp-server",
+        "name": "Activepieces MCP Server",
+        "type": "mcp",
+        "docs": "https://www.activepieces.com/docs/mcp/overview",
+        "basis": {
+          "via": "detected",
+          "signal": "mcp:initialize",
+          "verifiedAt": "2026-07-02T10:10:58.969Z"
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "activepieces_api_key",
+                  "mechanics": {
+                    "source": "well-known"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://www.activepieces.com/docs/mcp/overview"
+                ]
+              }
+            }
+          ]
+        },
+        "url": "https://www.activepieces.com/.well-known/mcp/server-card.json",
+        "transports": [
+          "streamable-http"
+        ]
+      }
+    ]
+  },
+  "discoveredAt": "2026-07-02T10:10:58.970Z",
+  "model": "loop-gpt-5.4-mini",
+  "usage": {
+    "prompt_tokens": 87784,
+    "completion_tokens": 689,
+    "total_tokens": 88473
+  },
+  "visited": [
+    "https://github.com/activepieces/activepieces",
+    "https://resources.activepieces.com/glossary/custom-api-authentication",
+    "https://www.activepieces.com/blog/model-context-protocol-mcp",
+    "https://www.activepieces.com/blog/what-is-mcp",
+    "https://www.activepieces.com/docs",
+    "https://www.activepieces.com/docs/endpoints/overview",
+    "https://www.activepieces.com/docs/llms-full.txt",
+    "https://www.activepieces.com/docs/mcp/overview",
+    "https://www.activepieces.com/docs/mcp/tools",
+    "https://www.activepieces.com/pieces/mcp"
+  ],
+  "grounding": [
+    "https://cloud.activepieces.com",
+    "https://cloud.activepieces.com/sign-up?utm_source=marketing_site&utm_medium=cta&utm_campaign=header&ref=%2Fblog%2Fmodel-context-protocol-mcp",
+    "https://cloud.activepieces.com/sign-up?utm_source=marketing_site&utm_medium=cta&utm_campaign=header&ref=%2Fpieces%2Fmcp",
+    "https://cloud.activepieces.com/sign-up?utm_source=marketing_site&utm_medium=cta&utm_campaign=pieces&ref=%2Fpieces%2Fmcp",
+    "https://community.activepieces.com",
+    "https://community.activepieces.com/c/tutorials/10",
+    "https://crowdin.com/project/activepieces",
+    "https://discord.com/invite/2jUXBKDdP8",
+    "https://feedback.activepieces.com",
+    "https://feedback.activepieces.com/",
+    "https://github.com/activepieces/activepieces",
+    "https://github.com/activepieces/activepieces/blob/main/.github/workflows/benchmark.yml",
+    "https://github.com/activepieces/activepieces/blob/main/.github/workflows/smoke-test.yml",
+    "https://github.com/activepieces/activepieces/blob/main/LICENSE",
+    "https://github.com/activepieces/activepieces/blob/main/packages/ee/LICENSE",
+    "https://github.com/activepieces/activepieces/edit/main/docs/endpoints/overview.mdx",
+    "https://github.com/activepieces/activepieces/edit/main/docs/mcp/overview.mdx",
+    "https://github.com/activepieces/activepieces/edit/main/docs/overview/welcome.mdx",
+    "https://github.com/activepieces/activepieces/issues/new?title=Issue",
+    "https://github.com/activepieces/activepieces/releases",
+    "https://host/",
+    "https://host/.well-known/oauth-*",
+    "https://linkedin.com/company/activepieces",
+    "https://modelcontextprotocol.io/",
+    "https://resources.activepieces.com/glossary/custom-api-authentication",
+    "https://status.activepieces.com",
+    "https://www.activepieces.com",
+    "https://www.activepieces.com/",
+    "https://www.activepieces.com/#-why-activepieces-is-different",
+    "https://www.activepieces.com/#1-get-your-server-url",
+    "https://www.activepieces.com/#2-connect-your-client",
+    "https://www.activepieces.com/#3-start-building",
+    "https://www.activepieces.com/#annotations",
+    "https://www.activepieces.com/#ap_add_branch",
+    "https://www.activepieces.com/#ap_add_step",
+    "https://www.activepieces.com/#ap_build_flow",
+    "https://www.activepieces.com/#ap_change_flow_status",
+    "https://www.activepieces.com/#ap_create_flow",
+    "https://www.activepieces.com/#ap_create_table",
+    "https://www.activepieces.com/#ap_delete_branch",
+    "https://www.activepieces.com/#ap_delete_flow",
+    "https://www.activepieces.com/#ap_delete_records",
+    "https://www.activepieces.com/#ap_delete_step",
+    "https://www.activepieces.com/#ap_delete_table",
+    "https://www.activepieces.com/#ap_duplicate_flow",
+    "https://www.activepieces.com/#ap_find_records",
+    "https://www.activepieces.com/#ap_flow_structure",
+    "https://www.activepieces.com/#ap_get_piece_props",
+    "https://www.activepieces.com/#ap_get_run",
+    "https://www.activepieces.com/#ap_insert_records",
+    "https://www.activepieces.com/#ap_list_ai_models",
+    "https://www.activepieces.com/#ap_list_connections",
+    "https://www.activepieces.com/#ap_list_flows",
+    "https://www.activepieces.com/#ap_list_runs",
+    "https://www.activepieces.com/#ap_list_tables",
+    "https://www.activepieces.com/#ap_lock_and_publish",
+    "https://www.activepieces.com/#ap_manage_fields",
+    "https://www.activepieces.com/#ap_manage_notes",
+    "https://www.activepieces.com/#ap_read_step_code",
+    "https://www.activepieces.com/#ap_rename_flow",
+    "https://www.activepieces.com/#ap_research_pieces",
+    "https://www.activepieces.com/#ap_resolve_property_chain",
+    "https://www.activepieces.com/#ap_resolve_property_options",
+    "https://www.activepieces.com/#ap_retry_run",
+    "https://www.activepieces.com/#ap_run_action",
+    "https://www.activepieces.com/#ap_set_project_context",
+    "https://www.activepieces.com/#ap_setup_guide",
+    "https://www.activepieces.com/#ap_test_flow",
+    "https://www.activepieces.com/#ap_test_step",
+    "https://www.activepieces.com/#ap_update_branch",
+    "https://www.activepieces.com/#ap_update_record",
+    "https://www.activepieces.com/#ap_update_step",
+    "https://www.activepieces.com/#ap_update_trigger",
+    "https://www.activepieces.com/#ap_validate_flow",
+    "https://www.activepieces.com/#ap_validate_step_config",
+    "https://www.activepieces.com/#authentication",
+    "https://www.activepieces.com/#content-area",
+    "https://www.activepieces.com/#discovery",
+    "https://www.activepieces.com/#flow-building",
+    "https://www.activepieces.com/#flow-management",
+    "https://www.activepieces.com/#pagination",
+    "https://www.activepieces.com/#quick-start",
+    "https://www.activepieces.com/#router-%26-branching",
+    "https://www.activepieces.com/#security",
+    "https://www.activepieces.com/#self-hosting-behind-a-reverse-proxy",
+    "https://www.activepieces.com/#tables",
+    "https://www.activepieces.com/#testing-%26-runs",
+    "https://www.activepieces.com/#tool-categories",
+    "https://www.activepieces.com/blog",
+    "https://www.activepieces.com/blog/10-mcp-model-context-protocol-use-cases",
+    "https://www.activepieces.com/blog/5-mcp-flows-you-can-build-with-airtable-mcp-on-activepieces-with-templates",
+    "https://www.activepieces.com/blog/category/automation-software",
+    "https://www.activepieces.com/blog/category/automation-thoughts",
+    "https://www.activepieces.com/blog/category/automation-tutorials",
+    "https://www.activepieces.com/blog/connecting-claude-to-google-calendar-with-mcp",
+    "https://www.activepieces.com/blog/model-context-protocol-mcp",
+    "https://www.activepieces.com/blog/what-is-mcp",
+    "https://www.activepieces.com/docs",
+    "https://www.activepieces.com/docs/about/changelog",
+    "https://www.activepieces.com/docs/about/i18n",
+    "https://www.activepieces.com/docs/about/license",
+    "https://www.activepieces.com/docs/admin-guide/guides/event-streaming",
+    "https://www.activepieces.com/docs/admin-guide/guides/structure-projects",
+    "https://www.activepieces.com/docs/build-pieces/building-pieces/overview",
+    "https://www.activepieces.com/docs/embedding/overview",
+    "https://www.activepieces.com/docs/endpoints/overview",
+    "https://www.activepieces.com/docs/endpoints/projects/schema",
+    "https://www.activepieces.com/docs/flows/building-flows",
+    "https://www.activepieces.com/docs/flows/debugging-runs",
+    "https://www.activepieces.com/docs/flows/formula-reference",
+    "https://www.activepieces.com/docs/flows/passing-data",
+    "https://www.activepieces.com/docs/flows/publishing-flows",
+    "https://www.activepieces.com/docs/flows/using-formulas",
+    "https://www.activepieces.com/docs/flows/versioning",
+    "https://www.activepieces.com/docs/handbook/overview",
+    "https://www.activepieces.com/docs/install/overview",
+    "https://www.activepieces.com/docs/llms-full.txt",
+    "https://www.activepieces.com/docs/llms.txt",
+    "https://www.activepieces.com/docs/mcp/overview",
+    "https://www.activepieces.com/docs/mcp/tools",
+    "https://www.activepieces.com/docs/overview/welcome",
+    "https://www.activepieces.com/mcp",
+    "https://www.activepieces.com/mcp/bounty",
+    "https://www.activepieces.com/oss-friends",
+    "https://www.activepieces.com/pieces",
+    "https://www.activepieces.com/pieces/gmail",
+    "https://www.activepieces.com/pieces/hubspot",
+    "https://www.activepieces.com/pieces/mcp",
+    "https://www.activepieces.com/pieces/notion",
+    "https://www.activepieces.com/pieces/openai",
+    "https://www.activepieces.com/pieces/slack",
+    "https://www.activepieces.com/plans",
+    "https://www.activepieces.com/pricing",
+    "https://www.activepieces.com/privacy",
+    "https://www.activepieces.com/product/ai-adoption",
+    "https://www.activepieces.com/product/ai-agent-builder",
+    "https://www.activepieces.com/product/deployment-options",
+    "https://www.activepieces.com/product/governance-and-management",
+    "https://www.activepieces.com/sales",
+    "https://www.activepieces.com/terms",
+    "https://www.mintlify.com?utm_campaign=poweredBy&utm_medium=referral&utm_source=activepieces",
+    "https://www.youtube.com/@activepiecesco",
+    "https://x.com/activepieces",
+    "https://your-instance.com/",
+    "https://your-instance.com/activepieces",
+    "https://your-instance.com/mcp"
+  ]
+}

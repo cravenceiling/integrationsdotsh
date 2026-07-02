@@ -1,0 +1,294 @@
+{
+  "result": {
+    "version": 3,
+    "domain": "ai21.com",
+    "detect": {
+      "domain": "ai21.com",
+      "found": [
+        "llms.txt"
+      ],
+      "mcp": [],
+      "llmsTxt": true,
+      "errors": []
+    },
+    "usedLlm": true,
+    "discoveredAt": "2026-07-02T10:17:06.376Z",
+    "summary": "AI21 exposes a bearer-token HTTP API, Python and TypeScript SDKs, and MCP support; the documented developer credential is an AI21 API key from AI21 Studio.",
+    "credentials": {
+      "ai21_api_key": {
+        "type": "api_key",
+        "label": "AI21 API key",
+        "generateUrl": "https://studio.ai21.com/v2/account/api-key?source=docs",
+        "setup": "Create it in [AI21 Studio](https://studio.ai21.com/v2?tab=maestro): open **Settings** → **API Keys** → **Create new key**. Copy it once; AI21 says you won’t be able to view it again. Use the key as your bearer token for API access, and either pass it directly to the SDK or set `AI21_API_KEY` in your environment.",
+        "acquisition": "manual"
+      }
+    },
+    "surfaces": [
+      {
+        "slug": "ai21-api",
+        "name": "AI21 API",
+        "type": "http",
+        "docs": "https://docs.ai21.com/reference/introduction",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.ai21.com/reference/introduction",
+            "https://docs.ai21.com/reference/authentication",
+            "https://docs.ai21.com/reference/jamba-1-6-api-ref.md",
+            "https://docs.ai21.com/reference/maestro-create-run.md",
+            "https://docs.ai21.com/reference/manage-library-ref.md"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "ai21_api_key",
+                  "mechanics": {
+                    "source": "spec",
+                    "scheme": "Bearer"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.ai21.com/reference/authentication"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "ai21-python-sdk",
+        "name": "AI21 Python SDK",
+        "type": "cli",
+        "docs": "https://docs.ai21.com/docs/sdk",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.ai21.com/docs/sdk"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "ai21_api_key",
+                  "mechanics": {
+                    "source": "cli",
+                    "env": [
+                      "AI21_API_KEY"
+                    ]
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.ai21.com/docs/sdk"
+                ]
+              }
+            }
+          ]
+        },
+        "packages": [
+          {
+            "registryType": "pypi",
+            "identifier": "ai21",
+            "runtimeHint": "python"
+          }
+        ],
+        "command": "ai21"
+      },
+      {
+        "slug": "ai21-mcp",
+        "name": "AI21 MCP",
+        "type": "mcp",
+        "docs": "https://docs.ai21.com/docs/mcp-server-setup-guide.md",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.ai21.com/docs/mcp-server-setup-guide.md",
+            "https://docs.ai21.com/llms.txt"
+          ]
+        },
+        "auth": {
+          "status": "unknown"
+        },
+        "url": "https://docs.ai21.com/docs/mcp-studio-guide.md",
+        "transports": [
+          "streamable-http",
+          "sse"
+        ]
+      }
+    ]
+  },
+  "discoveredAt": "2026-07-02T10:17:06.377Z",
+  "model": "loop-gpt-5.4-mini",
+  "usage": {
+    "prompt_tokens": 73431,
+    "completion_tokens": 949,
+    "total_tokens": 74380
+  },
+  "visited": [
+    "https://docs.ai21.com/docs/create-api-key",
+    "https://docs.ai21.com/docs/mcp-server-setup-guide.md",
+    "https://docs.ai21.com/docs/sdk",
+    "https://docs.ai21.com/home",
+    "https://docs.ai21.com/llms.txt",
+    "https://docs.ai21.com/reference/authentication",
+    "https://docs.ai21.com/reference/introduction",
+    "https://docs.ai21.com/reference/jamba-1-6-api-ref.md",
+    "https://docs.ai21.com/reference/maestro-create-run.md",
+    "https://docs.ai21.com/reference/manage-library-ref.md",
+    "https://github.com/AI21Labs/ai21-typescript"
+  ],
+  "grounding": [
+    "http://localhost:6274/",
+    "http://localhost:6274/?MCP_PROXY_AUTH_TOKEN=",
+    "http://localhost:8000",
+    "http://localhost:8000/mcp",
+    "https://abc123.ngrok-free.app",
+    "https://abc123.ngrok-free.app/mcp",
+    "https://ai21-demo.mintlify.app/v4.2/docs/large-language-models",
+    "https://api.ai21.com/studio/v1/chat/completions",
+    "https://api.ai21.com/studio/v1/maestro/runs",
+    "https://api.weatherapi.com/v1/forecast",
+    "https://astral.sh/uv/install.sh",
+    "https://discord.com/invite/cKzg6GEAyB",
+    "https://docs.ai21.com/#authentication",
+    "https://docs.ai21.com/#content-area",
+    "https://docs.ai21.com/#example-usage",
+    "https://docs.ai21.com/#get-an-api-key",
+    "https://docs.ai21.com/#installation",
+    "https://docs.ai21.com/#python-sdk",
+    "https://docs.ai21.com/#step-1-sign-in-to-ai21-studio",
+    "https://docs.ai21.com/#step-2-open-settings",
+    "https://docs.ai21.com/#step-3-open-the-api-keys-tab",
+    "https://docs.ai21.com/#step-4-create-a-new-api-key",
+    "https://docs.ai21.com/#step-5-name-your-api-key",
+    "https://docs.ai21.com/#step-6-save-your-api-key",
+    "https://docs.ai21.com/#step-7-manage-your-api-keys",
+    "https://docs.ai21.com/blog.md",
+    "https://docs.ai21.com/changelog",
+    "https://docs.ai21.com/changelog.md",
+    "https://docs.ai21.com/community.md",
+    "https://docs.ai21.com/docs/cloud-platform-deployment",
+    "https://docs.ai21.com/docs/cloud-platform-deployment.md",
+    "https://docs.ai21.com/docs/create-api-key",
+    "https://docs.ai21.com/docs/create-api-key.md",
+    "https://docs.ai21.com/docs/file-library-studio",
+    "https://docs.ai21.com/docs/file-library-studio.md",
+    "https://docs.ai21.com/docs/file-search-studio-guide.md",
+    "https://docs.ai21.com/docs/fine-tuning",
+    "https://docs.ai21.com/docs/fine-tuning.md",
+    "https://docs.ai21.com/docs/function-calling",
+    "https://docs.ai21.com/docs/function-calling.md",
+    "https://docs.ai21.com/docs/http-studio-guide.md",
+    "https://docs.ai21.com/docs/instruction-following-module.md",
+    "https://docs.ai21.com/docs/jamba-batch-api",
+    "https://docs.ai21.com/docs/jamba-batch-api.md",
+    "https://docs.ai21.com/docs/jamba-foundation-models",
+    "https://docs.ai21.com/docs/jamba-foundation-models.md",
+    "https://docs.ai21.com/docs/local-inference",
+    "https://docs.ai21.com/docs/local-inference.md",
+    "https://docs.ai21.com/docs/maestro-overview",
+    "https://docs.ai21.com/docs/maestro-overview.md",
+    "https://docs.ai21.com/docs/maestro-rag-overview.md",
+    "https://docs.ai21.com/docs/maestro-rag-quickstart.md",
+    "https://docs.ai21.com/docs/maestro-rag-use-cases.md",
+    "https://docs.ai21.com/docs/managing-your-account",
+    "https://docs.ai21.com/docs/managing-your-account.md",
+    "https://docs.ai21.com/docs/mcp-server-setup-guide.md",
+    "https://docs.ai21.com/docs/mcp-studio-guide.md",
+    "https://docs.ai21.com/docs/model-availability-across-platforms",
+    "https://docs.ai21.com/docs/model-availability-across-platforms.md",
+    "https://docs.ai21.com/docs/overview",
+    "https://docs.ai21.com/docs/overview.md",
+    "https://docs.ai21.com/docs/prompt-engineering",
+    "https://docs.ai21.com/docs/prompt-engineering.md",
+    "https://docs.ai21.com/docs/quantization",
+    "https://docs.ai21.com/docs/quantization.md",
+    "https://docs.ai21.com/docs/responsible-use-1",
+    "https://docs.ai21.com/docs/responsible-use-1.md",
+    "https://docs.ai21.com/docs/safety-research-1",
+    "https://docs.ai21.com/docs/safety-research-1.md",
+    "https://docs.ai21.com/docs/sdk",
+    "https://docs.ai21.com/docs/sdk.md",
+    "https://docs.ai21.com/docs/tokenization",
+    "https://docs.ai21.com/docs/tokenization.md",
+    "https://docs.ai21.com/docs/training-data-1",
+    "https://docs.ai21.com/docs/training-data-1.md",
+    "https://docs.ai21.com/docs/troubleshooting-performance",
+    "https://docs.ai21.com/docs/troubleshooting-performance.md",
+    "https://docs.ai21.com/docs/usage-cost",
+    "https://docs.ai21.com/docs/usage-cost.md",
+    "https://docs.ai21.com/docs/use-cases-validated-output.md",
+    "https://docs.ai21.com/docs/user-provided-tools-http.md",
+    "https://docs.ai21.com/docs/user-provided-tools-mcp.md",
+    "https://docs.ai21.com/docs/user-provided-tools-overview.md",
+    "https://docs.ai21.com/docs/using-data-connectors",
+    "https://docs.ai21.com/docs/using-data-connectors.md",
+    "https://docs.ai21.com/docs/vllm",
+    "https://docs.ai21.com/docs/vllm.md",
+    "https://docs.ai21.com/docs/walkthrough-guide.md",
+    "https://docs.ai21.com/docs/web-search-studio-guide.md",
+    "https://docs.ai21.com/home",
+    "https://docs.ai21.com/home.md",
+    "https://docs.ai21.com/llms.txt",
+    "https://docs.ai21.com/reference/api-rate-limits",
+    "https://docs.ai21.com/reference/api-rate-limits.md",
+    "https://docs.ai21.com/reference/authentication",
+    "https://docs.ai21.com/reference/authentication.md",
+    "https://docs.ai21.com/reference/introduction",
+    "https://docs.ai21.com/reference/introduction.md",
+    "https://docs.ai21.com/reference/jamba-1-6-api-ref",
+    "https://docs.ai21.com/reference/jamba-1-6-api-ref.md",
+    "https://docs.ai21.com/reference/jamba-api-response",
+    "https://docs.ai21.com/reference/jamba-api-response.md",
+    "https://docs.ai21.com/reference/maestro-create-run",
+    "https://docs.ai21.com/reference/maestro-create-run.md",
+    "https://docs.ai21.com/reference/manage-library-ref",
+    "https://docs.ai21.com/reference/manage-library-ref.md",
+    "https://docs.ai21.com/reference/manage-library-ref/delete-file",
+    "https://docs.ai21.com/reference/manage-library-ref/delete-file.md",
+    "https://docs.ai21.com/reference/manage-library-ref/get-file-download-link",
+    "https://docs.ai21.com/reference/manage-library-ref/get-file-download-link.md",
+    "https://docs.ai21.com/reference/manage-library-ref/get-workspace-files",
+    "https://docs.ai21.com/reference/manage-library-ref/get-workspace-files.md",
+    "https://docs.ai21.com/reference/manage-library-ref/list-library-files",
+    "https://docs.ai21.com/reference/manage-library-ref/list-library-files.md",
+    "https://docs.ai21.com/reference/manage-library-ref/update-file",
+    "https://docs.ai21.com/reference/manage-library-ref/update-file.md",
+    "https://docs.ai21.com/reference/manage-library-ref/upload-workspace-files",
+    "https://docs.ai21.com/reference/manage-library-ref/upload-workspace-files.md",
+    "https://docs.ai21.com/reference/retrieve-run",
+    "https://docs.ai21.com/reference/retrieve-run.md",
+    "https://docs.ai21.com/reference/run-object",
+    "https://docs.ai21.com/reference/run-object.md",
+    "https://docs.ai21.com/status",
+    "https://example.com",
+    "https://finance.yahoo.com/",
+    "https://github.com/AI21Labs/ai21-python",
+    "https://github.com/AI21Labs/ai21-typescript",
+    "https://github.com/modelcontextprotocol/inspector",
+    "https://mintcdn.com/ai21-demo/wP9Nmewq561aziQU/images/MCPEXPOSER.png?fit=max&auto=format&n=wP9Nmewq561aziQU&q=85&s=a6824628980756d84a08b8cbce745108",
+    "https://ngrok.com/download",
+    "https://studio.ai21.com/v2/account/api-key?source=docs&_gl=1*u1mkxz*_gcl_au*OTIzMDQ5NzU0LjE3NDkyOTE4NjA",
+    "https://studio.ai21.com/v2/workspaces/81189ce4-f4d4-433e-954d-ff17cd040a2a/maestro",
+    "https://studio.ai21.com/v2?tab=maestro",
+    "https://studio.ai21.com/v2?tab=third_party_models",
+    "https://twitter.com/AI21Labs",
+    "https://www.ai21.com/",
+    "https://www.ai21.com/blog/",
+    "https://www.ai21.com/talk-to-us/",
+    "https://www.linkedin.com/company/ai21",
+    "https://www.reuters.com/markets/"
+  ]
+}

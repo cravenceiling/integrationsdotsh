@@ -1,0 +1,519 @@
+{
+  "result": {
+    "version": 3,
+    "domain": "abstractapi.com",
+    "detect": {
+      "domain": "abstractapi.com",
+      "found": [
+        "llms.txt"
+      ],
+      "mcp": [],
+      "llmsTxt": true,
+      "errors": []
+    },
+    "usedLlm": true,
+    "discoveredAt": "2026-07-02T10:10:07.586Z",
+    "summary": "Abstract API exposes four documented REST surfaces—Email Reputation, Phone Intelligence, IP Intelligence, and Company Enrichment—each using a per-product API key; Email Reputation also supports Bearer-header auth, and the docs/index pages are public.",
+    "credentials": {
+      "abstractapi_api_key": {
+        "type": "api_key",
+        "label": "Abstract API key",
+        "generateUrl": "https://app.abstractapi.com/dashboard",
+        "setup": "Sign in to the [Abstract dashboard](https://app.abstractapi.com/dashboard), pick the API product you want to use, and copy that product’s unique `api_key`. Abstract documents that each API has its own key, so keys are not shared across products. Use the key either as `?api_key=...` in the query string or as `Authorization: Bearer ...` where supported.",
+        "acquisition": "manual"
+      }
+    },
+    "surfaces": [
+      {
+        "slug": "email-reputation-api",
+        "name": "Email Reputation API",
+        "type": "http",
+        "docs": "https://docs.abstractapi.com/api/email-reputation",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.abstractapi.com/api/email-reputation"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "abstractapi_api_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "query",
+                    "scheme": "api_key",
+                    "paramName": "api_key"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.abstractapi.com/api/email-reputation"
+                ]
+              }
+            },
+            {
+              "use": [
+                {
+                  "id": "abstractapi_api_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Bearer"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.abstractapi.com/api/email-reputation"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "phone-intelligence-api",
+        "name": "Phone Intelligence API",
+        "type": "http",
+        "docs": "https://docs.abstractapi.com/api/phone-intelligence",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.abstractapi.com/api/phone-intelligence"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "abstractapi_api_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "query",
+                    "scheme": "api_key",
+                    "paramName": "api_key"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.abstractapi.com/api/phone-intelligence"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "ip-intelligence-api",
+        "name": "IP Intelligence API",
+        "type": "http",
+        "docs": "https://docs.abstractapi.com/api/ip-intelligence",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.abstractapi.com/api/ip-intelligence"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "abstractapi_api_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "query",
+                    "scheme": "api_key",
+                    "paramName": "api_key"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.abstractapi.com/api/ip-intelligence"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "company-enrichment-api",
+        "name": "Company Enrichment API",
+        "type": "http",
+        "docs": "https://docs.abstractapi.com/api/company-enrichment",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.abstractapi.com/api/company-enrichment"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "abstractapi_api_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "query",
+                    "scheme": "api_key",
+                    "paramName": "api_key"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.abstractapi.com/api/company-enrichment"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "slug": "abstract-api-docs",
+        "name": "Abstract API docs",
+        "type": "http",
+        "docs": "https://docs.abstractapi.com/api",
+        "basis": {
+          "via": "discovered",
+          "evidence": []
+        },
+        "auth": {
+          "status": "none",
+          "basis": {
+            "via": "discovered",
+            "evidence": [
+              "https://docs.abstractapi.com/api",
+              "https://abstractapi.com/llms.txt"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "discoveredAt": "2026-07-02T10:10:07.587Z",
+  "model": "loop-gpt-5.4-mini",
+  "usage": {
+    "prompt_tokens": 87175,
+    "completion_tokens": 953,
+    "total_tokens": 88128
+  },
+  "visited": [
+    "https://abstractapi.com/llms.txt",
+    "https://docs.abstractapi.com/api",
+    "https://docs.abstractapi.com/api/company-enrichment",
+    "https://docs.abstractapi.com/api/email-reputation",
+    "https://docs.abstractapi.com/api/ip-intelligence",
+    "https://docs.abstractapi.com/api/phone-intelligence",
+    "https://github.com/blurrah/mcp-graphql",
+    "https://mcpmarket.com/server/api-docs",
+    "https://www.apollographql.com/blog/connect-ai-agents-to-your-graphql-api-using-mcp-and-type-safe-tool-configuration",
+    "https://www.reddit.com/r/mcp/comments/1ogb1ye/api_graphql_openapi_swagger_docs_mcp_server/",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
+  ],
+  "grounding": [
+    "http://www.namecheap.com",
+    "https://abstractapi.com/llms.txt",
+    "https://app.abstractapi.com/api/email-reputation/pricing/select",
+    "https://app.abstractapi.com/dashboard",
+    "https://calendly.com/d/crbk-jpf-9pv?&utm_source=documentation",
+    "https://companyenrichment.abstractapi.com/v2",
+    "https://docs.abstractapi.com/#-popular-apis",
+    "https://docs.abstractapi.com/#api-versions",
+    "https://docs.abstractapi.com/#authentication-methods",
+    "https://docs.abstractapi.com/#base-url",
+    "https://docs.abstractapi.com/#bearer-token-header",
+    "https://docs.abstractapi.com/#bulk-upload-csv",
+    "https://docs.abstractapi.com/#checking-a-malformed-email",
+    "https://docs.abstractapi.com/#code-samples-and-libraries",
+    "https://docs.abstractapi.com/#content-area",
+    "https://docs.abstractapi.com/#country-codes",
+    "https://docs.abstractapi.com/#getting-started",
+    "https://docs.abstractapi.com/#https",
+    "https://docs.abstractapi.com/#limiting-response-fields",
+    "https://docs.abstractapi.com/#other-notes",
+    "https://docs.abstractapi.com/#param-annual-revenue",
+    "https://docs.abstractapi.com/#param-api-key",
+    "https://docs.abstractapi.com/#param-asn-asn",
+    "https://docs.abstractapi.com/#param-asn-domain",
+    "https://docs.abstractapi.com/#param-asn-name",
+    "https://docs.abstractapi.com/#param-asn-type",
+    "https://docs.abstractapi.com/#param-city",
+    "https://docs.abstractapi.com/#param-company-domain",
+    "https://docs.abstractapi.com/#param-company-name",
+    "https://docs.abstractapi.com/#param-company-type",
+    "https://docs.abstractapi.com/#param-country",
+    "https://docs.abstractapi.com/#param-country-iso-code",
+    "https://docs.abstractapi.com/#param-crunchbase-url",
+    "https://docs.abstractapi.com/#param-currency-code",
+    "https://docs.abstractapi.com/#param-currency-name",
+    "https://docs.abstractapi.com/#param-currency-symbol",
+    "https://docs.abstractapi.com/#param-description",
+    "https://docs.abstractapi.com/#param-domain",
+    "https://docs.abstractapi.com/#param-domain-1",
+    "https://docs.abstractapi.com/#param-domains-domains",
+    "https://docs.abstractapi.com/#param-email",
+    "https://docs.abstractapi.com/#param-email-address",
+    "https://docs.abstractapi.com/#param-email-addresses",
+    "https://docs.abstractapi.com/#param-email-breaches-breached-domains",
+    "https://docs.abstractapi.com/#param-email-breaches-breached-domains-date-breached",
+    "https://docs.abstractapi.com/#param-email-breaches-breached-domains-domain",
+    "https://docs.abstractapi.com/#param-email-breaches-date-first-breached",
+    "https://docs.abstractapi.com/#param-email-breaches-date-last-breached",
+    "https://docs.abstractapi.com/#param-email-breaches-total-breaches",
+    "https://docs.abstractapi.com/#param-email-deliverability-is-format-valid",
+    "https://docs.abstractapi.com/#param-email-deliverability-is-mx-valid",
+    "https://docs.abstractapi.com/#param-email-deliverability-is-smtp-valid",
+    "https://docs.abstractapi.com/#param-email-deliverability-mx-records",
+    "https://docs.abstractapi.com/#param-email-deliverability-status",
+    "https://docs.abstractapi.com/#param-email-deliverability-status-detail",
+    "https://docs.abstractapi.com/#param-email-domain-date-expires",
+    "https://docs.abstractapi.com/#param-email-domain-date-last-renewed",
+    "https://docs.abstractapi.com/#param-email-domain-date-registered",
+    "https://docs.abstractapi.com/#param-email-domain-domain",
+    "https://docs.abstractapi.com/#param-email-domain-domain-age",
+    "https://docs.abstractapi.com/#param-email-domain-is-live-site",
+    "https://docs.abstractapi.com/#param-email-domain-is-risky-tld",
+    "https://docs.abstractapi.com/#param-email-domain-registrar",
+    "https://docs.abstractapi.com/#param-email-domain-registrar-url",
+    "https://docs.abstractapi.com/#param-email-quality-is-catchall",
+    "https://docs.abstractapi.com/#param-email-quality-is-disposable",
+    "https://docs.abstractapi.com/#param-email-quality-is-dmarc-enforced",
+    "https://docs.abstractapi.com/#param-email-quality-is-free-email",
+    "https://docs.abstractapi.com/#param-email-quality-is-role",
+    "https://docs.abstractapi.com/#param-email-quality-is-spf-strict",
+    "https://docs.abstractapi.com/#param-email-quality-is-subaddress",
+    "https://docs.abstractapi.com/#param-email-quality-is-username-suspicious",
+    "https://docs.abstractapi.com/#param-email-quality-minimum-age",
+    "https://docs.abstractapi.com/#param-email-quality-score",
+    "https://docs.abstractapi.com/#param-email-risk-address-risk-status",
+    "https://docs.abstractapi.com/#param-email-risk-domain-risk-status",
+    "https://docs.abstractapi.com/#param-email-sender-email-provider-name",
+    "https://docs.abstractapi.com/#param-email-sender-first-name",
+    "https://docs.abstractapi.com/#param-email-sender-last-name",
+    "https://docs.abstractapi.com/#param-email-sender-organization-name",
+    "https://docs.abstractapi.com/#param-email-sender-organization-type",
+    "https://docs.abstractapi.com/#param-employee-count",
+    "https://docs.abstractapi.com/#param-employee-range",
+    "https://docs.abstractapi.com/#param-exchange",
+    "https://docs.abstractapi.com/#param-facebook-url",
+    "https://docs.abstractapi.com/#param-fields",
+    "https://docs.abstractapi.com/#param-flag-emoji",
+    "https://docs.abstractapi.com/#param-flag-png",
+    "https://docs.abstractapi.com/#param-flag-svg",
+    "https://docs.abstractapi.com/#param-flag-unicode",
+    "https://docs.abstractapi.com/#param-global-ranking",
+    "https://docs.abstractapi.com/#param-industry",
+    "https://docs.abstractapi.com/#param-instagram-url",
+    "https://docs.abstractapi.com/#param-ip-address",
+    "https://docs.abstractapi.com/#param-ip-address-1",
+    "https://docs.abstractapi.com/#param-latitude",
+    "https://docs.abstractapi.com/#param-linkedin-url",
+    "https://docs.abstractapi.com/#param-location-city",
+    "https://docs.abstractapi.com/#param-location-city-geoname-id",
+    "https://docs.abstractapi.com/#param-location-continent",
+    "https://docs.abstractapi.com/#param-location-continent-code",
+    "https://docs.abstractapi.com/#param-location-continent-geoname-id",
+    "https://docs.abstractapi.com/#param-location-country",
+    "https://docs.abstractapi.com/#param-location-country-code",
+    "https://docs.abstractapi.com/#param-location-country-geoname-id",
+    "https://docs.abstractapi.com/#param-location-is-country-eu",
+    "https://docs.abstractapi.com/#param-location-latitude",
+    "https://docs.abstractapi.com/#param-location-longitude",
+    "https://docs.abstractapi.com/#param-location-postal-code",
+    "https://docs.abstractapi.com/#param-location-region",
+    "https://docs.abstractapi.com/#param-location-region-geoname-id",
+    "https://docs.abstractapi.com/#param-location-region-iso-code",
+    "https://docs.abstractapi.com/#param-logo",
+    "https://docs.abstractapi.com/#param-longitude",
+    "https://docs.abstractapi.com/#param-naics-code",
+    "https://docs.abstractapi.com/#param-phone",
+    "https://docs.abstractapi.com/#param-phone-breaches",
+    "https://docs.abstractapi.com/#param-phone-breaches-breached-domains",
+    "https://docs.abstractapi.com/#param-phone-breaches-date-first-breached",
+    "https://docs.abstractapi.com/#param-phone-breaches-date-last-breached",
+    "https://docs.abstractapi.com/#param-phone-breaches-total-breaches",
+    "https://docs.abstractapi.com/#param-phone-carrier",
+    "https://docs.abstractapi.com/#param-phone-carrier-line-type",
+    "https://docs.abstractapi.com/#param-phone-carrier-mcc",
+    "https://docs.abstractapi.com/#param-phone-carrier-mnc",
+    "https://docs.abstractapi.com/#param-phone-carrier-name",
+    "https://docs.abstractapi.com/#param-phone-format",
+    "https://docs.abstractapi.com/#param-phone-format-international",
+    "https://docs.abstractapi.com/#param-phone-format-national",
+    "https://docs.abstractapi.com/#param-phone-location",
+    "https://docs.abstractapi.com/#param-phone-location-city",
+    "https://docs.abstractapi.com/#param-phone-location-country-code",
+    "https://docs.abstractapi.com/#param-phone-location-country-name",
+    "https://docs.abstractapi.com/#param-phone-location-country-prefix",
+    "https://docs.abstractapi.com/#param-phone-location-region",
+    "https://docs.abstractapi.com/#param-phone-location-timezone",
+    "https://docs.abstractapi.com/#param-phone-messaging",
+    "https://docs.abstractapi.com/#param-phone-messaging-sms-domain",
+    "https://docs.abstractapi.com/#param-phone-messaging-sms-email",
+    "https://docs.abstractapi.com/#param-phone-number",
+    "https://docs.abstractapi.com/#param-phone-numbers",
+    "https://docs.abstractapi.com/#param-phone-registration",
+    "https://docs.abstractapi.com/#param-phone-registration-name",
+    "https://docs.abstractapi.com/#param-phone-registration-type",
+    "https://docs.abstractapi.com/#param-phone-risk",
+    "https://docs.abstractapi.com/#param-phone-risk-is-abuse-detected",
+    "https://docs.abstractapi.com/#param-phone-risk-is-disposable",
+    "https://docs.abstractapi.com/#param-phone-risk-risk-level",
+    "https://docs.abstractapi.com/#param-phone-validation",
+    "https://docs.abstractapi.com/#param-phone-validation-is-valid",
+    "https://docs.abstractapi.com/#param-phone-validation-is-voip",
+    "https://docs.abstractapi.com/#param-phone-validation-line-status",
+    "https://docs.abstractapi.com/#param-phone-validation-minimum-age",
+    "https://docs.abstractapi.com/#param-postal-code",
+    "https://docs.abstractapi.com/#param-revenue-range",
+    "https://docs.abstractapi.com/#param-security-is-abuse",
+    "https://docs.abstractapi.com/#param-security-is-hosting",
+    "https://docs.abstractapi.com/#param-security-is-mobile",
+    "https://docs.abstractapi.com/#param-security-is-proxy",
+    "https://docs.abstractapi.com/#param-security-is-relay",
+    "https://docs.abstractapi.com/#param-security-is-tor",
+    "https://docs.abstractapi.com/#param-security-is-vpn",
+    "https://docs.abstractapi.com/#param-sic-code",
+    "https://docs.abstractapi.com/#param-state",
+    "https://docs.abstractapi.com/#param-street-address",
+    "https://docs.abstractapi.com/#param-tags",
+    "https://docs.abstractapi.com/#param-technologies",
+    "https://docs.abstractapi.com/#param-ticker",
+    "https://docs.abstractapi.com/#param-timezone-abbreviation",
+    "https://docs.abstractapi.com/#param-timezone-is-dst",
+    "https://docs.abstractapi.com/#param-timezone-local-time",
+    "https://docs.abstractapi.com/#param-timezone-name",
+    "https://docs.abstractapi.com/#param-timezone-utc-offset",
+    "https://docs.abstractapi.com/#param-twitter-url",
+    "https://docs.abstractapi.com/#param-type",
+    "https://docs.abstractapi.com/#param-year-founded",
+    "https://docs.abstractapi.com/#post-method",
+    "https://docs.abstractapi.com/#post-with-bearer-token-and-json-body",
+    "https://docs.abstractapi.com/#post-with-form-encoded-data",
+    "https://docs.abstractapi.com/#query-parameter-default",
+    "https://docs.abstractapi.com/#request-examples",
+    "https://docs.abstractapi.com/#request-parameters",
+    "https://docs.abstractapi.com/#response-and-error-codes",
+    "https://docs.abstractapi.com/#response-parameters",
+    "https://docs.abstractapi.com/#rest",
+    "https://docs.abstractapi.com/#validation-endpoint",
+    "https://docs.abstractapi.com/#your-api-key",
+    "https://docs.abstractapi.com/api",
+    "https://docs.abstractapi.com/api/avatars",
+    "https://docs.abstractapi.com/api/company-enrichment",
+    "https://docs.abstractapi.com/api/email-reputation",
+    "https://docs.abstractapi.com/api/exchange-rates",
+    "https://docs.abstractapi.com/api/holidays",
+    "https://docs.abstractapi.com/api/iban-validation",
+    "https://docs.abstractapi.com/api/images",
+    "https://docs.abstractapi.com/api/ip-intelligence",
+    "https://docs.abstractapi.com/api/phone-intelligence",
+    "https://docs.abstractapi.com/api/scrape",
+    "https://docs.abstractapi.com/api/screenshot",
+    "https://docs.abstractapi.com/api/timezones",
+    "https://docs.abstractapi.com/api/vat-validation",
+    "https://docs.abstractapi.com/llms.txt",
+    "https://docs.google.com/spreadsheets/d/1w4VMneDoL6JW2NaUp2SjTOyvRcD4rlXDI0XpqKS2PeQ/view?usp=sharing",
+    "https://emailreputation.abstractapi.com/v1",
+    "https://emailreputation.abstractapi.com/v1/",
+    "https://emailreputation.abstractapi.com/v1/?api_key=YOUR_UNIQUE_API_KEY&email=johnsmith@gmail.com",
+    "https://emailreputation.abstractapi.com/v1/?email=johnsmith@gmail.com",
+    "https://github.com/blurrah/mcp-graphql",
+    "https://ip-intelligence.abstractapi.com/v1",
+    "https://ip-intelligence.abstractapi.com/v1/",
+    "https://logo.abstractapi.com/cb6281618-c67a-5004-9c9b-29fc2245a4f7_-airbnb.png",
+    "https://mcpmarket.com/server/api-docs",
+    "https://phoneintelligence.abstractapi.com/v1",
+    "https://phoneintelligence.abstractapi.com/v1/",
+    "https://static.abstractapi.com/country-flags/US_flag.png",
+    "https://static.abstractapi.com/country-flags/US_flag.svg",
+    "https://twitter.com/abstractapi",
+    "https://www.abstractapi.com",
+    "https://www.abstractapi.com/",
+    "https://www.abstractapi.com/about",
+    "https://www.abstractapi.com/affiliate-program",
+    "https://www.abstractapi.com/api",
+    "https://www.abstractapi.com/api/company-enrichment",
+    "https://www.abstractapi.com/api/email-reputation-api",
+    "https://www.abstractapi.com/api/email-verification-validation-api",
+    "https://www.abstractapi.com/api/exchange-rate-api",
+    "https://www.abstractapi.com/api/holidays-api",
+    "https://www.abstractapi.com/api/iban-validation",
+    "https://www.abstractapi.com/api/image-processing-optimization-api",
+    "https://www.abstractapi.com/api/ip-geolocation-api",
+    "https://www.abstractapi.com/api/ip-intelligence",
+    "https://www.abstractapi.com/api/phone-validation-api",
+    "https://www.abstractapi.com/api/time-date-timezone-api",
+    "https://www.abstractapi.com/api/user-avatar-api",
+    "https://www.abstractapi.com/api/vat-validation-rates-api",
+    "https://www.abstractapi.com/api/web-scraping-api",
+    "https://www.abstractapi.com/api/website-screenshot-api",
+    "https://www.abstractapi.com/contact-us",
+    "https://www.abstractapi.com/data-correction",
+    "https://www.abstractapi.com/docs",
+    "https://www.abstractapi.com/domain-reputation-checker",
+    "https://www.abstractapi.com/guides/alternatives",
+    "https://www.abstractapi.com/guides/alternatives-to/abuseipdb-alternatives",
+    "https://www.abstractapi.com/guides/alternatives-to/accurate-append-email-validation-and-verification-api-alternatives",
+    "https://www.abstractapi.com/guides/alternatives-to/amazon-email-address-and-phone-number-validation-api-alternatives",
+    "https://www.abstractapi.com/guides/alternatives-to/amazon-pinpoint-phone-number-validation-alternatives",
+    "https://www.abstractapi.com/guides/alternatives-to/anyapi-geolocation-alternatives",
+    "https://www.abstractapi.com/guides/alternatives-to/apibundle-alternatives",
+    "https://www.abstractapi.com/guides/alternatives-to/apiip-alternatives",
+    "https://www.abstractapi.com/guides/alternatives-to/apilayer-email-verification-api--alternatives",
+    "https://www.abstractapi.com/integrations",
+    "https://www.abstractapi.com/integrations/aws-ip-geolocation-api",
+    "https://www.abstractapi.com/integrations/aws-phone-validation-api",
+    "https://www.abstractapi.com/integrations/hubspot-email-validation-api",
+    "https://www.abstractapi.com/integrations/hubspot-ip-geolocation-api",
+    "https://www.abstractapi.com/integrations/hubspot-phone-validation-api",
+    "https://www.abstractapi.com/integrations/salesforce-email-validation-api",
+    "https://www.abstractapi.com/integrations/salesforce-ip-geolocation-api",
+    "https://www.abstractapi.com/integrations/salesforce-phone-validation-api",
+    "https://www.abstractapi.com/ip-lookup",
+    "https://www.abstractapi.com/legal/dpa",
+    "https://www.abstractapi.com/legal/legal",
+    "https://www.abstractapi.com/legal/terms-affiliate-program",
+    "https://www.abstractapi.com/resources",
+    "https://www.abstractapi.com/solutions/customer-risk-assessment",
+    "https://www.abstractapi.com/solutions/email-impersonation-prevention",
+    "https://www.abstractapi.com/solutions/payment-fraud-detection",
+    "https://www.abstractapi.com/tools/disposable-email-checker",
+    "https://www.abstractapi.com/tools/dmarc-check",
+    "https://www.abstractapi.com/tools/domain-age-checker",
+    "https://www.abstractapi.com/tools/gdpr-cookie-banner-creator",
+    "https://www.abstractapi.com/tools/ip-abuse-check",
+    "https://www.abstractapi.com/tools/phone-number-lookup",
+    "https://www.abstractapi.com/tools/proxy-detector",
+    "https://www.abstractapi.com/tools/spf-check",
+    "https://www.abstractapi.com/tools/tor-detector",
+    "https://www.abstractapi.com/tools/vpn-detection-tool",
+    "https://www.abstractapi.com/what-is-my-ip-address-and-location",
+    "https://www.apollographql.com/blog/connect-ai-agents-to-your-graphql-api-using-mcp-and-type-safe-tool-configuration",
+    "https://www.facebook.com/abstractapi",
+    "https://www.json.org/json-en.html",
+    "https://www.linkedin.com/company/abstractapi",
+    "https://www.mintlify.com?utm_campaign=poweredBy&utm_medium=referral&utm_source=abstractapi-avatars",
+    "https://www.reddit.com/r/mcp/comments/1ogb1ye/api_graphql_openapi_swagger_docs_mcp_server/",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
+  ]
+}
