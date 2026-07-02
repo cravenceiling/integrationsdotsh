@@ -68,7 +68,7 @@ function collectUrls(value: unknown, out = new Set<string>()): Set<string> {
   if (typeof value === "string") {
     for (const match of value.match(/https?:\/\/[^\s"'<>),\]`]+/g) ?? []) {
       if (/^https?:\/\/\.{2,}/.test(match)) continue; // literal "http://..." ellipses in prose
-      out.add(match.replace(/[.]+$/, ""));
+      out.add(match.replace(/[.;,]+$/, ""));
     }
   } else if (Array.isArray(value)) {
     for (const item of value) collectUrls(item, out);
@@ -156,7 +156,7 @@ export function checklist(
   const brandLabel = resultDomain ? resultDomain.split(".")[0] : null;
   const urlOffenders = [...collectUrls(result)].filter((url) => {
     if (corpusText !== undefined) return !corpusText.includes(url);
-    if (/[{}]/.test(url)) return false;
+    if (/[{}]/.test(url) || /\/\/[^/]*\b[A-Z]{2,}[A-Z_-]*[A-Z]\b/.test(url)) return false; // {tenant} and YOUR_INSTANCE placeholders
     const urlDomain = registrable(url);
     return (
       !evidenceUrls.has(url) &&
