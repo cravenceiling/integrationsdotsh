@@ -119,7 +119,7 @@ function EntryRow({ e }: { e: SurfaceEntry }) {
   );
 }
 
-function DiscoveryMeta({ discoveredAt, hasSurfaces, onRun }: { discoveredAt?: string; hasSurfaces: boolean; onRun: () => void }) {
+function DiscoveryMeta({ discoveredAt, hasSurfaces, onRegenerate }: { discoveredAt?: string; hasSurfaces: boolean; onRegenerate: () => void }) {
   const freshness = discoveryFreshness(discoveredAt, hasSurfaces);
   // Unknown-age data (timestampless baselines) shows no age claim at all —
   // just the regenerate affordance.
@@ -127,7 +127,7 @@ function DiscoveryMeta({ discoveredAt, hasSurfaces, onRun }: { discoveredAt?: st
     <div className="disc-freshness" title={freshness.title}>
       {freshness.known && <span>discovered {freshness.label}</span>}
       {freshness.shouldRegenerate && (
-        <button className="conv-action disc-regenerate" onClick={onRun}>
+        <button className="conv-action disc-regenerate" onClick={onRegenerate}>
           regenerate
         </button>
       )}
@@ -179,15 +179,19 @@ export default function Surfaces({
     };
   }, [domain, initialData]);
 
-  async function run() {
-    // The site's key conversion — posthog is the snippet global from
-    // src/lib/analytics.ts (absent on localhost, hence the guard).
-    (window as { posthog?: { capture: (e: string, p?: Record<string, unknown>) => void } }).posthog?.capture("map_surface_clicked", { domain });
+  async function run(opts?: { regenerate?: boolean }) {
+    const posthog = (window as { posthog?: { capture: (e: string, p?: Record<string, unknown>) => void } }).posthog;
+    if (opts?.regenerate) {
+      posthog?.capture("regenerate_clicked", { domain });
+    } else {
+      posthog?.capture("map_surface_clicked", { domain });
+    }
     setState("loading");
     setProgress("Starting…");
     setLiveCreds({});
     setLiveSurfaces([]);
     const surfaceKeys = new Set<string>();
+    const started = Date.now();
     try {
       const res = await fetch(`/api/${encodeURIComponent(domain)}/discover/stream`);
       if (!res.ok || !res.body) throw new Error();
@@ -195,6 +199,7 @@ export default function Surfaces({
       const dec = new TextDecoder();
       let buf = "";
       let finished = false;
+      let surfaceCount = 0;
       while (!finished) {
         const { value, done } = await reader.read();
         if (done) break;
@@ -209,7 +214,7 @@ export default function Surfaces({
             else if (line.startsWith("data:")) dat += line.slice(5).trim();
           }
           if (!dat) continue;
-          let parsed: { message?: string; id?: string; credential?: Credential; type?: string; name?: string; spec?: string; url?: string };
+          let parsed: { message?: string; id?: string; credential?: Credential; type?: string; name?: string; spec?: string; url?: string; surfaces?: unknown[] };
           try {
             parsed = JSON.parse(dat);
           } catch {
@@ -227,20 +232,31 @@ export default function Surfaces({
               setLiveSurfaces((s) => [...s, parsed as unknown as Surface]);
             }
           } else if (ev === "done") {
+            surfaceCount = Array.isArray(parsed.surfaces) ? parsed.surfaces.length : liveSurfaces.length;
             setData(parsed as unknown as DiscoverData);
             setState("done");
             finished = true;
+            posthog?.capture("discovery_stream_done", { domain, surfaces: surfaceCount, duration_ms: Date.now() - started });
           } else if (ev === "error") {
             setState("error");
             finished = true;
+            posthog?.capture("discovery_stream_error", { domain });
           }
         }
       }
       reader.cancel().catch(() => {});
-      if (!finished) setState("error");
+      if (!finished) {
+        setState("error");
+        posthog?.capture("discovery_stream_error", { domain });
+      }
     } catch {
       setState("error");
+      posthog?.capture("discovery_stream_error", { domain });
     }
+  }
+
+  function regenerate() {
+    void run({ regenerate: true });
   }
 
   const activeData: DiscoverData | null =
@@ -264,7 +280,7 @@ export default function Surfaces({
           <p className="auth-cta-text">
             Map how to integrate with <b>{domain}</b> — every API, MCP server, and CLI, and how to authenticate to each.
           </p>
-          <button className="auth-btn" onClick={run}>
+          <button className="auth-btn" onClick={() => void run()}>
             Map integration surface →
           </button>
         </div>
@@ -279,13 +295,13 @@ export default function Surfaces({
       {state === "error" && (
         <div className="auth-loading">
           <span className="auth-loading-text">Couldn't reach the detector.</span>
-          <button className="auth-btn" onClick={run}>
+          <button className="auth-btn" onClick={() => void run()}>
             Retry
           </button>
         </div>
       )}
       {state === "done" && data?.summary && <p className="disc-summary">{data.summary}</p>}
-      {state === "done" && hasSurfaceData && <DiscoveryMeta discoveredAt={data?.discoveredAt} hasSurfaces={hasSurfaceData} onRun={run} />}
+      {state === "done" && hasSurfaceData && <DiscoveryMeta discoveredAt={data?.discoveredAt} hasSurfaces={hasSurfaceData} onRegenerate={regenerate} />}
 
       {built.map((sec) => (
         <section className="disc-sec" id={sec.kind} key={sec.kind}>

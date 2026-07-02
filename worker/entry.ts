@@ -134,12 +134,24 @@ async function faviconData(origin: string, domain: string): Promise<OgImageData 
 async function ogResponse(request: Request, env: Env, ctx: ExecutionContext, cacheVersion: string): Promise<Response | null> {
   if (request.method !== "GET" && request.method !== "HEAD") return null;
   const url = new URL(request.url);
+  const meta = ogMeta(url);
+  if (!meta) return null;
+  const started = Date.now();
   const cache = (caches as unknown as EdgeCaches).default;
   const keyUrl = new URL(url.origin + url.pathname);
   keyUrl.searchParams.set("__cv", cacheVersion);
   const cacheKey = new Request(keyUrl.toString(), { method: "GET" });
   const cached = await cache.match(cacheKey);
-  if (cached) return cached;
+  if (cached) {
+    track(env, ctx, request, "og_render", {
+      kind: meta.kind,
+      ...(meta.domain && { domain: meta.domain }),
+      status: cached.status,
+      duration_ms: Date.now() - started,
+      cache_hit: true,
+    });
+    return cached;
+  }
 
   const png = async () => {
     const fonts = await ogFonts(env, url.origin);
@@ -170,7 +182,16 @@ async function ogResponse(request: Request, env: Env, ctx: ExecutionContext, cac
   };
 
   const body = await png();
-  if (!body) return new Response(null, { status: 404 });
+  if (!body) {
+    track(env, ctx, request, "og_render", {
+      kind: meta.kind,
+      ...(meta.domain && { domain: meta.domain }),
+      status: 404,
+      duration_ms: Date.now() - started,
+      cache_hit: false,
+    });
+    return new Response(null, { status: 404 });
+  }
   const bodyBuffer = body.buffer.slice(body.byteOffset, body.byteOffset + body.byteLength) as ArrayBuffer;
   const cacheable = new Response(bodyBuffer, {
     headers: {
@@ -179,6 +200,13 @@ async function ogResponse(request: Request, env: Env, ctx: ExecutionContext, cac
     },
   });
   ctx.waitUntil(cache.put(cacheKey, cacheable.clone()));
+  track(env, ctx, request, "og_render", {
+    kind: meta.kind,
+    ...(meta.domain && { domain: meta.domain }),
+    status: 200,
+    duration_ms: Date.now() - started,
+    cache_hit: false,
+  });
   if (request.method === "HEAD") {
     return new Response(null, { headers: cacheable.headers });
   }
@@ -190,6 +218,59 @@ const json = (body: unknown, status = 200, headers: Record<string, string> = {})
     status,
     headers: { "content-type": "application/json; charset=utf-8", "access-control-allow-origin": "*", ...headers },
   });
+
+const truncate = (s: string, max: number) => (s.length <= max ? s : s.slice(0, max));
+
+function apiEndpoint(pathname: string): string | undefined {
+  if (pathname === "/openapi.json") return "openapi";
+  const m = /^\/api\/[^/]+\/(detect|discover|surface)\/?$/.exec(pathname);
+  return m?.[1];
+}
+
+async function mcpRequestMeta(request: Request): Promise<{ method?: string; tool?: string }> {
+  if (request.method !== "POST") return {};
+  try {
+    const body = (await request.clone().json()) as { method?: string; params?: { name?: string } };
+    const method = typeof body.method === "string" ? body.method : undefined;
+    const tool = method === "tools/call" && typeof body.params?.name === "string" ? body.params.name : undefined;
+    return { ...(method && { method }), ...(tool && { tool }) };
+  } catch {
+    return {};
+  }
+}
+
+function ogMeta(url: URL): { kind: "home" | "domain" | "surface"; domain?: string } | null {
+  if (url.pathname === "/og.png") return { kind: "home" };
+  const match = /^\/og\/([^/]+)(?:\/([^/]+))?\.png$/.exec(url.pathname);
+  if (!match) return null;
+  const domain = registrableDomain(decodeURIComponent(match[1]).trim().toLowerCase());
+  if (!domain) return null;
+  return match[2] ? { kind: "surface", domain } : { kind: "domain", domain };
+}
+
+function discoveryCounts(result: {
+  surfaces?: readonly unknown[] | unknown[];
+  credentials?: Readonly<Record<string, unknown>> | Record<string, unknown>;
+  usedLlm?: boolean;
+}) {
+  return {
+    surfaces_count: Array.isArray(result.surfaces) ? result.surfaces.length : 0,
+    credentials_count: result.credentials ? Object.keys(result.credentials).length : 0,
+    used_llm: !!result.usedLlm,
+  };
+}
+
+async function healthz(env: Env): Promise<Response> {
+  const kv = await Promise.race([
+    env.DISCOVERY.get("stripe.com"),
+    new Promise<never>((_, reject) => setTimeout(() => reject(new Error("timeout")), 2000)),
+  ])
+    .then(() => "ok" as const)
+    .catch(() => "slow" as const);
+  const body: Record<string, unknown> = { ok: true, version: CACHE_VERSION };
+  if (kv === "slow") body.kv = "slow";
+  return json(body, 200, { "cache-control": "no-store" });
+}
 
 const TRAILING_SLASH_SKIP_PREFIXES = ["/api/", "/og/", "/_i/", "/logo/"];
 
@@ -246,6 +327,26 @@ export function createExports(manifest: SSRManifest) {
   const app = new App(manifest);
 
   const fetchHandler = async (request: Request, env: Env, ctx: ExecutionContext): Promise<Response> => {
+    try {
+      return await handleRequest(request, env, ctx, manifest, app);
+    } catch (err) {
+      const message = truncate(err instanceof Error ? err.message : String(err), 200);
+      const stack = truncate(err instanceof Error ? (err.stack ?? "") : "", 300);
+      track(env, ctx, request, "worker_exception", { message, stack });
+      throw err;
+    }
+  };
+
+  return { default: { fetch: fetchHandler }, McpDurableObject };
+}
+
+async function handleRequest(
+  request: Request,
+  env: Env,
+  ctx: ExecutionContext,
+  manifest: SSRManifest,
+  app: App,
+): Promise<Response> {
     const url = new URL(request.url);
     wireAi(env);
 
@@ -269,8 +370,13 @@ export function createExports(manifest: SSRManifest) {
     // MCP server — point Claude/Cursor at /mcp. Routed through a single Durable
     // Object so the session map persists across stateless Worker requests.
     if (url.pathname === "/mcp") {
-      track(env, ctx, request, "mcp_request");
+      const mcpMeta = await mcpRequestMeta(request);
+      track(env, ctx, request, "mcp_request", mcpMeta);
       return env.MCP.get(env.MCP.idFromName("mcp")).fetch(request);
+    }
+
+    if (url.pathname === "/healthz" && request.method === "GET") {
+      return healthz(env);
     }
 
     // Logo proxy — the single logo source for executor clients (and anything
@@ -333,8 +439,16 @@ export function createExports(manifest: SSRManifest) {
     }
 
     if (url.pathname === "/og.png" || url.pathname.startsWith("/og/")) {
-      const res = await ogResponse(request, env, ctx, CACHE_VERSION);
-      if (res) return res;
+      try {
+        const res = await ogResponse(request, env, ctx, CACHE_VERSION);
+        if (res) return res;
+      } catch (err) {
+        track(env, ctx, request, "og_error", {
+          path: url.pathname,
+          message: truncate(err instanceof Error ? err.message : String(err), 200),
+        });
+      }
+      return new Response(null, { status: 404 });
     }
 
     // Self-describe via the same discovery format the catalog indexes: point at
@@ -408,12 +522,18 @@ export function createExports(manifest: SSRManifest) {
         }
       }
       const producer = (async () => {
+        const started = Date.now();
         try {
           const cached = await cache.match(cacheKey);
-          track(env, ctx, request, "discovery_run", { domain, cached: !!cached });
           if (cached) {
-            const result = (await cached.json()) as { domain?: string };
+            const result = (await cached.json()) as { domain?: string; surfaces?: unknown[]; credentials?: Record<string, unknown>; usedLlm?: boolean };
             await send("done", result);
+            track(env, ctx, request, "discovery_run", {
+              domain,
+              outcome: "cached",
+              duration_ms: Date.now() - started,
+              ...discoveryCounts(result),
+            });
             // Backfill KV so a cache-served result still lands in durable storage.
             if (result.domain) {
               ctx.waitUntil(env.DISCOVERY.put(result.domain, JSON.stringify({ result, discoveredAt: new Date().toISOString(), model: OPENAI_MODEL })));
@@ -427,6 +547,12 @@ export function createExports(manifest: SSRManifest) {
             });
             if (Array.isArray(result.surfaces)) preserveSlugs(result.surfaces as Surface[], prior);
             await send("done", result);
+            track(env, ctx, request, "discovery_run", {
+              domain,
+              outcome: "done",
+              duration_ms: Date.now() - started,
+              ...discoveryCounts(result),
+            });
             const toCache = new Response(JSON.stringify(result), {
               headers: { "content-type": "application/json; charset=utf-8", "access-control-allow-origin": "*", "cache-control": "public, max-age=86400" },
             });
@@ -436,7 +562,12 @@ export function createExports(manifest: SSRManifest) {
               ctx.waitUntil(env.DISCOVERY.put(result.domain, JSON.stringify({ result, discoveredAt: new Date().toISOString(), model: OPENAI_MODEL })));
             }
           }
-        } catch {
+        } catch (err) {
+          track(env, ctx, request, "discovery_error", {
+            domain,
+            message: truncate(err instanceof Error ? err.message : String(err), 200),
+            duration_ms: Date.now() - started,
+          });
           await send("error", { message: "Discovery failed." });
         } finally {
           await writer.close();
@@ -462,7 +593,7 @@ export function createExports(manifest: SSRManifest) {
       url.pathname === "/api/search" ||
       /^\/api\/[^/]+\/(?:detect|discover|surface)\/?$/.test(url.pathname)
     ) {
-      track(env, ctx, request, "api_request");
+      const endpoint = apiEndpoint(url.pathname);
       const cache = (caches as unknown as EdgeCaches).default;
       // Version the cache key so a deploy that bumps CACHE_VERSION orphans stale
       // entries (the Cache API otherwise survives deploys).
@@ -470,17 +601,22 @@ export function createExports(manifest: SSRManifest) {
       keyUrl.searchParams.set("__cv", CACHE_VERSION);
       const cacheKey = new Request(keyUrl.toString(), { method: "GET" });
       const cached = await cache.match(cacheKey);
-      if (cached) return cached;
+      if (cached) {
+        track(env, ctx, request, "api_request", { ...(endpoint && { endpoint }), cache_hit: true, status: cached.status });
+        return cached;
+      }
       // Uncached /discover runs the LLM loop — same per-IP cap as the stream.
       if (url.pathname.includes("/discover") && env.DISCOVER_LIMITER) {
         const ip = request.headers.get("cf-connecting-ip") ?? "unknown";
         const { success } = await env.DISCOVER_LIMITER.limit({ key: ip });
         if (!success) {
           track(env, ctx, request, "discovery_ratelimited", { path: url.pathname });
+          track(env, ctx, request, "api_request", { ...(endpoint && { endpoint }), cache_hit: false, status: 429 });
           return json({ error: "rate limited — try again in a minute" }, 429, { "retry-after": "60" });
         }
       }
       const res = await apiHandler(request, apiContext(env, url.origin));
+      track(env, ctx, request, "api_request", { ...(endpoint && { endpoint }), cache_hit: false, status: res.status });
       const maxAge = url.pathname.includes("/discover") ? 86400 : url.pathname.includes("/surface") ? 60 : 3600;
       if (request.method === "GET" && (res.status === 200 || (url.pathname.includes("/surface") && res.status === 404))) {
         const out = new Response(res.clone().body, res);
@@ -533,9 +669,6 @@ export function createExports(manifest: SSRManifest) {
     // Everything else is Astro: prerendered pages/data served from ASSETS, and
     // the on-demand routes (surface detail pages) rendered in this Worker.
     return handle(manifest, app, request as never, env as never, ctx as never);
-  };
-
-  return { default: { fetch: fetchHandler }, McpDurableObject };
 }
 
 export { McpDurableObject };

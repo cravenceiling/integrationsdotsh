@@ -64,6 +64,45 @@
 - check-results gained --probe (live-verify grounding offenders; github MCP
   endpoint case). 257/257 passing at last full check.
 
+## Analytics event contract
+
+Server events fire via `track()` in `worker/entry.ts` (PostHog capture API,
+`distinct_id` = `cf-connecting-ip`, `$process_person_profile: false`). Client
+events fire via `posthog-js` (`src/lib/analytics.ts`, first-party `/_i` proxy).
+Every event also carries `user_agent`, `country`, and `path` on the server side.
+
+### Server (worker)
+
+| Event | Properties |
+|-------|------------|
+| `mcp_request` | `method?` (JSON-RPC method when parseable), `tool?` (tools/call name) |
+| `discovery_run` | `domain`, `outcome` (`cached` \| `done`), `duration_ms`, `surfaces_count`, `credentials_count`, `used_llm` |
+| `discovery_error` | `domain`, `message` (≤200 chars), `duration_ms` |
+| `discovery_ratelimited` | `domain?` (SSE stream), `path?` (REST discover) |
+| `api_request` | `endpoint?` (`detect` \| `discover` \| `openapi`), `cache_hit`, `status` |
+| `data_fetch` | (base properties only) |
+| `hit` | (base properties only; dual-sent to executor + integrations projects) |
+| `og_render` | `kind` (`home` \| `domain` \| `surface`), `domain?`, `status`, `duration_ms`, `cache_hit` |
+| `og_error` | `path`, `message` (≤200 chars) |
+| `worker_exception` | `message` (≤200 chars), `stack` (first 300 chars) |
+
+### Client (posthog-js)
+
+| Event | Properties |
+|-------|------------|
+| `$pageview` | (PostHog default pageview) |
+| `map_surface_clicked` | `domain` |
+| `regenerate_clicked` | `domain` |
+| `discovery_stream_done` | `domain`, `surfaces`, `duration_ms` |
+| `discovery_stream_error` | `domain` |
+
+### Health
+
+`GET /healthz` — no auth, `Cache-Control: no-store`. Returns
+`{ ok: true, version: <CACHE_VERSION>, kv?: "slow" }`. KV probe reads
+`DISCOVERY.get("stripe.com")` with a 2s timeout; slow KV adds `kv: "slow"`
+without failing the check (external uptime monitor target).
+
 ## 07:45 update — TPM bump landed (180M/min)
 - Driver restarted at concurrency 16; ~560 domains done, batch 3 in flight.
 - narvar rerun: correct empty result (no public dev surface). opentools.com is
