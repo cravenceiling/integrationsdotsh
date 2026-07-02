@@ -1,6 +1,6 @@
 import React from "react";
-import satori, { type Font } from "satori";
-import { initWasm, Resvg } from "@resvg/resvg-wasm";
+import satori, { init as initSatori, type Font } from "satori/wasm";
+import { initWasm as initResvgWasm, Resvg, type InitInput as ResvgInitInput } from "@resvg/resvg-wasm";
 import { SURFACE_TYPE_LABEL, hostOf, type Credential, type DiscoveryDoc, type Surface } from "./surface-view.ts";
 import { TOTAL_SURFACE_COUNT } from "./og-count.ts";
 
@@ -26,6 +26,13 @@ export type OgInput =
   | { kind: "domain"; domain: string; doc: DiscoveryDoc; favicon?: OgImageData | null }
   | { kind: "surface"; domain: string; surface: Surface; credentials?: Record<string, Credential>; favicon?: OgImageData | null };
 
+export type OgWasmInput = Promise<ResvgInitInput> | ResvgInitInput;
+export type OgYogaInput = Parameters<typeof initSatori>[0];
+export interface OgRuntimeInput {
+  yoga: Promise<OgYogaInput> | OgYogaInput;
+  resvg: OgWasmInput;
+}
+
 const c = {
   bg: "#0a0a0a",
   fg: "#ededed",
@@ -40,11 +47,14 @@ const c = {
 const baseFont = '"Geist", ui-sans-serif, system-ui, sans-serif';
 const monoFont = '"Geist Mono", ui-monospace, Menlo, monospace';
 
-let wasmReady: Promise<void> | null = null;
+let runtimeReady: Promise<void> | null = null;
 
-export function initOgWasm(wasm: Promise<ArrayBuffer> | ArrayBuffer): Promise<void> {
-  wasmReady ??= Promise.resolve(wasm).then((buf) => initWasm(buf));
-  return wasmReady;
+export function initOgRuntime(runtime: OgRuntimeInput): Promise<void> {
+  runtimeReady ??= Promise.all([
+    initSatori(runtime.yoga),
+    initResvgWasm(runtime.resvg),
+  ]).then(() => undefined);
+  return runtimeReady;
 }
 
 export function ogFontList(fonts: OgFonts): Font[] {
@@ -58,8 +68,8 @@ export function ogFontList(fonts: OgFonts): Font[] {
   ];
 }
 
-export async function renderOgPng(input: OgInput, fonts: OgFonts, wasm: Promise<ArrayBuffer> | ArrayBuffer): Promise<Uint8Array> {
-  await initOgWasm(wasm);
+export async function renderOgPng(input: OgInput, fonts: OgFonts, runtime: OgRuntimeInput): Promise<Uint8Array> {
+  await initOgRuntime(runtime);
   const svg = await satori(<OgCard input={input} />, {
     width: OG_WIDTH,
     height: OG_HEIGHT,

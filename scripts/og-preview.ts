@@ -1,11 +1,12 @@
 import { mkdir, readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import { renderOgPng, type OgFonts, type OgImageData, type OgInput } from "../src/lib/og.tsx";
+import type { OgFonts, OgImageData, OgInput } from "../src/lib/og.tsx";
 import type { DiscoveryDoc, Surface } from "../src/lib/surface-view.ts";
 
 const root = process.cwd();
 const outDir = "/tmp/og-preview";
+process.env.SATORI_STANDALONE = "1";
 
 async function font(path: string): Promise<ArrayBuffer> {
   const bytes = await readFile(join(root, path));
@@ -68,8 +69,12 @@ const stripeFallback: DiscoveryDoc = {
 
 await mkdir(outDir, { recursive: true });
 
+const { renderOgPng } = await import("../src/lib/og.tsx");
 const loadedFonts = await fonts();
-const wasm = font("public/resvg.wasm");
+const runtime = {
+  yoga: font("node_modules/satori/yoga.wasm"),
+  resvg: font("node_modules/@resvg/resvg-wasm/index_bg.wasm"),
+};
 const [stripeIcon, gitlabIcon] = await Promise.all([favicon("stripe.com"), favicon("gitlab.com")]);
 const stripeDoc = await discovery("stripe.com", stripeFallback);
 
@@ -93,7 +98,7 @@ const renders: Array<[string, OgInput]> = [
 ];
 
 for (const [name, input] of renders) {
-  const png = await renderOgPng(input, loadedFonts, wasm);
+  const png = await renderOgPng(input, loadedFonts, runtime);
   await Bun.write(join(outDir, name), png);
 }
 

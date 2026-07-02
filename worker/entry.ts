@@ -12,6 +12,8 @@
 import type { SSRManifest } from "astro";
 import { App } from "astro/app";
 import { handle } from "@astrojs/cloudflare/handler";
+import resvgWasmModule from "@resvg/resvg-wasm/index_bg.wasm?module";
+import yogaWasmModule from "satori/yoga.wasm?module";
 import { apiHandler } from "./api.ts";
 import { setChat, setWebBackend, discoverWithProgress, preserveSlugs } from "./operations.ts";
 import { contextWeb, naiveWeb } from "../src/lib/contextdev.ts";
@@ -37,6 +39,7 @@ const OPENAI_MODEL = "gpt-5.4-mini";
 // OpenAI endpoint (needs "Authenticated Gateway" off, or a cf-aig-authorization token):
 //   `https://gateway.ai.cloudflare.com/v1/<account>/<gateway>/openai/chat/completions`
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
+const ogRuntime = { yoga: yogaWasmModule, resvg: resvgWasmModule };
 
 interface OpenAiToolCall {
   id: string;
@@ -166,9 +169,8 @@ async function ogResponse(request: Request, env: Env, ctx: ExecutionContext, cac
 
   const png = async () => {
     const fonts = await ogFonts(env, url.origin);
-    const wasm = assetBuffer(env, url.origin, "/resvg.wasm");
     if (url.pathname === "/og.png") {
-      return renderOgPng({ kind: "home" }, fonts, wasm);
+      return renderOgPng({ kind: "home" }, fonts, ogRuntime);
     }
 
     const match = /^\/og\/([^/]+)(?:\/([^/]+))?\.png$/.exec(url.pathname);
@@ -181,7 +183,7 @@ async function ogResponse(request: Request, env: Env, ctx: ExecutionContext, cac
     const favicon = await faviconData(url.origin, domain);
     const slug = match[2] ? decodeURIComponent(match[2]) : "";
     if (!slug) {
-      return renderOgPng({ kind: "domain", domain, doc, favicon }, fonts, wasm);
+      return renderOgPng({ kind: "domain", domain, doc, favicon }, fonts, ogRuntime);
     }
 
     const surface = doc.surfaces.find((s) => s.slug === slug);
@@ -189,7 +191,7 @@ async function ogResponse(request: Request, env: Env, ctx: ExecutionContext, cac
     return renderOgPng(
       { kind: "surface", domain, surface, credentials: (doc.credentials ?? {}) as Record<string, Credential>, favicon },
       fonts,
-      wasm,
+      ogRuntime,
     );
   };
 
