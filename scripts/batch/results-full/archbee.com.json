@@ -12,113 +12,121 @@
       "errors": []
     },
     "usedLlm": true,
-    "discoveredAt": "2026-07-02T14:55:20.393Z",
-    "summary": "Archbee exposes a public knowledge portal site plus public integration guide pages for GraphQL and GitHub; no developer-mintable API credentials or MCP/CLI surfaces were confirmed.",
-    "credentials": {},
+    "discoveredAt": "2026-07-02T16:17:14.376Z",
+    "summary": "Archbee exposes one developer-facing HTTP Public API requiring a Bearer token derived from docSpaceId and apiKey, plus a public GraphQL docs component/integration page; no MCP server or CLI surfaced.",
+    "credentials": {
+      "archbee_bearer_token": {
+        "type": "bearer",
+        "label": "Archbee API bearer token",
+        "generateUrl": "https://app.archbee.com/signup",
+        "setup": "In Archbee, this API uses `Authorization: Bearer {base64(docSpaceId~apiKey)}`. Create or sign in to your Archbee account, then obtain the API key for the relevant doc space in the app and combine it with your `docSpaceId` as documented on the API reference pages. Base64-encode `docSpaceId~apiKey` and send it as the bearer token in the `Authorization` header.",
+        "acquisition": "manual"
+      }
+    },
     "surfaces": [
       {
-        "slug": "archbee-knowledge-portal-platform",
-        "name": "Archbee Knowledge Portal Platform",
+        "slug": "archbee-public-api",
+        "name": "Archbee Public API",
         "type": "http",
-        "docs": "https://www.archbee.com/portals/developers-catenda",
+        "docs": "https://www.archbee.com/docs/sync-open-api-document",
         "basis": {
           "via": "discovered",
-          "evidence": []
+          "evidence": [
+            "https://www.archbee.com/docs/sync-open-api-document",
+            "https://www.archbee.com/docs/info-open-api-document"
+          ]
         },
         "auth": {
-          "status": "none",
-          "basis": {
-            "via": "discovered",
-            "evidence": [
-              "https://www.archbee.com/portals/developers-catenda",
-              "https://archbee.com/llms.txt"
-            ]
-          }
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "archbee_bearer_token",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Bearer"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://www.archbee.com/docs/sync-open-api-document",
+                  "https://www.archbee.com/docs/info-open-api-document"
+                ]
+              }
+            }
+          ]
         },
-        "url": "https://www.archbee.com"
+        "url": "https://api.archbee.com/api/public-api"
       },
       {
-        "slug": "archbee-graphql-integration",
-        "name": "Archbee GraphQL Integration",
+        "slug": "archbee-graphql-docs-component",
+        "name": "Archbee GraphQL docs component",
         "type": "graphql",
-        "docs": "https://www.archbee.com/integrations/graphql",
+        "docs": "https://www.archbee.com/docs/graphql",
         "basis": {
           "via": "discovered",
-          "evidence": []
+          "evidence": [
+            "https://www.archbee.com/docs/graphql",
+            "https://www.archbee.com/integrations/graphql"
+          ]
         },
         "auth": {
           "status": "none",
           "basis": {
             "via": "discovered",
             "evidence": [
+              "https://www.archbee.com/docs/graphql",
               "https://www.archbee.com/integrations/graphql"
             ]
           }
-        },
-        "url": "https://app.archbee.com/docs"
-      },
-      {
-        "slug": "archbee-github-integration",
-        "name": "Archbee GitHub Integration",
-        "type": "http",
-        "docs": "https://www.archbee.com/integrations/github",
-        "basis": {
-          "via": "discovered",
-          "evidence": []
-        },
-        "auth": {
-          "status": "none",
-          "basis": {
-            "via": "discovered",
-            "evidence": [
-              "https://www.archbee.com/integrations/github"
-            ]
-          }
-        },
-        "url": "https://app.archbee.com/docs"
+        }
       }
     ]
   },
-  "discoveredAt": "2026-07-02T14:55:20.393Z",
+  "discoveredAt": "2026-07-02T16:17:14.376Z",
   "model": "loop-gpt-5.4-mini",
   "usage": {
-    "prompt_tokens": 76001,
-    "completion_tokens": 536,
-    "total_tokens": 76537
+    "prompt_tokens": 58018,
+    "completion_tokens": 652,
+    "total_tokens": 58670
   },
   "visited": [
     "https://archbee.com/llms.txt",
-    "https://developer.appdirect.com/references-api/llms",
-    "https://developers.cloudbeds.com/docs/build-with-llms",
-    "https://gitbook.com/docs/ai-and-search/llm-ready-docs",
-    "https://readme.com/blog/llm-ready-api-documentation",
+    "https://mcpservers.org/servers/elifuzz/api-docs-mcp",
+    "https://www.archbee.com/docs/graphql",
+    "https://www.archbee.com/docs/info-open-api-document",
+    "https://www.archbee.com/docs/sync-open-api-document",
+    "https://www.archbee.com/integrations",
     "https://www.archbee.com/integrations/github",
-    "https://www.archbee.com/integrations/google-sso",
     "https://www.archbee.com/integrations/graphql",
-    "https://www.archbee.com/portals/developers-catenda",
-    "https://www.reddit.com/r/technicalwriting/comments/1nshttx/show_tell_generate_a_clean_llmtxt_from_any_docs/"
+    "https://www.reddit.com/r/mcp/comments/1ogb1ye/api_graphql_openapi_swagger_docs_mcp_server/",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
   ],
   "grounding": [
+    "https://api.archbee.com/api/public-api/info-api-reference",
+    "https://api.archbee.com/api/public-api/sync-api-reference",
     "https://app.archbee.com/docs",
     "https://app.archbee.com/signup",
     "https://app.archbee.com/signup?utm_source=integration",
     "https://app.archbee.com/signup?utm_source=website&utm_medium=bottom-cta-section",
     "https://app.archbee.com/signup?utm_source=website&utm_medium=integration-github",
-    "https://app.archbee.com/signup?utm_source=website&utm_medium=integration-google-sso",
     "https://app.archbee.com/signup?utm_source=website&utm_medium=integration-graphql",
     "https://archbee.com/llms.txt",
-    "https://developer.appdirect.com/references-api/llms",
-    "https://developers.catenda.com/",
-    "https://developers.cloudbeds.com/docs/build-with-llms",
     "https://download.archbee.com/linux",
     "https://download.archbee.com/mac",
     "https://download.archbee.com/windows",
-    "https://gitbook.com/docs/ai-and-search/llm-ready-docs",
-    "https://readme.com/blog/llm-ready-api-documentation",
+    "https://github.com/graphql/graphiql",
+    "https://mcpservers.org/servers/elifuzz/api-docs-mcp",
     "https://security.archbee.com/",
     "https://status.archbee.com/",
     "https://www.archbee.com",
     "https://www.archbee.com/",
+    "https://www.archbee.com/?utm_campaign=hosted-docs&utm_medium=referral&utm_source=docs-vercel.archbee.com",
     "https://www.archbee.com/alternatives/adobe-robohelp",
     "https://www.archbee.com/alternatives/clickhelp-alternative",
     "https://www.archbee.com/alternatives/confluence-alternative",
@@ -648,6 +656,14 @@
     "https://www.archbee.com/customers/wallester-as.md",
     "https://www.archbee.com/customers/xenett.md",
     "https://www.archbee.com/docs",
+    "https://www.archbee.com/docs/editor-blocks",
+    "https://www.archbee.com/docs/get-document",
+    "https://www.archbee.com/docs/graphql",
+    "https://www.archbee.com/docs/info-open-api-document",
+    "https://www.archbee.com/docs/mermaid-diagrams",
+    "https://www.archbee.com/docs/scalar",
+    "https://www.archbee.com/docs/sync-open-api-document",
+    "https://www.archbee.com/docs/url-redirect",
     "https://www.archbee.com/event-confirmation",
     "https://www.archbee.com/free-document-convertor",
     "https://www.archbee.com/integrations",
@@ -1229,6 +1245,7 @@
     "https://www.archbee.com/webinars/docs-as-code-without-the-complexity",
     "https://www.archbee.com/webinars/from-draft-to-published",
     "https://www.linkedin.com/company/archbee",
-    "https://www.reddit.com/r/technicalwriting/comments/1nshttx/show_tell_generate_a_clean_llmtxt_from_any_docs/"
+    "https://www.reddit.com/r/mcp/comments/1ogb1ye/api_graphql_openapi_swagger_docs_mcp_server/",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
   ]
 }

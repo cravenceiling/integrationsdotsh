@@ -10,27 +10,69 @@
       "errors": []
     },
     "usedLlm": true,
-    "discoveredAt": "2026-07-02T10:40:24.712Z",
-    "summary": "Ashby exposes a Basic-authenticated RPC-style HTTP API at api.ashbyhq.com, a separate public job-postings HTTP API, and webhook delivery with optional HMAC signing via `Ashby-Signature`; no GraphQL, MCP, or CLI surfaced in the docs I found.",
+    "discoveredAt": "2026-07-02T16:17:25.336Z",
+    "summary": "Ashby exposes one authenticated HTTP API at https://api.ashbyhq.com using HTTP Basic with an Ashby API key, plus public webhook delivery documentation for configuring and verifying inbound webhooks.",
     "credentials": {
       "ashby_api_key": {
         "type": "api_key",
         "label": "Ashby API key",
-        "generateUrl": "https://app.ashbyhq.com",
-        "setup": "In Ashby, go to the admin area and create an API key with the endpoint permissions you need. The docs describe using this key as the HTTP Basic Auth username, with a blank password. Start from the [Ashby API docs](https://developers.ashbyhq.com/).",
+        "generateUrl": "https://developers.ashbyhq.com/docs/getting-started",
+        "setup": "Go to the Ashby developer docs and create or copy your organization’s API key from the setup/getting-started flow. Use it as the Basic Auth username with an empty password, e.g. `-u API_KEY:`. Ashby notes this is a long-lived key and recommends proxying browser requests through your backend.",
         "acquisition": "manual"
       }
     },
     "surfaces": [
       {
-        "slug": "ashby-job-postings-api",
-        "name": "Ashby Job Postings API",
+        "slug": "ashby-api",
+        "name": "Ashby API",
         "type": "http",
-        "docs": "https://developers.ashbyhq.com/docs/public-job-posting-api",
+        "docs": "https://developers.ashbyhq.com/reference",
         "basis": {
           "via": "discovered",
           "evidence": [
-            "https://developers.ashbyhq.com/docs/public-job-posting-api"
+            "https://developers.ashbyhq.com/docs/introduction",
+            "https://developers.ashbyhq.com/docs/authentication",
+            "https://developers.ashbyhq.com/reference",
+            "https://developers.ashbyhq.com/llms.txt"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "ashby_api_key",
+                  "mechanics": {
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "Authorization",
+                    "scheme": "Basic"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://developers.ashbyhq.com/docs/authentication",
+                  "https://developers.ashbyhq.com/docs/introduction"
+                ]
+              }
+            }
+          ]
+        },
+        "url": "https://api.ashbyhq.com"
+      },
+      {
+        "slug": "ashby-webhooks",
+        "name": "Ashby Webhooks",
+        "type": "http",
+        "docs": "https://developers.ashbyhq.com/docs/setting-up-webhooks",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://developers.ashbyhq.com/docs/setting-up-webhooks",
+            "https://developers.ashbyhq.com/docs/authenticating-webhooks"
           ]
         },
         "auth": {
@@ -38,45 +80,42 @@
           "basis": {
             "via": "discovered",
             "evidence": [
-              "https://developers.ashbyhq.com/docs/public-job-posting-api"
+              "Webhook delivery requests are sent by Ashby to your configured payload URL; they are not developer-integrated API calls. The docs say webhook requests include an `Ashby-Signature` header when you provide a secret token, but the delivery surface itself is public and you secure it with your own endpoint secret.",
+              "https://developers.ashbyhq.com/docs/setting-up-webhooks",
+              "https://developers.ashbyhq.com/docs/authenticating-webhooks"
             ]
           }
         }
       }
     ]
   },
-  "discoveredAt": "2026-07-02T10:40:24.713Z",
+  "discoveredAt": "2026-07-02T16:17:25.336Z",
   "model": "loop-gpt-5.4-mini",
   "usage": {
-    "prompt_tokens": 73831,
-    "completion_tokens": 891,
-    "total_tokens": 74722
+    "prompt_tokens": 73264,
+    "completion_tokens": 807,
+    "total_tokens": 74071
   },
   "visited": [
     "https://developers.ashbyhq.com/",
     "https://developers.ashbyhq.com/docs/authenticating-webhooks",
     "https://developers.ashbyhq.com/docs/authentication",
+    "https://developers.ashbyhq.com/docs/getting-started",
     "https://developers.ashbyhq.com/docs/introduction",
-    "https://developers.ashbyhq.com/docs/public-job-posting-api",
     "https://developers.ashbyhq.com/docs/setting-up-webhooks",
     "https://developers.ashbyhq.com/llms.txt",
     "https://developers.ashbyhq.com/reference",
-    "https://learn.microsoft.com/en-us/fabric/data-engineering/api-graphql-local-model-context-protocol",
-    "https://mcpservers.org/servers/ctkadvisors/graphql-mcp",
+    "https://developers.cloudflare.com/changelog/post/2025-05-23-graphql-api-explorer/",
+    "https://github.com/blurrah/mcp-graphql",
+    "https://www.apollographql.com/docs/apollo-mcp-server",
     "https://www.youtube.com/watch?v=tMTsNn09GNo"
   ],
   "grounding": [
     "https://api.ashbyhq.com/application.list",
-    "https://api.ashbyhq.com/posting-api/job-board/{JOB_BOARD_NAME}?includeCompensation=true",
-    "https://api.ashbyhq.com/posting-api/job-board/{JOB_BOARD_NAME}?includeCompensation={true/false}",
     "https://developers.ashby",
     "https://developers.ashbyhq.com/",
-    "https://developers.ashbyhq.com/#api",
     "https://developers.ashbyhq.com/#computing-and-comparing-digests",
     "https://developers.ashbyhq.com/#content",
-    "https://developers.ashbyhq.com/#example",
-    "https://developers.ashbyhq.com/#how-to-find-your-jobs-page-name",
-    "https://developers.ashbyhq.com/#introduction",
     "https://developers.ashbyhq.com/#ping-webhooks",
     "https://developers.ashbyhq.com/#request-url",
     "https://developers.ashbyhq.com/#secret-token",
@@ -458,11 +497,9 @@
     "https://developers.ashbyhq.com/webhookdelete",
     "https://developers.ashbyhq.com/webhookinfo",
     "https://developers.ashbyhq.com/webhookupdate",
-    "https://jobs.ashbyhq.com/Ashby",
-    "https://jobs.ashbyhq.com/example/apply",
-    "https://jobs.ashbyhq.com/example_job",
-    "https://learn.microsoft.com/en-us/fabric/data-engineering/api-graphql-local-model-context-protocol",
-    "https://mcpservers.org/servers/ctkadvisors/graphql-mcp",
+    "https://developers.cloudflare.com/changelog/post/2025-05-23-graphql-api-explorer/",
+    "https://github.com/blurrah/mcp-graphql",
+    "https://www.apollographql.com/docs/apollo-mcp-server",
     "https://www.youtube.com/watch?v=tMTsNn09GNo"
   ]
 }

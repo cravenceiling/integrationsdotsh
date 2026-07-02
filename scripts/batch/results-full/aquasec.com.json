@@ -12,83 +12,47 @@
       "errors": []
     },
     "usedLlm": true,
-    "discoveredAt": "2026-07-02T10:36:03.284Z",
-    "summary": "Aqua Security exposes a documented HTTP API surface for the Aqua CSPM API (deprecated docs) using signed API credentials; the developer portal also points to Image Scanning API docs, but I could not confirm a machine-readable spec or auth details for that surface.",
+    "discoveredAt": "2026-07-02T16:17:07.942Z",
+    "summary": "Aqua exposes a developer-center HTTP API surface for Platform/CSPM and related Image Scanning docs; the confirmed, machine-readable API blueprint for the deprecated CSPM surface was unavailable, and no GraphQL, MCP, or CLI integration surface was confirmed.",
     "credentials": {
       "aqua_api_key": {
         "type": "api_key",
         "label": "Aqua API key",
         "generateUrl": "https://cloud.aquasec.com/developers",
-        "setup": "Go to the Aqua Cloud console and open the developer/API area linked from [Aqua Developer Center](https://cloud.aquasec.com/developers). Create or copy your API key from the platform’s key management area (the docs link to [CSPM API Docs](https://cloudsploit.docs.apiary.io/#) and the platform key area at [keys](https://cloud.aquasec.com/keys)). Store the value securely; it is the credential sent to Aqua’s HTTP APIs.",
+        "setup": "Open the [Aqua Developer Center](https://cloud.aquasec.com/developers), choose the API docs for the surface you need, and create an API key in the Aqua UI/account settings for API access. The docs indicate API key-based access and show a dedicated API Keys area in the deprecated CSPM docs; use the current developer center to mint your own key.",
         "acquisition": "manual"
       },
-      "aqua_sig_v1": {
+      "aqua_signature": {
         "type": "signature",
-        "label": "Aqua CSPM API signature credentials",
-        "generateUrl": "https://cloudsploit.docs.apiary.io/#",
-        "setup": "Use the Aqua CSPM API signing flow documented in the APIary docs. Start from [Getting Started](https://cloudsploit.docs.apiary.io/introduction/getting-started) and [Signature Creation](https://cloudsploit.docs.apiary.io/introduction/signature-creation), then generate the request signature from your Aqua API key/secret pair as described there. This is the authentication used by the deprecated CSPM API docs and is the easiest path documented for that surface.",
+        "label": "Aqua API request signature",
+        "generateUrl": "https://cloudsploit.docs.apiary.io/",
+        "setup": "Use the Aqua CSPM API signing flow documented in the API reference: follow the [Signature Creation](https://cloudsploit.docs.apiary.io/introduction/signature-creation) guide to sign requests for the CSPM API. The docs also describe paid-plan access and API keys in the same reference set.",
         "acquisition": "manual"
       }
     },
-    "surfaces": [
-      {
-        "slug": "aqua-cspm-api",
-        "name": "Aqua CSPM API",
-        "type": "http",
-        "docs": "https://cloudsploit.docs.apiary.io/",
-        "basis": {
-          "via": "discovered",
-          "evidence": [
-            "https://cloud.aquasec.com/developers",
-            "https://cloudsploit.docs.apiary.io/introduction/getting-started",
-            "https://cloudsploit.docs.apiary.io/introduction/signature-creation"
-          ]
-        },
-        "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "aqua_sig_v1",
-                  "mechanics": {
-                    "source": "http",
-                    "scheme": "signature"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://cloudsploit.docs.apiary.io/introduction/getting-started",
-                  "https://cloudsploit.docs.apiary.io/introduction/signature-creation"
-                ]
-              }
-            }
-          ]
-        }
-      }
-    ]
+    "surfaces": []
   },
-  "discoveredAt": "2026-07-02T10:36:03.284Z",
+  "discoveredAt": "2026-07-02T16:17:07.942Z",
   "model": "loop-gpt-5.4-mini",
   "usage": {
-    "prompt_tokens": 105866,
-    "completion_tokens": 1065,
-    "total_tokens": 106931
+    "prompt_tokens": 79883,
+    "completion_tokens": 861,
+    "total_tokens": 80744
   },
   "visited": [
+    "https://aquacspm.docs.apiary.io/",
     "https://aquasec.com/llms.txt",
-    "https://avd.aquasec.com/misconfig/google/api/api-key-api-restriction/",
     "https://cloud.aquasec.com/developers",
     "https://cloudsploit.docs.apiary.io/#",
+    "https://cloudsploit.docs.apiary.io/api-description-document",
+    "https://cloudsploit.docs.apiary.io/introduction/api-details",
     "https://cloudsploit.docs.apiary.io/introduction/getting-started",
-    "https://cloudsploit.docs.apiary.io/introduction/signature-creation",
-    "https://docs.aquasec.com/",
-    "https://docs.brinqa.com/docs/connectors/aqua-saas/",
-    "https://github.com/api-evangelist/aqua-security/blob/main/openapi/aqua-security-api.yaml",
     "https://github.com/aquasecurity/saas-api-samples",
-    "https://www.aquasec.com/"
+    "https://github.com/knowsuchagency/mcp2cli",
+    "https://www.reddit.com/r/mcp/comments/1ogb1ye/api_graphql_openapi_swagger_docs_mcp_server/",
+    "https://www.speakeasy.com/mcp/tool-design/generate-mcp-tools-from-openapi",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo",
+    "https://zuplo.com/docs/mcp-server/graphql"
   ],
   "grounding": [
     "https://api.cloudsploit.com",
@@ -97,7 +61,6 @@
     "https://aquacspm.docs.apiary.io/#",
     "https://aquasec.com/llms.txt",
     "https://archiveprogram.github.com",
-    "https://avd.aquasec.com/misconfig/google/api/api-key-api-restriction/",
     "https://cloud.aquasec.com/",
     "https://cloud.aquasec.com/#",
     "https://cloud.aquasec.com/developers",
@@ -209,9 +172,6 @@
     "https://cloudsploit.docs.apiary.io/reference/users/users",
     "https://cloudsploit.docs.apiary.io/reference/users/users-collection",
     "https://cloudsploit.docs.apiary.io/traffic",
-    "https://docs.aquasec.com/",
-    "https://docs.aquasec.com/javascript",
-    "https://docs.brinqa.com/docs/connectors/aqua-saas/",
     "https://docs.github.com",
     "https://docs.github.com/search-github/github-code-search/understanding-github-code-search-syntax",
     "https://github.blog",
@@ -222,21 +182,6 @@
     "https://github.com/#ruby-samples",
     "https://github.com/#start-of-content",
     "https://github.com/accelerator",
-    "https://github.com/api-evangelist",
-    "https://github.com/api-evangelist/aqua-security",
-    "https://github.com/api-evangelist/aqua-security/actions",
-    "https://github.com/api-evangelist/aqua-security/blob/main/openapi/aqua-security-api.yaml",
-    "https://github.com/api-evangelist/aqua-security/commit/5ae22ad046914b903983d652dbdc63f060c46b9d",
-    "https://github.com/api-evangelist/aqua-security/commits/main/openapi/aqua-security-api.yaml",
-    "https://github.com/api-evangelist/aqua-security/commits?author=kinlane",
-    "https://github.com/api-evangelist/aqua-security/issues",
-    "https://github.com/api-evangelist/aqua-security/projects",
-    "https://github.com/api-evangelist/aqua-security/pulls",
-    "https://github.com/api-evangelist/aqua-security/pulse",
-    "https://github.com/api-evangelist/aqua-security/raw/refs/heads/main/openapi/aqua-security-api.yaml",
-    "https://github.com/api-evangelist/aqua-security/security",
-    "https://github.com/api-evangelist/aqua-security/tree/main",
-    "https://github.com/api-evangelist/aqua-security/tree/main/openapi",
     "https://github.com/aquasecurity",
     "https://github.com/aquasecurity/saas-api-samples",
     "https://github.com/aquasecurity/saas-api-samples/actions",
@@ -284,9 +229,8 @@
     "https://github.com/features/copilot",
     "https://github.com/features/copilot/copilot-business",
     "https://github.com/features/issues",
-    "https://github.com/login?return_to=%2Fapi-evangelist%2Faqua-security",
+    "https://github.com/knowsuchagency/mcp2cli",
     "https://github.com/login?return_to=%2Faquasecurity%2Fsaas-api-samples",
-    "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2Fapi-evangelist%2Faqua-security%2Fblob%2Fmain%2Fopenapi%2Faqua-security-api.yaml",
     "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2Faquasecurity%2Fsaas-api-samples",
     "https://github.com/marketplace",
     "https://github.com/mcp",
@@ -305,7 +249,6 @@
     "https://github.com/security/advanced-security",
     "https://github.com/security/advanced-security/code-security",
     "https://github.com/security/advanced-security/secret-protection",
-    "https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E%2Fblob%2Fshow&source=header-repo&source_repo=api-evangelist%2Faqua-security",
     "https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E&source=header-repo&source_repo=aquasecurity%2Fsaas-api-samples",
     "https://github.com/solutions",
     "https://github.com/solutions/executive-insights",
@@ -328,16 +271,13 @@
     "https://github.com/why-github",
     "https://login.apiary.io/login?redirect=https%3A%2F%2Fcloudsploit.docs.apiary.io%2F%23",
     "https://login.apiary.io/login?redirect=https%3A%2F%2Fcloudsploit.docs.apiary.io%2Fintroduction%2Fgetting-started",
-    "https://login.apiary.io/login?redirect=https%3A%2F%2Fcloudsploit.docs.apiary.io%2Fintroduction%2Fsignature-creation",
     "https://maintainers.github.com",
     "https://securitylab.github.com",
     "https://skills.github.com",
     "https://stars.github.com",
-    "https://support.aquasec.com/",
     "https://support.github.com",
     "https://www.aquasec.com/",
     "https://www.aquasec.com/about-us/",
-    "https://www.aquasec.com/aqua-cloud/terms-of-service/",
     "https://www.aquasec.com/authors/erin-stephan/",
     "https://www.aquasec.com/authors/mike-dube/",
     "https://www.aquasec.com/authors/nir-makowski/",
@@ -372,7 +312,9 @@
     "https://www.aquasec.com/sitemap_index.xml",
     "https://www.aquasec.com/solutions/vmware-tanzu/",
     "https://www.aquasec.com/trust/compliance/",
-    "https://{host}:8080/api",
-    "https://{tenant}.cloud.aquasec.com/api"
+    "https://www.reddit.com/r/mcp/comments/1ogb1ye/api_graphql_openapi_swagger_docs_mcp_server/",
+    "https://www.speakeasy.com/mcp/tool-design/generate-mcp-tools-from-openapi",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo",
+    "https://zuplo.com/docs/mcp-server/graphql"
   ]
 }

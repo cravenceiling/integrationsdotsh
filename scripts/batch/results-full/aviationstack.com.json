@@ -10,21 +10,21 @@
       "errors": []
     },
     "usedLlm": true,
-    "discoveredAt": "2026-07-02T10:45:17.212Z",
-    "summary": "Aviationstack exposes one public developer surface: a REST/JSON HTTP API authenticated with a per-user API access key passed as the `access_key` query parameter.",
+    "discoveredAt": "2026-07-02T16:17:32.199Z",
+    "summary": "Aviationstack exposes one public integration surface: a REST HTTP API at https://api.aviationstack.com/v1/ authenticated with an `access_key` API key passed as a query parameter.",
     "credentials": {
-      "aviationstack_api_key": {
+      "aviationstack_access_key": {
         "type": "api_key",
         "label": "Aviationstack API Access Key",
-        "generateUrl": "https://aviationstack.com/signup/free",
-        "setup": "Create an account on [Aviationstack signup](https://aviationstack.com/signup/free) and complete the plan signup flow. After registration, open your account dashboard to copy your personal `API Access Key`; the docs say it appears in the dashboard and can be reset anytime there. Use that key in the `access_key` query parameter on API requests.",
+        "generateUrl": "https://aviationstack.com/signup/free/",
+        "setup": "Create an account at [aviationstack signup](https://aviationstack.com/signup/free/) and open the Dashboard; your personal `API Access Key` is shown there. The quickstart says you can reset it from the account dashboard anytime. Append it as the `access_key` query parameter on API requests.",
         "acquisition": "manual"
       }
     },
     "surfaces": [
       {
-        "slug": "aviationstack-rest-api",
-        "name": "Aviationstack REST API",
+        "slug": "aviationstack-api",
+        "name": "Aviationstack API",
         "type": "http",
         "docs": "https://docs.apilayer.com/aviationstack/docs/api-documentation",
         "basis": {
@@ -40,7 +40,7 @@
             {
               "use": [
                 {
-                  "id": "aviationstack_api_key",
+                  "id": "aviationstack_access_key",
                   "mechanics": {
                     "source": "http",
                     "in": "query",
@@ -51,32 +51,30 @@
               "basis": {
                 "via": "discovered",
                 "evidence": [
-                  "https://docs.apilayer.com/aviationstack/docs/api-documentation",
                   "https://docs.apilayer.com/aviationstack/docs/quickstart-guide"
                 ]
               }
             }
           ]
-        }
+        },
+        "url": "https://api.aviationstack.com/v1/"
       }
     ]
   },
-  "discoveredAt": "2026-07-02T10:45:17.213Z",
+  "discoveredAt": "2026-07-02T16:17:32.199Z",
   "model": "loop-gpt-5.4-mini",
   "usage": {
-    "prompt_tokens": 48504,
-    "completion_tokens": 544,
-    "total_tokens": 49048
+    "prompt_tokens": 39506,
+    "completion_tokens": 475,
+    "total_tokens": 39981
   },
   "visited": [
     "https://aviationstack.com/",
-    "https://aviationstack.com/api-status",
     "https://aviationstack.com/faq",
-    "https://aviationstack.com/signup/free",
-    "https://dlthub.com/context/source/aviationstack",
+    "https://aviationstack.com/pricing",
     "https://docs.apilayer.com/aviationstack/docs/api-documentation",
     "https://docs.apilayer.com/aviationstack/docs/quickstart-guide",
-    "https://www.tutorialsteacher.com/articles/aviation-rest-api-aviationstack",
+    "https://github.com/apilayer/aviationstack",
     "https://www.youtube.com/watch?v=yy95TRn5yiI"
   ],
   "grounding": [
@@ -89,13 +87,11 @@
     "https://apilayer.com/",
     "https://apilayer.com/affiliates",
     "https://apilayer.com/marketplace",
-    "https://apilayer.com/products",
     "https://apilayer.com/provider",
     "https://apilayer.com/why-choose-apilayer",
     "https://aviationstack.com/",
     "https://aviationstack.com/api-glossary",
     "https://aviationstack.com/api-status",
-    "https://aviationstack.com/api-status?utm_source=dashboard&utm_medium=Referral",
     "https://aviationstack.com/billing-overages-documentation",
     "https://aviationstack.com/contact",
     "https://aviationstack.com/contact/?utm_source=DocumentationPage&utm_medium=Referral",
@@ -108,17 +104,12 @@
     "https://aviationstack.com/login",
     "https://aviationstack.com/pricing",
     "https://aviationstack.com/product",
-    "https://aviationstack.com/signup/basic/monthly",
-    "https://aviationstack.com/signup/business/monthly",
     "https://aviationstack.com/signup/free",
     "https://aviationstack.com/signup/free/?utm_source=DocumentationPage&utm_medium=Referral",
-    "https://aviationstack.com/signup/free/monthly",
-    "https://aviationstack.com/signup/professional/monthly",
     "https://aviationstack.com/sitemap.php",
     "https://blog.apilayer.com/",
     "https://blog.apilayer.com/building-an-automated-flight-status-notification-system-with-aviationstack-api/",
     "https://discord.com/invite/hgjA78638n",
-    "https://dlthub.com/context/source/aviationstack",
     "https://docs.apilayer.com/aviationstack",
     "https://docs.apilayer.com/aviationstack/docs/api-documentation",
     "https://docs.apilayer.com/aviationstack/docs/api-documentation#api-documentation",
@@ -126,25 +117,21 @@
     "https://docs.apilayer.com/aviationstack/docs/api-documentation#data-coverage-and-accuracy",
     "https://docs.apilayer.com/aviationstack/docs/api-documentation#why-choose-aviationstack",
     "https://docs.apilayer.com/aviationstack/docs/api-documentation/?utm_source=AviationstackHomePage&utm_medium=Referral",
-    "https://docs.apilayer.com/aviationstack/docs/api-documentation?utm_source=AviationstackHomePage&utm_medium=Referral",
     "https://docs.apilayer.com/aviationstack/docs/aviationstack-api-v-1-0-0",
     "https://docs.apilayer.com/aviationstack/docs/getting-started",
     "https://docs.apilayer.com/aviationstack/docs/quickstart-guide",
     "https://docs.apilayer.com/aviationstack/docs/quickstart-guide#step-3-make-api-requests",
     "https://docs.apilayer.com/changelog/docs/aviationstack",
+    "https://github.com/apilayer/aviationstack",
     "https://github.com/public-apis/public-apis",
     "https://god.gw.postman.com/run-collection/10131015-9cbac391-3611-4f50-9bfd-d24ae41c97c1?action=collection/fork",
     "https://mailboxlayer.com/signup?plan=797&billing=yearly/?utm_source=DocumentationPage&utm_medium=Referral",
     "https://status.aviationstack.com",
     "https://www.apilayer.com?utm_source=aviationstackBanner&utm_medium=Referral",
-    "https://www.ideracorp.com/",
     "https://www.ideracorp.com/Legal/APILayer/CookiePolicy",
     "https://www.ideracorp.com/Legal/PrivacyPolicy",
-    "https://www.ideracorp.com/Legal/Terms-of-Use",
-    "https://www.ideracorp.com/en/legal/privacypolicy",
     "https://www.ideracorp.com/legal/APILayer",
     "https://www.ideracorp.com/legal/APILayer#tabs-2",
-    "https://www.tutorialsteacher.com/articles/aviation-rest-api-aviationstack",
     "https://www.youtube.com/watch?v=iRm-wJrayrg",
     "https://www.youtube.com/watch?v=yy95TRn5yiI"
   ]

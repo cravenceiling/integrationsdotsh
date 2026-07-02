@@ -10,21 +10,21 @@
       "errors": []
     },
     "usedLlm": true,
-    "discoveredAt": "2026-07-02T10:33:27.610Z",
-    "summary": "Monoscope (apitoolkit.io) exposes one authenticated HTTP API, one MCP server, and one CLI; auth is via API key for the API/MCP and `monoscope auth login` for the CLI.",
+    "discoveredAt": "2026-07-02T16:16:59.647Z",
+    "summary": "Monoscope exposes one authenticated HTTP API, one authenticated MCP server, and one authenticated CLI; no public GraphQL surface was found.",
     "credentials": {
-      "apitoolkit_api_key": {
+      "monoscope_api_key": {
         "type": "api_key",
         "label": "Monoscope API key",
-        "generateUrl": "https://monoscope.tech/docs/dashboard/settings-pages/api-keys",
-        "setup": "Create or view it from the dashboard: go to [API Keys](https://monoscope.tech/docs/dashboard/settings-pages/api-keys), click `Create an API key` if needed, and copy the generated key. The onboarding guide says a key is created automatically for your first project and you can keep separate keys per environment (`development`, `staging`, `production`).",
+        "generateUrl": "https://app.monoscope.tech",
+        "setup": "Sign up at [app.monoscope.tech](https://app.monoscope.tech) and create a project; a default project generates an API key on first load. You can also open **Settings → API Keys** in the dashboard to create additional keys and revoke old ones. The docs recommend separate keys for development, staging, and production.",
         "acquisition": "manual"
       },
-      "apitoolkit_cli_login": {
-        "type": "two_step",
+      "monoscope_cli_login": {
+        "type": "bearer",
         "label": "Monoscope CLI login session",
         "generateUrl": "https://monoscope.tech/docs/onboarding/",
-        "setup": "Install the CLI with the documented installer, then authenticate by running `monoscope auth login`. The onboarding quick path shows `curl https://monoscope.tech/install.sh | sh` followed by `monoscope auth login`, which mints the CLI session used by the terminal commands.",
+        "setup": "Install the CLI with `curl https://monoscope.tech/install.sh | sh`, then run `monoscope auth login` to authenticate the CLI and mint a local session for terminal use. After login, you can send telemetry with commands like `monoscope send-event -m \"Hello from Monoscope\"`.",
         "acquisition": "manual"
       }
     },
@@ -37,10 +37,7 @@
         "basis": {
           "via": "discovered",
           "evidence": [
-            "https://monoscope.tech/docs/api-reference/",
-            "https://monoscope.tech/docs/api-reference/endpoints/querymetrics/",
-            "https://monoscope.tech/docs/api-reference/endpoints/getschema/",
-            "https://monoscope.tech/docs/api-reference/endpoints/listmonitors/"
+            "https://monoscope.tech/docs/api-reference/"
           ]
         },
         "auth": {
@@ -49,20 +46,20 @@
             {
               "use": [
                 {
-                  "id": "apitoolkit_api_key",
+                  "id": "monoscope_api_key",
                   "mechanics": {
                     "source": "http",
                     "in": "header",
                     "headerName": "x-api-key",
-                    "scheme": "Bearer"
+                    "scheme": "api key"
                   }
                 }
               ],
               "basis": {
                 "via": "discovered",
                 "evidence": [
-                  "https://monoscope.tech/docs/api-reference/getting-started/authentication/",
-                  "https://monoscope.tech/docs/onboarding/"
+                  "https://monoscope.tech/docs/onboarding/",
+                  "https://monoscope.tech/docs/api-reference/"
                 ]
               }
             }
@@ -78,8 +75,7 @@
         "basis": {
           "via": "discovered",
           "evidence": [
-            "https://monoscope.tech/docs/api-reference/",
-            "https://monoscope.tech/docs/api-reference/mcp/"
+            "https://monoscope.tech/docs/api-reference/"
           ]
         },
         "auth": {
@@ -88,23 +84,26 @@
             {
               "use": [
                 {
-                  "id": "apitoolkit_api_key",
+                  "id": "monoscope_api_key",
                   "mechanics": {
-                    "source": "well-known"
+                    "source": "http",
+                    "in": "header",
+                    "headerName": "x-api-key",
+                    "scheme": "api key"
                   }
                 }
               ],
               "basis": {
                 "via": "discovered",
                 "evidence": [
-                  "https://monoscope.tech/docs/api-reference/mcp/",
-                  "https://monoscope.tech/docs/api-reference/getting-started/authentication/"
+                  "https://monoscope.tech/docs/api-reference/",
+                  "https://monoscope.tech/docs/onboarding/"
                 ]
               }
             }
           ]
         },
-        "url": "https://monoscope.tech/docs/api-reference/mcp/",
+        "url": "https://api.monoscope.tech",
         "transports": [
           "streamable-http"
         ]
@@ -113,10 +112,12 @@
         "slug": "monoscope-cli",
         "name": "Monoscope CLI",
         "type": "cli",
+        "docs": "https://monoscope.tech/docs/onboarding/",
         "basis": {
           "via": "discovered",
           "evidence": [
-            "https://monoscope.tech/docs/onboarding/"
+            "https://monoscope.tech/docs/onboarding/",
+            "https://monoscope.tech/docs/api-reference/"
           ]
         },
         "auth": {
@@ -125,7 +126,7 @@
             {
               "use": [
                 {
-                  "id": "apitoolkit_cli_login",
+                  "id": "monoscope_cli_login",
                   "mechanics": {
                     "source": "cli",
                     "command": "monoscope auth login"
@@ -141,30 +142,21 @@
             }
           ]
         },
-        "packages": [
-          {
-            "registryType": "generic",
-            "identifier": "https://monoscope.tech/install.sh",
-            "runtimeHint": "shell"
-          }
-        ],
         "command": "monoscope"
       }
     ]
   },
-  "discoveredAt": "2026-07-02T10:33:27.610Z",
+  "discoveredAt": "2026-07-02T16:16:59.648Z",
   "model": "loop-gpt-5.4-mini",
   "usage": {
-    "prompt_tokens": 146374,
-    "completion_tokens": 1096,
-    "total_tokens": 147470
+    "prompt_tokens": 154018,
+    "completion_tokens": 981,
+    "total_tokens": 154999
   },
   "visited": [
-    "https://apitoolkit.io",
-    "https://docs.apidog.com/mcp-client-1930835m0",
-    "https://docs.apitoolkit.io",
-    "https://github.com/blurrah/mcp-graphql",
-    "https://mcpservers.org/servers/ctkadvisors/graphql-mcp",
+    "https://apitoolkit.io/",
+    "https://awslabs.github.io/mcp/servers/openapi-mcp-server",
+    "https://docs.apollo.io/",
     "https://monoscope.tech/blog/5-common-api-issues-and-how-to-fix-them",
     "https://monoscope.tech/blog/5-key-metrics-for-api-health",
     "https://monoscope.tech/blog/50-api-tools-for-every-budget-and-requirement",
@@ -358,12 +350,13 @@
     "https://monoscope.tech/features/api-management",
     "https://monoscope.tech/features/api-observability",
     "https://www.apollographql.com/docs/apollo-mcp-server",
+    "https://www.reddit.com/r/mcp/comments/1ogb1ye/api_graphql_openapi_swagger_docs_mcp_server/",
     "https://www.stainless.com/mcp/mcp-api-documentation-the-complete-guide/",
     "https://www.youtube.com/watch?v=tMTsNn09GNo"
   ],
   "grounding": [
     "https://api.monoscope.tech",
-    "https://apitoolkit.io",
+    "https://apitoolkit.io/",
     "https://apitoolkit.io/#",
     "https://apitoolkit.io/#from-anywhere",
     "https://apitoolkit.io/#know-instantly",
@@ -441,42 +434,43 @@
     "https://app.monoscope.tech?utm_source=docs",
     "https://app.monoscope.tech?utm_source=docs_onboarding",
     "https://app.monoscope.tech?utm_source=docs_quickpath",
+    "https://awslabs.github.io/mcp/servers/openapi-mcp-server",
     "https://calendar.app.google/1a4HG5GZYv1sjjZG6",
     "https://chatgpt.com/?hints=search&q=Read%20this%20Monoscope%20Docs%20page%20and%20help%20me%20understand%20it%3A%20https%3A%2F%2Fmonoscope.tech%2Fdocs%2Fapi-reference%2F",
+    "https://chatgpt.com/?hints=search&q=Read%20this%20Monoscope%20Docs%20page%20and%20help%20me%20understand%20it%3A%20https%3A%2F%2Fmonoscope.tech%2Fdocs%2Fdashboard%2Fdashboard-pages%2Fapi-log-explorer%2F",
     "https://chatgpt.com/?hints=search&q=Read%20this%20Monoscope%20Docs%20page%20and%20help%20me%20understand%20it%3A%20https%3A%2F%2Fmonoscope.tech%2Fdocs%2Fdashboard%2Fdashboard-pages%2Fget-started%2F",
     "https://chatgpt.com/?hints=search&q=Read%20this%20Monoscope%20Docs%20page%20and%20help%20me%20understand%20it%3A%20https%3A%2F%2Fmonoscope.tech%2Fdocs%2Fdashboard%2Fsettings-pages%2Fapi-keys%2F",
     "https://chatgpt.com/?hints=search&q=Read%20this%20Monoscope%20Docs%20page%20and%20help%20me%20understand%20it%3A%20https%3A%2F%2Fmonoscope.tech%2Fdocs%2Fdashboard%2Fsettings-pages%2Fintegrations%2F",
-    "https://chatgpt.com/?hints=search&q=Read%20this%20Monoscope%20Docs%20page%20and%20help%20me%20understand%20it%3A%20https%3A%2F%2Fmonoscope.tech%2Fdocs%2Fdashboard%2Fsettings-pages%2Fproject-settings%2F",
     "https://chatgpt.com/?hints=search&q=Read%20this%20Monoscope%20Docs%20page%20and%20help%20me%20understand%20it%3A%20https%3A%2F%2Fmonoscope.tech%2Fdocs%2Fonboarding%2F",
     "https://chatgpt.com/?hints=search&q=Read%20this%20Monoscope%20Docs%20page%20and%20help%20me%20understand%20it%3A%20https%3A%2F%2Fmonoscope.tech%2Fdocs%2Fsdks%2F",
     "https://claude.ai/new?q=Read%20this%20Monoscope%20Docs%20page%20and%20help%20me%20understand%20it%3A%20https%3A%2F%2Fmonoscope.tech%2Fdocs%2Fapi-reference%2F",
+    "https://claude.ai/new?q=Read%20this%20Monoscope%20Docs%20page%20and%20help%20me%20understand%20it%3A%20https%3A%2F%2Fmonoscope.tech%2Fdocs%2Fdashboard%2Fdashboard-pages%2Fapi-log-explorer%2F",
     "https://claude.ai/new?q=Read%20this%20Monoscope%20Docs%20page%20and%20help%20me%20understand%20it%3A%20https%3A%2F%2Fmonoscope.tech%2Fdocs%2Fdashboard%2Fdashboard-pages%2Fget-started%2F",
     "https://claude.ai/new?q=Read%20this%20Monoscope%20Docs%20page%20and%20help%20me%20understand%20it%3A%20https%3A%2F%2Fmonoscope.tech%2Fdocs%2Fdashboard%2Fsettings-pages%2Fapi-keys%2F",
     "https://claude.ai/new?q=Read%20this%20Monoscope%20Docs%20page%20and%20help%20me%20understand%20it%3A%20https%3A%2F%2Fmonoscope.tech%2Fdocs%2Fdashboard%2Fsettings-pages%2Fintegrations%2F",
-    "https://claude.ai/new?q=Read%20this%20Monoscope%20Docs%20page%20and%20help%20me%20understand%20it%3A%20https%3A%2F%2Fmonoscope.tech%2Fdocs%2Fdashboard%2Fsettings-pages%2Fproject-settings%2F",
     "https://claude.ai/new?q=Read%20this%20Monoscope%20Docs%20page%20and%20help%20me%20understand%20it%3A%20https%3A%2F%2Fmonoscope.tech%2Fdocs%2Fonboarding%2F",
     "https://claude.ai/new?q=Read%20this%20Monoscope%20Docs%20page%20and%20help%20me%20understand%20it%3A%20https%3A%2F%2Fmonoscope.tech%2Fdocs%2Fsdks%2F",
-    "https://docs.apidog.com/mcp-client-1930835m0",
-    "https://docs.apitoolkit.io",
-    "https://github.com/blurrah/mcp-graphql",
+    "https://docs.apollo.io/",
     "https://github.com/monoscope-tech/monoscope",
     "https://github.com/monoscope-tech/monoscope-landing/issues/new/choose",
     "https://github.com/open-telemetry/opentelemetry-collector-contrib/releases/latest/download/telemetrygen_linux_amd64",
     "https://github.com/open-telemetry/opentelemetry-collector-contrib/releases/latest/download/telemetrygen_windows_amd64.exe",
-    "https://mcpservers.org/servers/ctkadvisors/graphql-mcp",
     "https://monoscope.tech/",
     "https://monoscope.tech/#API-Keys",
+    "https://monoscope.tech/#API-Log-Explorer-Page",
+    "https://monoscope.tech/#Alerts",
     "https://monoscope.tech/#Base-URL",
     "https://monoscope.tech/#Dashboard-Overview",
     "https://monoscope.tech/#Get-Started-Page",
     "https://monoscope.tech/#Integrations",
     "https://monoscope.tech/#Next-Steps",
     "https://monoscope.tech/#Onboarding-Guide",
-    "https://monoscope.tech/#Project-Settings",
+    "https://monoscope.tech/#Query-Results",
     "https://monoscope.tech/#Quick-Links",
     "https://monoscope.tech/#Quick-Start-2-minutes",
     "https://monoscope.tech/#Quick-Test---Try-It-Without-Code",
     "https://monoscope.tech/#SDK-Guides",
+    "https://monoscope.tech/#Share-URL",
     "https://monoscope.tech/#Simulate-Different-Scenarios",
     "https://monoscope.tech/#Steps",
     "https://monoscope.tech/#What-is-telemetrygen",
@@ -769,12 +763,13 @@
     "https://status.monoscope.tech/",
     "https://www.apollographql.com/docs/apollo-mcp-server",
     "https://www.perplexity.ai/search?q=Read%20this%20Monoscope%20Docs%20page%20and%20help%20me%20understand%20it%3A%20https%3A%2F%2Fmonoscope.tech%2Fdocs%2Fapi-reference%2F",
+    "https://www.perplexity.ai/search?q=Read%20this%20Monoscope%20Docs%20page%20and%20help%20me%20understand%20it%3A%20https%3A%2F%2Fmonoscope.tech%2Fdocs%2Fdashboard%2Fdashboard-pages%2Fapi-log-explorer%2F",
     "https://www.perplexity.ai/search?q=Read%20this%20Monoscope%20Docs%20page%20and%20help%20me%20understand%20it%3A%20https%3A%2F%2Fmonoscope.tech%2Fdocs%2Fdashboard%2Fdashboard-pages%2Fget-started%2F",
     "https://www.perplexity.ai/search?q=Read%20this%20Monoscope%20Docs%20page%20and%20help%20me%20understand%20it%3A%20https%3A%2F%2Fmonoscope.tech%2Fdocs%2Fdashboard%2Fsettings-pages%2Fapi-keys%2F",
     "https://www.perplexity.ai/search?q=Read%20this%20Monoscope%20Docs%20page%20and%20help%20me%20understand%20it%3A%20https%3A%2F%2Fmonoscope.tech%2Fdocs%2Fdashboard%2Fsettings-pages%2Fintegrations%2F",
-    "https://www.perplexity.ai/search?q=Read%20this%20Monoscope%20Docs%20page%20and%20help%20me%20understand%20it%3A%20https%3A%2F%2Fmonoscope.tech%2Fdocs%2Fdashboard%2Fsettings-pages%2Fproject-settings%2F",
     "https://www.perplexity.ai/search?q=Read%20this%20Monoscope%20Docs%20page%20and%20help%20me%20understand%20it%3A%20https%3A%2F%2Fmonoscope.tech%2Fdocs%2Fonboarding%2F",
     "https://www.perplexity.ai/search?q=Read%20this%20Monoscope%20Docs%20page%20and%20help%20me%20understand%20it%3A%20https%3A%2F%2Fmonoscope.tech%2Fdocs%2Fsdks%2F",
+    "https://www.reddit.com/r/mcp/comments/1ogb1ye/api_graphql_openapi_swagger_docs_mcp_server/",
     "https://www.stainless.com/mcp/mcp-api-documentation-the-complete-guide/",
     "https://www.trustpilot.com/review/apitoolkit.io",
     "https://www.youtube.com/watch?v=tMTsNn09GNo"

@@ -50,12 +50,6 @@ export function surfaceDedupKey(surface: SurfaceLike): string {
   if ((type === "http" || type === "graphql") && !surface.spec && surface.url) {
     return `${type}|${normalizeLocator(surface.url)}|${normalizeLocator(surface.name)}`;
   }
-  // An mcp surface keyed by url and its url-less twin (same name) are the same
-  // server recorded at different confidence — key mcp by name so they collapse
-  // (mergeSurface keeps the url-bearing one).
-  if (type === "mcp") {
-    return `${type}|${normalizeLocator(surface.name)}`;
-  }
   return `${type}|${normalizeLocator(locator) || normalizeLocator(surface.name)}`;
 }
 
@@ -202,6 +196,19 @@ export function dedupSurfacesWithReport<T>(result: T, domain = (result as { doma
     const kept = String(keptBeforeMerge.name ?? surfaceDedupKey(keptBeforeMerge));
     const dropped = String(droppedBeforeMerge.name ?? surfaceDedupKey(droppedBeforeMerge));
     collapses.push({ domain, dropped, kept });
+  }
+
+  // An url-less mcp stub whose NAME matches an url-bearing mcp is the same
+  // server recorded at lower confidence — merge the stub in.
+  for (let i = deduped.length - 1; i >= 0; i--) {
+    const stub = deduped[i]!;
+    if (stub.type !== "mcp" || stub.url) continue;
+    const target = deduped.find((other) => other !== stub && other.type === "mcp" && other.url && normalizeLocator(other.name) === normalizeLocator(stub.name));
+    if (!target) continue;
+    const merged = mergeSurface(target, stub);
+    deduped[deduped.indexOf(target)] = merged;
+    deduped.splice(i, 1);
+    collapses.push({ domain, dropped: String(stub.name ?? "mcp stub"), kept: String(merged.name ?? "mcp") });
   }
 
   const idRewrite = new Map<string, string>();

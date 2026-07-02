@@ -10,68 +10,21 @@
       "errors": []
     },
     "usedLlm": true,
-    "discoveredAt": "2026-07-02T10:44:54.731Z",
-    "summary": "Avalara exposes a required-auth HTTP API surface and required-auth MCP servers; no standalone public GraphQL or CLI surface was confirmed.",
+    "discoveredAt": "2026-07-02T16:17:39.810Z",
+    "summary": "Avalara exposes a developer portal and authenticated MCP servers; I could not confirm any public HTTP/GraphQL/CLI integration surface from the pages read.",
     "credentials": {
-      "ava_token": {
-        "type": "basic",
-        "label": "AvaTax account credentials",
-        "generateUrl": "https://developer.avalara.com/freeTrial/",
-        "setup": "Create an Avalara developer account and start an [AvaTax free trial](https://developer.avalara.com/freeTrial/) or sign in to an existing Avalara account. For API access, use the account credentials associated with your Avalara/AvaTax tenant. The docs portal links to [APIs](https://developer.avalara.com/api-reference/) and [Playground](https://developer.avalara.com/playground/); the exact tenant-issued credentials depend on your Avalara subscription.",
-        "acquisition": "manual"
-      },
-      "mcp_avalara_account": {
+      "avalara_account": {
         "type": "oauth2",
-        "label": "Avalara account authorization for MCP servers",
-        "generateUrl": "https://developer.avalara.com/mcp-servers/home/",
-        "setup": "Use your Avalara subscription/account to connect an MCP-capable client to Avalara’s MCP servers. The MCP home says you need an active Avalara account and an AI client; connect using the client’s MCP OAuth/account linking flow from the [MCP Servers](https://developer.avalara.com/mcp-servers/) pages.",
+        "label": "Avalara developer account",
+        "generateUrl": "https://developer.avalara.com/freeTrial/",
+        "setup": "Create an Avalara developer/subscription account from the [AvaTax 90 days free trial](https://developer.avalara.com/freeTrial/) or sign in via the developer portal. This is the account used to access Avalara MCP servers and product APIs for subscribed services.",
         "acquisition": "manual"
       }
     },
     "surfaces": [
       {
-        "slug": "avalara-apis",
-        "name": "Avalara APIs",
-        "type": "http",
-        "docs": "https://developer.avalara.com/api-reference/",
-        "basis": {
-          "via": "discovered",
-          "evidence": [
-            "https://developer.avalara.com/api-reference/",
-            "https://developer.avalara.com/products/avatax/",
-            "https://developer.avalara.com/products/returns/",
-            "https://developer.avalara.com/products/ecm/"
-          ]
-        },
-        "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "ava_token",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "header",
-                    "headerName": "Authorization",
-                    "scheme": "Basic"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://developer.avalara.com/api-reference/",
-                  "https://developer.avalara.com/products/avatax/"
-                ]
-              }
-            }
-          ]
-        }
-      },
-      {
-        "slug": "avalara-mcp-servers",
-        "name": "Avalara MCP servers",
+        "slug": "avalara-developer-mcp-servers",
+        "name": "Avalara Developer MCP Servers",
         "type": "mcp",
         "docs": "https://developer.avalara.com/mcp-servers/",
         "basis": {
@@ -88,7 +41,7 @@
             {
               "use": [
                 {
-                  "id": "mcp_avalara_account",
+                  "id": "avalara_account",
                   "mechanics": {
                     "source": "well-known"
                   }
@@ -97,40 +50,38 @@
               "basis": {
                 "via": "discovered",
                 "evidence": [
-                  "https://developer.avalara.com/mcp-servers/home/",
-                  "https://developer.avalara.com/mcp-servers/docs/"
+                  "https://developer.avalara.com/mcp-servers/",
+                  "https://developer.avalara.com/mcp-servers/home/"
                 ]
               }
             }
           ]
         },
-        "url": "https://developer.avalara.com/mcp-servers/home/",
+        "url": "https://developer.avalara.com/mcp-servers/",
         "transports": [
           "streamable-http"
         ]
       }
     ]
   },
-  "discoveredAt": "2026-07-02T10:44:54.731Z",
+  "discoveredAt": "2026-07-02T16:17:39.810Z",
   "model": "loop-gpt-5.4-mini",
   "usage": {
-    "prompt_tokens": 151635,
-    "completion_tokens": 979,
-    "total_tokens": 152614
+    "prompt_tokens": 83140,
+    "completion_tokens": 603,
+    "total_tokens": 83743
   },
   "visited": [
+    "https://developer.avalara.com/",
     "https://developer.avalara.com/api-reference/",
     "https://developer.avalara.com/mcp-servers/",
     "https://developer.avalara.com/mcp-servers/docs/",
     "https://developer.avalara.com/mcp-servers/home/",
     "https://developer.avalara.com/products/avatax/",
-    "https://developer.avalara.com/products/ecm/",
     "https://developer.avalara.com/products/returns/",
     "https://developer.avalara.com/products/shared-services/",
-    "https://developer.avalara.com/sdk/",
-    "https://github.com/api-evangelist/avalara",
-    "https://www.avalara.com/blog/en/north-america/2026/05/avalara-mcp-servers.html",
-    "https://www.pulsemcp.com/servers/avalara-docs"
+    "https://www.apollographql.com/docs/apollo-mcp-server",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
   ],
   "grounding": [
     "https://cursor.com/docs/mcp",
@@ -144,8 +95,10 @@
     "https://developer.avalara.com/avi-agent/",
     "https://developer.avalara.com/build-with-ai/",
     "https://developer.avalara.com/certification/avatax/",
+    "https://developer.avalara.com/developer-community",
     "https://developer.avalara.com/documentation/",
     "https://developer.avalara.com/freeTrial/",
+    "https://developer.avalara.com/mcp-servers",
     "https://developer.avalara.com/mcp-servers.md",
     "https://developer.avalara.com/mcp-servers/",
     "https://developer.avalara.com/mcp-servers/E-Invoicing/",
@@ -168,7 +121,6 @@
     "https://developer.avalara.com/products/automated-tariff-code/",
     "https://developer.avalara.com/products/avalara-1099-and-w9/",
     "https://developer.avalara.com/products/avalara-1099-and-w9/api/",
-    "https://developer.avalara.com/products/avalara-1099-and-w9/sdk/",
     "https://developer.avalara.com/products/avalara-tax-content/",
     "https://developer.avalara.com/products/avalara-tax-content/api/",
     "https://developer.avalara.com/products/avatax-brazil/",
@@ -183,18 +135,12 @@
     "https://developer.avalara.com/products/brazil-customer-portal/api/",
     "https://developer.avalara.com/products/communications/",
     "https://developer.avalara.com/products/communications/api/",
-    "https://developer.avalara.com/products/communications/sdk/",
     "https://developer.avalara.com/products/crossborder/",
     "https://developer.avalara.com/products/data-staging/",
     "https://developer.avalara.com/products/e-invoicing/",
     "https://developer.avalara.com/products/e-invoicing/api/",
-    "https://developer.avalara.com/products/e-invoicing/sdk/",
-    "https://developer.avalara.com/products/ecm.md",
     "https://developer.avalara.com/products/ecm/",
-    "https://developer.avalara.com/products/ecm/api/",
     "https://developer.avalara.com/products/ecm/api/certcapture/",
-    "https://developer.avalara.com/products/ecm/integration-guides/",
-    "https://developer.avalara.com/products/ecm/mcp/",
     "https://developer.avalara.com/products/excise/",
     "https://developer.avalara.com/products/excise/api/",
     "https://developer.avalara.com/products/excisereturns/",
@@ -230,20 +176,20 @@
     "https://developer.avalara.com/products/vat-reporting/",
     "https://developer.avalara.com/products/vat-reporting/api/",
     "https://developer.avalara.com/refactor-guides/",
-    "https://developer.avalara.com/sdk.md",
     "https://developer.avalara.com/sdk/",
     "https://developer.avalara.com/support/",
     "https://developercommunity.avalara.com/",
-    "https://github.com/api-evangelist/avalara",
     "https://help.avalara.com/Contact_Avalara",
     "https://knowledge.avalara.com",
     "https://legal.avalara.com/dpa#privacynotice",
     "https://mcp.avalara.com/docs",
     "https://training.avalara.com/",
+    "https://training.avalara.com/pages/product-training",
+    "https://www.apollographql.com/docs/apollo-mcp-server",
     "https://www.avalara.com/",
-    "https://www.avalara.com/blog/en/north-america/2026/05/avalara-mcp-servers.html",
     "https://www.avalara.com/site-terms/",
     "https://www.avalara.com/us/en/partners/apply-partner.html",
-    "https://www.pulsemcp.com/servers/avalara-docs"
+    "https://www.avalara.com/us/en/partners/technology-partner.html",
+    "https://www.youtube.com/watch?v=tMTsNn09GNo"
   ]
 }

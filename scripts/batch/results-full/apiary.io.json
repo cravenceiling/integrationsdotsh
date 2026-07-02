@@ -10,90 +10,17 @@
       "errors": []
     },
     "usedLlm": true,
-    "discoveredAt": "2026-07-02T10:28:26.364Z",
-    "summary": "Apiary exposes one public HTTP API and one CLI; both use the user-minted Apiary authorization token, with CLI via `APIARY_API_KEY`.",
+    "discoveredAt": "2026-07-02T16:16:44.396Z",
+    "summary": "Apiary exposes an authenticated CLI (`apiary`) and a documented Apiary API at apiary.docs.apiary.io; no GraphQL, MCP, or public unauthenticated developer surface was confirmed.",
     "credentials": {
       "apiary_api_key": {
-        "type": "bearer",
-        "label": "Apiary authorization token",
+        "type": "api_key",
+        "label": "Apiary API key",
         "generateUrl": "https://login.apiary.io/tokens",
-        "setup": "Go to [tokens](https://login.apiary.io/tokens) while signed in to your Apiary account and create an authorization token. Keep it secret; the docs say it grants access to fetch and publish your documentation. Set it as `APIARY_API_KEY` for the CLI, or send it as `Authorization: Bearer <token>` to the API.",
-        "acquisition": "manual"
+        "setup": "Go to [Apiary token settings](https://login.apiary.io/tokens) and generate an authentication token. Keep it safe: the CLI docs note it grants access to fetch and publish documentation. For CLI use, export it as `APIARY_API_KEY`."
       }
     },
     "surfaces": [
-      {
-        "slug": "apiary-api",
-        "name": "Apiary API",
-        "type": "http",
-        "docs": "https://apiary.docs.apiary.io",
-        "basis": {
-          "via": "discovered",
-          "evidence": [
-            "https://apiary.docs.apiary.io"
-          ]
-        },
-        "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "apiary_api_key",
-                  "mechanics": {
-                    "source": "spec",
-                    "scheme": "Bearer"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://apiary.docs.apiary.io"
-                ]
-              }
-            },
-            {
-              "use": [
-                {
-                  "id": "apiary_api_key",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "header",
-                    "headerName": "Authorization",
-                    "scheme": "Basic"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://apiary.docs.apiary.io"
-                ]
-              }
-            },
-            {
-              "use": [
-                {
-                  "id": "apiary_api_key",
-                  "mechanics": {
-                    "source": "http",
-                    "in": "header",
-                    "headerName": "Authentication",
-                    "scheme": "Token"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://apiary.docs.apiary.io"
-                ]
-              }
-            }
-          ]
-        }
-      },
       {
         "slug": "apiary-cli",
         "name": "Apiary CLI",
@@ -114,7 +41,7 @@
                   "id": "apiary_api_key",
                   "mechanics": {
                     "source": "cli",
-                    "command": "export APIARY_API_KEY",
+                    "command": "apiary",
                     "env": [
                       "APIARY_API_KEY"
                     ]
@@ -138,59 +65,48 @@
           }
         ],
         "command": "apiary"
+      },
+      {
+        "slug": "apiary-api",
+        "name": "Apiary API",
+        "type": "http",
+        "docs": "https://apiary.docs.apiary.io",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://help.apiary.io/tools/apiary-cli/"
+          ]
+        },
+        "auth": {
+          "status": "unknown"
+        },
+        "url": "https://apiary.docs.apiary.io"
       }
     ]
   },
-  "discoveredAt": "2026-07-02T10:28:26.365Z",
+  "discoveredAt": "2026-07-02T16:16:44.396Z",
   "model": "loop-gpt-5.4-mini",
   "usage": {
-    "prompt_tokens": 53377,
-    "completion_tokens": 647,
-    "total_tokens": 54024
+    "prompt_tokens": 22240,
+    "completion_tokens": 485,
+    "total_tokens": 22725
   },
   "visited": [
-    "https://apiary.docs.apiary.io",
+    "https://apiary.io/how-apiary-works",
     "https://github.com/apiaryio/apiary-client",
-    "https://help.apiary.io/tools/",
     "https://help.apiary.io/tools/apiary-cli/",
-    "https://lobehub.com/mcp/wanzunz-github_graphql_api_mcp",
-    "https://mcpservers.org/servers/ctkadvisors/graphql-mcp",
-    "https://www.apollographql.com/blog/connect-ai-agents-to-your-graphql-api-using-mcp-and-type-safe-tool-configuration",
+    "https://tsh.io/blog/apiary-api-documentation-tool",
+    "https://www.reddit.com/r/mcp/comments/1ogb1ye/api_graphql_openapi_swagger_docs_mcp_server/",
     "https://www.youtube.com/watch?v=tMTsNn09GNo"
   ],
   "grounding": [
-    "http://api.example.com/",
-    "https://api.apiary.io/authorization",
-    "https://api.apiary.io/authorization/What%27s%20this%20token%20for%3F",
-    "https://api.apiary.io/blueprint/publish/publicpersonalapi",
-    "https://api.apiary.io/me",
-    "https://api.apiary.io/me/apis",
-    "https://api.apiary.io/me/teams/518bcf09a6e4580200000.../apis",
     "https://apiary.docs.apiary.io",
-    "https://apiary.docs.apiary.io/create-api",
-    "https://apiary.docs.apiary.io/reference/api-list",
-    "https://apiary.docs.apiary.io/reference/api-list/team-api-list",
-    "https://apiary.docs.apiary.io/reference/api-list/team-api-list/get-team-api-list",
-    "https://apiary.docs.apiary.io/reference/api-list/user-api-list",
-    "https://apiary.docs.apiary.io/reference/api-list/user-api-list/get-user-api-list",
-    "https://apiary.docs.apiary.io/reference/authentication",
-    "https://apiary.docs.apiary.io/reference/authentication/authorization-tokens",
-    "https://apiary.docs.apiary.io/reference/authentication/authorization-tokens/create-an-authorization-token",
-    "https://apiary.docs.apiary.io/reference/authentication/authorization-tokens/delete-an-existing-authorization-token",
-    "https://apiary.docs.apiary.io/reference/authentication/authorization-tokens/get-existing-authorization-tokens",
-    "https://apiary.docs.apiary.io/reference/blueprint",
-    "https://apiary.docs.apiary.io/reference/blueprint/create-api-project",
-    "https://apiary.docs.apiary.io/reference/blueprint/create-api-project/create-api-project",
-    "https://apiary.docs.apiary.io/reference/blueprint/fetch-blueprint",
-    "https://apiary.docs.apiary.io/reference/blueprint/fetch-blueprint/fetch-blueprint",
-    "https://apiary.docs.apiary.io/reference/blueprint/publish-blueprint",
-    "https://apiary.docs.apiary.io/reference/blueprint/publish-blueprint/publish-blueprint",
-    "https://apiary.docs.apiary.io/reference/user-information",
-    "https://apiary.docs.apiary.io/reference/user-information/me",
-    "https://apiary.docs.apiary.io/reference/user-information/me/get-me",
-    "https://apiary.docs.apiary.io/traffic",
     "https://apiary.io",
+    "https://apiary.io/",
+    "https://apiary.io/#navigation",
+    "https://apiary.io/#~",
     "https://apiary.io/company",
+    "https://apiary.io/how-apiary-works",
     "https://apiary.io/how-it-works",
     "https://apiary.io/jobs",
     "https://apiary.io/oracle",
@@ -202,9 +118,11 @@
     "https://archiveprogram.github.com",
     "https://blog.apiary.io/",
     "https://client.apiary.io",
+    "https://docs.apiary.io/tools/apiary-cli/",
     "https://docs.github.com",
     "https://docs.github.com/search-github/github-code-search/understanding-github-code-search-syntax",
     "https://dredd.readthedocs.org/",
+    "https://en.wikipedia.org/wiki/motd",
     "https://facebook.com/apiary.io",
     "https://github.blog",
     "https://github.blog/changelog",
@@ -260,6 +178,7 @@
     "https://github.com/apiaryio/apiary-client/tree/master/features",
     "https://github.com/apiaryio/apiary-client/tree/master/lib",
     "https://github.com/apiaryio/apiary-client/tree/master/spec",
+    "https://github.com/apiaryio/dredd",
     "https://github.com/apiaryio/gavel",
     "https://github.com/collections",
     "https://github.com/customer-stories",
@@ -342,40 +261,26 @@
     "https://help.apiary.io/tools/",
     "https://help.apiary.io/tools/api-inspector/",
     "https://help.apiary.io/tools/apiary-cli/",
-    "https://help.apiary.io/tools/apiary-constitutions/",
     "https://help.apiary.io/tools/apiary-editor/",
     "https://help.apiary.io/tools/apiary-integrations/",
-    "https://help.apiary.io/tools/automated-testing/",
-    "https://help.apiary.io/tools/automated-testing/testing-ci/",
-    "https://help.apiary.io/tools/automated-testing/testing-local/",
-    "https://help.apiary.io/tools/automated-testing/testing-reporter/",
     "https://help.apiary.io/tools/browser-jsagent/",
     "https://help.apiary.io/tools/code-examples/",
-    "https://help.apiary.io/tools/embed/",
-    "https://help.apiary.io/tools/github-enterprise-integration/",
-    "https://help.apiary.io/tools/github-integration/",
     "https://help.apiary.io/tools/github-sync/",
-    "https://help.apiary.io/tools/interactive-documentation-v4/",
-    "https://help.apiary.io/tools/interactive-documentation/",
-    "https://help.apiary.io/tools/mock-server/",
     "https://help.apiary.io/tools/style-guide",
-    "https://help.apiary.io/tools/style-guide/",
     "https://help.apiary.io/tools/style-guide/#api-design-assertion-language",
-    "https://help.apiary.io/tools/troubleshooting-github/",
-    "https://help.apiary.io/tools/version-history/",
-    "https://lobehub.com/mcp/wanzunz-github_graphql_api_mcp",
+    "https://login.apiary.io/",
     "https://login.apiary.io/login",
-    "https://login.apiary.io/login?redirect=https%3A%2F%2Fapiary.docs.apiary.io%2F",
+    "https://login.apiary.io/register",
     "https://login.apiary.io/tokens",
     "https://maintainers.github.com",
-    "https://mcpservers.org/servers/ctkadvisors/graphql-mcp",
     "https://securitylab.github.com",
     "https://skills.github.com",
     "https://stars.github.com",
     "https://support.github.com",
-    "https://tools.ietf.org/html/rfc6750",
+    "https://tsh.io/blog/apiary-api-documentation-tool",
     "https://twitter.com/apiaryio",
-    "https://www.apollographql.com/blog/connect-ai-agents-to-your-graphql-api-using-mcp-and-type-safe-tool-configuration",
+    "https://www.oracle.com",
+    "https://www.reddit.com/r/mcp/comments/1ogb1ye/api_graphql_openapi_swagger_docs_mcp_server/",
     "https://www.youtube.com/watch?v=tMTsNn09GNo"
   ]
 }

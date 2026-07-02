@@ -10,18 +10,61 @@
       "errors": []
     },
     "usedLlm": true,
-    "discoveredAt": "2026-07-02T10:32:22.395Z",
-    "summary": "APIMatic exposes one public HTTP API, one CLI, and an MCP server generation surface; the API and CLI use the same APIMatic Auth Key, while MCP generation access is documented but auth remains unclear.",
+    "discoveredAt": "2026-07-02T16:16:57.236Z",
+    "summary": "APIMatic exposes one authenticated HTTP API, one authenticated CLI (`apimatic`), and MCP server generation docs; the API and CLI use APIMatic account auth / auth keys, while the MCP connect endpoint itself wasn’t documented.",
     "credentials": {
       "apimatic_auth_key": {
         "type": "api_key",
         "label": "APIMatic Auth Key",
         "generateUrl": "https://www.apimatic.io/account/login",
-        "setup": "Sign in to your APIMatic account, then go to [Settings](https://www.apimatic.io/account/login) → **API Authentication** and create a new **Auth Key**. APIMatic’s docs say the key is passed in the `Authorization` header when calling the APIMatic API, and the CLI can also accept it via `--auth-key` for login or per-command overrides.",
+        "setup": "Sign in to the [APIMatic account](https://www.apimatic.io/account/login), then open **Settings** → **API Authentication** in the APIMatic app. Create a new **Auth Key** with a descriptive **API Key Identifier**, copy the generated key, and use it as your API credential. The docs say it is passed in the `Authorization` header for APIMatic APIs.",
+        "acquisition": "manual"
+      },
+      "apimatic_account_login": {
+        "type": "basic",
+        "label": "APIMatic account login",
+        "generateUrl": "https://www.apimatic.io/account/login",
+        "setup": "Use your APIMatic website account to log in. For CLI auth, run `apimatic auth login`, which opens a browser-based sign-in flow and logs you into APIMatic without manually handling tokens.",
         "acquisition": "manual"
       }
     },
     "surfaces": [
+      {
+        "slug": "apimatic-api",
+        "name": "APIMatic API",
+        "type": "http",
+        "docs": "https://docs.apimatic.io/platform-api",
+        "basis": {
+          "via": "discovered",
+          "evidence": [
+            "https://docs.apimatic.io/platform-api"
+          ]
+        },
+        "auth": {
+          "status": "required",
+          "entries": [
+            {
+              "use": [
+                {
+                  "id": "apimatic_auth_key",
+                  "mechanics": {
+                    "source": "spec",
+                    "scheme": "Authorization (Custom Header Signature)"
+                  }
+                }
+              ],
+              "basis": {
+                "via": "discovered",
+                "evidence": [
+                  "https://docs.apimatic.io/platform-api",
+                  "https://docs.apimatic.io/account-management/obtaining-auth-keys/"
+                ]
+              }
+            }
+          ]
+        },
+        "url": "https://api.apimatic.io"
+      },
       {
         "slug": "apimatic-cli",
         "name": "APIMatic CLI",
@@ -41,13 +84,17 @@
             {
               "use": [
                 {
+                  "id": "apimatic_account_login",
+                  "mechanics": {
+                    "source": "cli",
+                    "command": "apimatic auth login"
+                  }
+                },
+                {
                   "id": "apimatic_auth_key",
                   "mechanics": {
                     "source": "cli",
-                    "command": "apimatic auth login --auth-key=<auth-key>",
-                    "env": [
-                      "APIMATIC_AUTH_KEY"
-                    ]
+                    "command": "apimatic auth login --auth-key=<value>"
                   }
                 }
               ],
@@ -55,7 +102,7 @@
                 "via": "discovered",
                 "evidence": [
                   "https://docs.apimatic.io/apimatic-cli/getting-started/",
-                  "https://docs.apimatic.io/account-management/obtaining-auth-keys/"
+                  "https://docs.apimatic.io/apimatic-cli/commands/"
                 ]
               }
             }
@@ -71,8 +118,8 @@
         "command": "apimatic"
       },
       {
-        "slug": "apimatic-mcp-server-generation",
-        "name": "APIMatic MCP Server Generation",
+        "slug": "apimatic-mcp-server-generator",
+        "name": "APIMatic MCP Server Generator",
         "type": "mcp",
         "docs": "https://docs.apimatic.io/generate-mcp-servers/mcp-server-overview/",
         "basis": {
@@ -83,21 +130,16 @@
         },
         "auth": {
           "status": "unknown"
-        },
-        "url": "https://docs.apimatic.io/generate-mcp-servers/mcp-server-overview/",
-        "transports": [
-          "stdio",
-          "streamable-http"
-        ]
+        }
       }
     ]
   },
-  "discoveredAt": "2026-07-02T10:32:22.396Z",
+  "discoveredAt": "2026-07-02T16:16:57.237Z",
   "model": "loop-gpt-5.4-mini",
   "usage": {
-    "prompt_tokens": 67769,
-    "completion_tokens": 954,
-    "total_tokens": 68723
+    "prompt_tokens": 115536,
+    "completion_tokens": 998,
+    "total_tokens": 116534
   },
   "visited": [
     "https://docs.apimatic.io/account-management/obtaining-auth-keys/",
@@ -107,8 +149,8 @@
     "https://docs.apimatic.io/generate-mcp-servers/mcp-server-overview/",
     "https://docs.apimatic.io/platform-api",
     "https://github.com/apimatic/apimatic-cli",
-    "https://www.apimatic.io/blog/product-highlights-mar-2025",
-    "https://www.reddit.com/r/mcp/comments/1j7hybs/mcp_server_for_retrieving_up_to_date_api_docs_for/"
+    "https://www.apimatic.io/blog/june-2025-product-highlights-mcp-servers-portal-layout-controls-and-more-comprehensive-sdk-docs",
+    "https://www.apimatic.io/blog/product-highlights-mar-2025"
   ],
   "grounding": [
     "https://api.apimatic.io",
@@ -181,9 +223,11 @@
     "https://docs.apimatic.io/ai-capabilities/llms-txt/",
     "https://docs.apimatic.io/api-transformer/overview-transformer/",
     "https://docs.apimatic.io/apimatic-cli/commands/",
+    "https://docs.apimatic.io/apimatic-cli/commands/#cli-quickstart",
     "https://docs.apimatic.io/apimatic-cli/getting-started/",
     "https://docs.apimatic.io/apimatic-cli/intro-and-install/",
     "https://docs.apimatic.io/changelog/",
+    "https://docs.apimatic.io/changelog/improvements-in-search/",
     "https://docs.apimatic.io/docs-as-code/contents-of-the-build-directory/",
     "https://docs.apimatic.io/docs-as-code/documentation-as-code-overview/",
     "https://docs.apimatic.io/generate-mcp-servers/mcp-server-overview/",
@@ -193,26 +237,91 @@
     "https://docs.apimatic.io/getting-started/defining-your-first-api/",
     "https://docs.apimatic.io/platform-api",
     "https://docs.apimatic.io/platform-api/#/http/guides/generating-on-prem-api-portal/api-recipes",
+    "https://docs.apimatic.io/platform-api/#/http/guides/generating-on-prem-api-portal/build-file-reference/generateportal-portalsettings-theme-basetheme",
     "https://docs.apimatic.io/platform-api/#/http/guides/generating-on-prem-api-portal/toc-customization",
+    "https://docs.apimatic.io/platform-api/#/http/guides/generating-on-prem-api-portal/versioning",
     "https://docs.apimatic.io/platform/sso/",
+    "https://docs.apimatic.io/publish-apis/customizing-your-portal/#cosmos-theme",
     "https://docs.apimatic.io/publish-apis/hosting-your-portal/",
     "https://docs.apimatic.io/rulesets/overview/",
     "https://docs.apimatic.io/skills/overview/",
     "https://docs.apimatic.io/troubleshooting/",
     "https://docs.apimatic.io/web-dashboard-retired/",
     "https://github.com/apimatic/apimatic-cli",
+    "https://github.com/apimatic/apimatic-validator-mcp",
     "https://join.slack.com/t/friendsofapimatic/shared_invite/zt-30av44q1c-0op2BNLrIjCx_D8GYX30gg",
     "https://localhost:44301/api",
     "https://nodejs.org/en/download/current/",
+    "https://nz.linkedin.com/company/apimatic-limited",
     "https://petstore.swagger.io/v2/swagger.json",
     "https://twitter.com/apimatic",
+    "https://twitter.com/intent/tweet?url=&text=%3Cspan+id%3D%22hs_cos_wrapper_name%22+class%3D%22hs_cos_wrapper+hs_cos_wrapper_meta_field+hs_cos_wrapper_type_text%22+style%3D%22%22+data-hs-cos-general-type%3D%22meta_field%22+data-hs-cos-type%3D%22text%22+%3EMarch+2025%C2%A0Product+Highlights%3A+Smarter+Search%2C+improved+CLI%2C+MCP+Server+for+OpenAPI+Validation+and+Enterprise+SSO%3C%2Fspan%3E",
+    "https://www.apimatic",
     "https://www.apimatic.io/",
+    "https://www.apimatic.io/#heading-0",
+    "https://www.apimatic.io/#heading-1",
+    "https://www.apimatic.io/#heading-2",
+    "https://www.apimatic.io/#heading-3",
+    "https://www.apimatic.io/#heading-4",
+    "https://www.apimatic.io/#heading-5",
+    "https://www.apimatic.io/#heading-6",
+    "https://www.apimatic.io/#heading-7",
+    "https://www.apimatic.io/about",
     "https://www.apimatic.io/account/login",
+    "https://www.apimatic.io/api-copilot",
+    "https://www.apimatic.io/art-of-developer-experience",
     "https://www.apimatic.io/blog",
+    "https://www.apimatic.io/blog/agentic-engineering-claude-code",
+    "https://www.apimatic.io/blog/author/apimatic",
+    "https://www.apimatic.io/blog/june-2025-product-highlights-mcp-servers-portal-layout-controls-and-more-comprehensive-sdk-docs",
+    "https://www.apimatic.io/blog/may-2026-product-highlights",
+    "https://www.apimatic.io/blog/migrate-from-stainless-to-apimatic-without-breaking-changes",
+    "https://www.apimatic.io/blog/product-highlights-feb-2025",
     "https://www.apimatic.io/blog/product-highlights-mar-2025",
+    "https://www.apimatic.io/blog/tag/api-governance",
+    "https://www.apimatic.io/blog/tag/developer-portal",
+    "https://www.apimatic.io/blog/tag/openapi-linter",
+    "https://www.apimatic.io/blog/tag/product-highlights",
+    "https://www.apimatic.io/blog/tag/sdks",
+    "https://www.apimatic.io/blog/why-developer-onboarding-needs-more-than-an-ai-context-menu",
+    "https://www.apimatic.io/contact",
+    "https://www.apimatic.io/cs/c/?cta_guid=2c91ecd7-e164-4f57-9231-0be5ec63a44a&signature=AAH58kHCt385FOzKGIErgx15LC5rCdyIMA&portal_id=2052727&pageId=188428531348&placement_guid=e33eee88-c366-4cb3-9d6b-1142f1b939d5&click=037a384e-13f9-4655-bf2f-d8883d7d1551&redirect_url=APefjpGSq0MMbFp4w01QeNJFMNR-34VbzOycCeKXrv8SMXLUdr7tz7SN73zn6088AwM-ru7v-vGtv6vur7F1OWTAGtPzO5HzoUy9s1t9VUH7VSxrIOl6rBWwvrpg-gYd3hQm7ws03GZr&hsutk=&canon=https%3A%2F%2Fwww.apimatic.io%2Fblog%2Fproduct-highlights-mar-2025&ts=1783008997449",
+    "https://www.apimatic.io/cs/c/?cta_guid=9b74b435-44e8-4232-b1ff-a95284e9c102&signature=AAH58kGBpnvxJV_POYqLFJIsYy3CaCb4-A&portal_id=2052727&pageId=188428531348&placement_guid=591fe59f-c1a6-49ea-a53b-e203412ef21e&click=3da7cf2e-192f-4e28-bd18-d95b166aca31&redirect_url=APefjpGDoFE1hpM8mrmD4ZliNsEmhuT6K961q-Oxew7wZ4OXINomQTgcVhCFqKpfgBsTXsZ-LAVjUAtzFOhosenx8dgaKrT5NMUbHbp4JXpLgcPVh6cTo-jQM6zSRIwFKs5Ia1Vgtkcc&hsutk=&canon=https%3A%2F%2Fwww.apimatic.io%2Fblog%2Fproduct-highlights-mar-2025&ts=1783008997446",
+    "https://www.apimatic.io/customers",
+    "https://www.apimatic.io/events",
+    "https://www.apimatic.io/integrations/mulesoft-anypoint",
+    "https://www.apimatic.io/integrations/readme",
+    "https://www.apimatic.io/integrations/redhat-openshift",
+    "https://www.apimatic.io/integrations/redocly",
+    "https://www.apimatic.io/javascript",
+    "https://www.apimatic.io/pricing",
+    "https://www.apimatic.io/product",
+    "https://www.apimatic.io/product/automate",
+    "https://www.apimatic.io/product/context-plugins",
+    "https://www.apimatic.io/product/define",
+    "https://www.apimatic.io/product/generate",
+    "https://www.apimatic.io/product/generate#codesample",
+    "https://www.apimatic.io/product/generate#sdk",
+    "https://www.apimatic.io/product/publish",
+    "https://www.apimatic.io/product/publish#guided-walkthrough",
+    "https://www.apimatic.io/solution/dx-as-code",
+    "https://www.apimatic.io/solution/fintech",
+    "https://www.apimatic.io/solution/fix-my-openapi",
+    "https://www.apimatic.io/solution/messaging",
+    "https://www.apimatic.io/solution/no-code-dx",
+    "https://www.apimatic.io/solution/score-my-openapi",
+    "https://www.apimatic.io/solution/transformer",
+    "https://www.apimatic.io/success-stories",
+    "https://www.apimatic.io/success-stories/boku",
+    "https://www.apimatic.io/success-stories/foxit-esign",
+    "https://www.apimatic.io/success-stories/logistics",
+    "https://www.apimatic.io/success-stories/maxio",
+    "https://www.apimatic.io/success-stories/people-hedge",
+    "https://www.apimatic.io/success-stories/postman-case-study",
+    "https://www.apimatic.io/success-stories/xion-global",
     "https://www.apimatic.io/transformer/",
     "https://www.linkedin.com/company/apimatic-limited",
-    "https://www.npmjs.com/package/@apimatic/cli",
-    "https://www.reddit.com/r/mcp/comments/1j7hybs/mcp_server_for_retrieving_up_to_date_api_docs_for/"
+    "https://www.linkedin.com/shareArticle?mini=true&url=&title=%3Cspan+id%3D%22hs_cos_wrapper_name%22+class%3D%22hs_cos_wrapper+hs_cos_wrapper_meta_field+hs_cos_wrapper_type_text%22+style%3D%22%22+data-hs-cos-general-type%3D%22meta_field%22+data-hs-cos-type%3D%22text%22+%3EMarch+2025%C2%A0Product+Highlights%3A+Smarter+Search%2C+improved+CLI%2C+MCP+Server+for+OpenAPI+Validation+and+Enterprise+SSO%3C%2Fspan%3E",
+    "https://www.npmjs.com/package/@apimatic/cli"
   ]
 }

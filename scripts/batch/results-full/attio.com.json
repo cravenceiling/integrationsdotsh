@@ -39,21 +39,21 @@
       "errors": []
     },
     "usedLlm": true,
-    "discoveredAt": "2026-07-02T14:56:20.524Z",
-    "summary": "Attio exposes one public REST API (OpenAPI at https://api.attio.com/openapi/api) and a hosted MCP server at https://mcp.attio.com/mcp; both use OAuth, and the REST API also accepts single-workspace API keys via Authorization: Bearer.",
+    "discoveredAt": "2026-07-02T16:17:43.598Z",
+    "summary": "Attio exposes a public REST API (OAuth or workspace token) and a hosted MCP server over OAuth; no CLI or GraphQL surface was confirmed.",
     "credentials": {
-      "attio_oauth": {
+      "attio_oauth_app": {
         "type": "oauth2",
-        "label": "Attio OAuth 2.0 access token",
+        "label": "Attio OAuth app",
         "generateUrl": "https://build.attio.com/",
-        "setup": "Create an app in the [Attio developer dashboard](https://build.attio.com/), enable OAuth 2.0, add your redirect URI(s), and configure the scopes your integration needs. Use the resulting authorization-code flow to mint an access token for each workspace/user connection.",
+        "setup": "Go to the [Attio developer dashboard](https://build.attio.com/) and create/configure an OAuth app. Use the app’s client credentials with the authorization code flow. Attio’s OAuth endpoints are `https://app.attio.com/authorize` and `https://app.attio.com/oauth/token`.",
         "acquisition": "manual"
       },
-      "attio_workspace_api_key": {
-        "type": "api_key",
-        "label": "Attio single-workspace API key",
-        "generateUrl": "https://attio.com/help/apps/other-apps/generating-an-api-key",
-        "setup": "Go to the app's developer settings and generate a single-workspace API key for the workspace you want to access. This is the simpler option when you only need to integrate with one workspace; choose the scopes you need while creating or editing the token.",
+      "attio_workspace_token": {
+        "type": "bearer",
+        "label": "Attio single-workspace access token",
+        "generateUrl": "https://build.attio.com/",
+        "setup": "In the [Attio developer dashboard](https://build.attio.com/), open your app’s developer settings and generate a single-workspace access token. Choose the scopes you need; Attio notes these tokens are intended for a single workspace.",
         "acquisition": "manual"
       }
     },
@@ -78,7 +78,7 @@
             {
               "use": [
                 {
-                  "id": "attio_oauth",
+                  "id": "attio_oauth_app",
                   "mechanics": {
                     "source": "spec",
                     "scheme": "oauth2"
@@ -96,7 +96,7 @@
             {
               "use": [
                 {
-                  "id": "attio_workspace_api_key",
+                  "id": "attio_workspace_token",
                   "mechanics": {
                     "source": "http",
                     "in": "header",
@@ -133,7 +133,7 @@
             {
               "use": [
                 {
-                  "id": "attio_oauth",
+                  "id": "attio_oauth_app",
                   "mechanics": {
                     "source": "well-known"
                   }
@@ -155,26 +155,25 @@
       }
     ]
   },
-  "discoveredAt": "2026-07-02T14:56:20.524Z",
+  "discoveredAt": "2026-07-02T16:17:43.599Z",
   "model": "loop-gpt-5.4-mini",
   "usage": {
-    "prompt_tokens": 159405,
-    "completion_tokens": 1205,
-    "total_tokens": 160610
+    "prompt_tokens": 115478,
+    "completion_tokens": 1071,
+    "total_tokens": 116549
   },
   "visited": [
+    "https://apigene.ai/mcp/official/attio",
     "https://attio.com/engineering/blog/building-the-attio-mcp-server",
     "https://attio.com/llms.txt",
     "https://attio.com/openapi.json",
     "https://docs.attio.com/docs/overview",
     "https://docs.attio.com/mcp/overview",
     "https://docs.attio.com/rest-api/endpoint-reference/openapi",
-    "https://docs.attio.com/rest-api/endpoint-reference/webhooks",
     "https://docs.attio.com/rest-api/guides/authentication",
-    "https://docs.attio.com/rest-api/guides/webhooks",
     "https://docs.attio.com/rest-api/overview",
     "https://docs.attio.com/rest-api/tutorials/connect-an-app-through-oauth",
-    "https://github.com/kesslerio/attio-moltbot-skill/issues/1",
+    "https://www.coffee.ai/articles/attio-crm-public-api-docs",
     "https://www.scalekit.com/blog/attio-mcp-vs-api"
   ],
   "grounding": [
@@ -184,7 +183,7 @@
     "https://api.attio.com",
     "https://api.attio.com/openapi/api",
     "https://api.attio.com/v2/tasks?limit=10",
-    "https://api.attio.com/v2/webhooks",
+    "https://apigene.ai/mcp/official/attio",
     "https://app.attio.com/authorize",
     "https://app.attio.com/authorize?response_type=code&client_id=${process.env.ATTIO_CLIENT_ID}&redirect_uri=http://localhost:3050/integrations/attio/callback&state=${state}",
     "https://app.attio.com/oauth/token",
@@ -219,9 +218,7 @@
     "https://docs.attio.com/#add-as-a-custom-connector",
     "https://docs.attio.com/#api-key",
     "https://docs.attio.com/#approval-flows",
-    "https://docs.attio.com/#authenticating",
     "https://docs.attio.com/#authentication",
-    "https://docs.attio.com/#authorization-authorization",
     "https://docs.attio.com/#bulk-operations",
     "https://docs.attio.com/#comments",
     "https://docs.attio.com/#comments-2",
@@ -229,54 +226,30 @@
     "https://docs.attio.com/#contact-%26-company-lookup",
     "https://docs.attio.com/#contact-&-company-lookup",
     "https://docs.attio.com/#content-area",
-    "https://docs.attio.com/#creating-using-settings-page",
-    "https://docs.attio.com/#creating-using-the-api",
-    "https://docs.attio.com/#creating-webhooks",
     "https://docs.attio.com/#data-access",
-    "https://docs.attio.com/#delivery-attempts",
-    "https://docs.attio.com/#delivery-rate-limiting",
     "https://docs.attio.com/#emails",
-    "https://docs.attio.com/#entry-attribute-updated",
-    "https://docs.attio.com/#entry-created",
-    "https://docs.attio.com/#entry-deleted",
-    "https://docs.attio.com/#event-types",
-    "https://docs.attio.com/#filter-examples",
-    "https://docs.attio.com/#filter-syntax",
-    "https://docs.attio.com/#filtering",
     "https://docs.attio.com/#generating-access-tokens",
     "https://docs.attio.com/#getting-help",
     "https://docs.attio.com/#getting-started",
-    "https://docs.attio.com/#https",
-    "https://docs.attio.com/#idempotency",
-    "https://docs.attio.com/#ip-addresses",
     "https://docs.attio.com/#lists",
     "https://docs.attio.com/#lists-2",
-    "https://docs.attio.com/#logical-joins-or",
     "https://docs.attio.com/#meetings-%26-calls",
     "https://docs.attio.com/#meetings-&-calls",
-    "https://docs.attio.com/#migrating-from-v1-webhooks",
     "https://docs.attio.com/#notes",
     "https://docs.attio.com/#oauth-2-0",
-    "https://docs.attio.com/#operations",
-    "https://docs.attio.com/#parameter-limit",
-    "https://docs.attio.com/#parameter-offset",
-    "https://docs.attio.com/#payloads",
     "https://docs.attio.com/#prerequisites",
     "https://docs.attio.com/#rate-limits",
     "https://docs.attio.com/#records-%26-objects",
     "https://docs.attio.com/#records-&-objects",
     "https://docs.attio.com/#reporting",
     "https://docs.attio.com/#reporting-2",
-    "https://docs.attio.com/#response-data",
     "https://docs.attio.com/#sample-prompts",
     "https://docs.attio.com/#scopes",
     "https://docs.attio.com/#security-best-practices",
     "https://docs.attio.com/#sql",
-    "https://docs.attio.com/#step-by-step-migration-guide",
     "https://docs.attio.com/#supported-tools",
     "https://docs.attio.com/#tasks",
     "https://docs.attio.com/#tasks-2",
-    "https://docs.attio.com/#testing-webhooks",
     "https://docs.attio.com/#using-tokens",
     "https://docs.attio.com/#what%E2%80%99s-next",
     "https://docs.attio.com/#what-can-you-do-with-attio-mcp",
@@ -314,15 +287,8 @@
     "https://docs.attio.com/rest-api/attribute-types/attribute-types-text",
     "https://docs.attio.com/rest-api/attribute-types/attribute-types-timestamp",
     "https://docs.attio.com/rest-api/endpoint-reference",
-    "https://docs.attio.com/rest-api/endpoint-reference/files/download-a-file",
     "https://docs.attio.com/rest-api/endpoint-reference/objects/list-objects",
     "https://docs.attio.com/rest-api/endpoint-reference/openapi",
-    "https://docs.attio.com/rest-api/endpoint-reference/webhooks",
-    "https://docs.attio.com/rest-api/endpoint-reference/webhooks/create-a-webhook",
-    "https://docs.attio.com/rest-api/endpoint-reference/webhooks/delete-a-webhook",
-    "https://docs.attio.com/rest-api/endpoint-reference/webhooks/get-a-webhook",
-    "https://docs.attio.com/rest-api/endpoint-reference/webhooks/list-webhooks",
-    "https://docs.attio.com/rest-api/endpoint-reference/webhooks/update-a-webhook",
     "https://docs.attio.com/rest-api/guides/authentication",
     "https://docs.attio.com/rest-api/guides/filtering-and-sorting",
     "https://docs.attio.com/rest-api/guides/pagination",
@@ -335,11 +301,10 @@
     "https://docs.attio.com/sdk/server",
     "https://docs.attio.com/share/the-publication-lifecycle",
     "https://docs.attio.com/sql/overview",
-    "https://example.com/webhook",
-    "https://github.com/kesslerio/attio-moltbot-skill/issues/1",
     "https://mcp.attio.com/mcp",
     "https://modelcontextprotocol.io/introduction",
     "https://my-app.com/integrations/attio/callback",
+    "https://www.coffee.ai/articles/attio-crm-public-api-docs",
     "https://www.mintlify.com?utm_campaign=poweredBy&utm_medium=referral&utm_source=attio",
     "https://www.scalekit.com/blog/attio-mcp-vs-api",
     "https://x.com",

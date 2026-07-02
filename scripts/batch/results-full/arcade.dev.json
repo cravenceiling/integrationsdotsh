@@ -12,21 +12,14 @@
       "errors": []
     },
     "usedLlm": true,
-    "discoveredAt": "2026-07-02T10:37:43.070Z",
-    "summary": "Arcade exposes a required-auth HTTP API, an MCP Gateway, and the Arcade CLI; authentication is via Arcade API key for the API and `arcade login` for MCP/CLI workflows.",
+    "discoveredAt": "2026-07-02T16:17:12.389Z",
+    "summary": "Arcade exposes an authenticated HTTP API on api.arcade.dev with Bearer API key auth, plus MCP and CLI developer surfaces documented by Arcade; no GraphQL surface was confirmed.",
     "credentials": {
       "arcade_api_key": {
         "type": "api_key",
         "label": "Arcade API key",
         "generateUrl": "https://docs.arcade.dev/en/get-started/setup/api-keys",
-        "setup": "Go to the [Arcade dashboard](https://api.arcade.dev/dashboard/playground/chat) or the [Get an API key](https://docs.arcade.dev/en/get-started/setup/api-keys) guide, create/sign in to your Arcade account, then mint an API key for your project. Arcade describes this as the secret used to authenticate requests to the Arcade API.",
-        "acquisition": "manual"
-      },
-      "arcade_cli_login": {
-        "type": "bearer",
-        "label": "Arcade CLI login session",
-        "generateUrl": "https://docs.arcade.dev/en/guides/create-tools/tool-basics/create-tool-auth",
-        "setup": "Install the Arcade CLI, then run `arcade login` to authenticate. Arcade’s docs say this login is used to authorize MCP/tool workflows and can provide built-in auth providers for connected services.",
+        "setup": "Go to the [API keys guide](https://docs.arcade.dev/en/get-started/setup/api-keys), sign in to Arcade, and create an API key from the dashboard. Use the key value shown once at creation time; store it securely and pass it as instructed by the Arcade API/docs.",
         "acquisition": "manual"
       }
     },
@@ -35,13 +28,12 @@
         "slug": "arcade-api",
         "name": "Arcade API",
         "type": "http",
-        "docs": "https://docs.arcade.dev/",
+        "docs": "https://docs.arcade.dev/en/references/api",
         "basis": {
           "via": "discovered",
           "evidence": [
-            "https://docs.arcade.dev/",
-            "https://docs.arcade.dev/en/get-started/setup/api-keys",
-            "https://docs.arcade.dev/en/resources/glossary"
+            "https://docs.arcade.dev/en/references/api",
+            "https://docs.arcade.dev/en/get-started/setup/api-keys"
           ]
         },
         "auth": {
@@ -63,52 +55,30 @@
                 "via": "discovered",
                 "evidence": [
                   "https://docs.arcade.dev/en/get-started/setup/api-keys",
-                  "https://docs.arcade.dev/",
-                  "https://docs.arcade.dev/en/resources/glossary"
+                  "https://docs.arcade.dev/en/references/api"
                 ]
               }
             }
           ]
-        }
+        },
+        "url": "https://api.arcade.dev"
       },
       {
-        "slug": "arcade-mcp-gateway",
-        "name": "Arcade MCP Gateway",
+        "slug": "arcade-mcp-docs-client-connection",
+        "name": "Arcade MCP docs/client connection",
         "type": "mcp",
-        "docs": "https://docs.arcade.dev/en/guides/mcp-gateways",
+        "docs": "https://docs.arcade.dev/en/get-started/quickstarts/call-tool-client",
         "basis": {
           "via": "discovered",
           "evidence": [
-            "https://docs.arcade.dev/en/guides/mcp-gateways",
-            "https://www.arcade.dev/blog/mcp-runtime-gateway/",
-            "https://docs.arcade.dev/en/guides/create-tools/tool-basics/create-tool-auth"
+            "https://docs.arcade.dev/en/get-started/quickstarts/call-tool-client",
+            "https://docs.arcade.dev/"
           ]
         },
         "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "arcade_cli_login",
-                  "mechanics": {
-                    "source": "cli",
-                    "command": "arcade login"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://docs.arcade.dev/en/guides/mcp-gateways",
-                  "https://www.arcade.dev/blog/mcp-runtime-gateway/",
-                  "https://docs.arcade.dev/en/guides/create-tools/tool-basics/create-tool-auth"
-                ]
-              }
-            }
-          ]
+          "status": "unknown"
         },
-        "url": "https://api.arcade.dev/mcp/gateway/your-gateway-id",
+        "url": "https://api.arcade.dev",
         "transports": [
           "streamable-http"
         ]
@@ -117,67 +87,44 @@
         "slug": "arcade-cli",
         "name": "Arcade CLI",
         "type": "cli",
-        "docs": "https://docs.arcade.dev/en/guides/create-tools/tool-basics/create-tool-auth",
+        "docs": "https://docs.arcade.dev/en/references/arcade-cli",
         "basis": {
           "via": "discovered",
           "evidence": [
-            "https://docs.arcade.dev/en/guides/create-tools/tool-basics/create-tool-auth"
+            "https://docs.arcade.dev/en/references/arcade-cli"
           ]
         },
         "auth": {
-          "status": "required",
-          "entries": [
-            {
-              "use": [
-                {
-                  "id": "arcade_cli_login",
-                  "mechanics": {
-                    "source": "cli",
-                    "command": "arcade login"
-                  }
-                }
-              ],
-              "basis": {
-                "via": "discovered",
-                "evidence": [
-                  "https://docs.arcade.dev/en/guides/create-tools/tool-basics/create-tool-auth"
-                ]
-              }
-            }
-          ]
+          "status": "unknown"
         },
         "command": "arcade"
       }
     ]
   },
-  "discoveredAt": "2026-07-02T10:37:43.071Z",
+  "discoveredAt": "2026-07-02T16:17:12.390Z",
   "model": "loop-gpt-5.4-mini",
   "usage": {
-    "prompt_tokens": 183536,
-    "completion_tokens": 1144,
-    "total_tokens": 184680
+    "prompt_tokens": 112398,
+    "completion_tokens": 757,
+    "total_tokens": 113155
   },
   "visited": [
+    "https://arcade.dev/llms.txt",
     "https://docs.arcade.dev/",
     "https://docs.arcade.dev/en/get-started/quickstarts/call-tool-client",
     "https://docs.arcade.dev/en/get-started/quickstarts/mcp-server-quickstart",
     "https://docs.arcade.dev/en/get-started/setup/api-keys",
-    "https://docs.arcade.dev/en/guides/create-tools/tool-basics/create-tool-auth",
-    "https://docs.arcade.dev/en/guides/mcp-gateways",
-    "https://docs.arcade.dev/en/resources/glossary",
-    "https://docs.arcade.dev/get-started/mcp-clients",
-    "https://docs.arcade.dev/home/auth/how-arcade-helps",
+    "https://docs.arcade.dev/en/guides/tool-calling",
+    "https://docs.arcade.dev/en/references/api",
+    "https://docs.arcade.dev/en/references/arcade-cli",
     "https://github.com/arcadeai/arcade-mcp",
-    "https://www.arcade.dev/blog/mcp-runtime-gateway/",
-    "https://www.truefoundry.com/blog/mcp-authentication-in-claude-code",
-    "https://www.zenml.io/llmops-database/secure-authentication-for-ai-agents-using-model-context-protocol"
+    "https://pypi.org/project/arcade-mcp-server/",
+    "https://www.arcade.dev/"
   ],
   "grounding": [
     "https://api.arcade.dev/dashboard/playground/chat",
     "https://api.arcade.dev/dashboard/register?utm_source=docs&utm_campaign=docs&utm_medium=navbar",
-    "https://api.arcade.dev/mcp/engineering",
-    "https://api.arcade.dev/mcp/gateway/your-gateway-id",
-    "https://app.arcade.dev",
+    "https://arcade.dev/llms.txt",
     "https://docs.arcade.dev/",
     "https://docs.arcade.dev/#nextra-skip-nav",
     "https://docs.arcade.dev/en/get-started/about-arcade",
@@ -218,15 +165,19 @@
     "https://docs.arcade.dev/en/guides/contextual-access/build-your-own",
     "https://docs.arcade.dev/en/guides/contextual-access/examples",
     "https://docs.arcade.dev/en/guides/contextual-access/how-hooks-work",
-    "https://docs.arcade.dev/en/guides/create-tools/tool-basics/create-tool-auth",
+    "https://docs.arcade.dev/en/guides/create-tools/tool-basics/build-mcp-server",
     "https://docs.arcade.dev/en/guides/deployment-hosting/warp-pipes",
     "https://docs.arcade.dev/en/guides/mcp-gateways",
     "https://docs.arcade.dev/en/guides/mcp-gateways/add-remote-servers",
     "https://docs.arcade.dev/en/guides/mcp-gateways/create-via-ai",
     "https://docs.arcade.dev/en/guides/mcp-gateways/create-via-dashboard",
+    "https://docs.arcade.dev/en/guides/tool-calling",
     "https://docs.arcade.dev/en/guides/user-sources",
     "https://docs.arcade.dev/en/guides/user-sources/auth0",
     "https://docs.arcade.dev/en/home",
+    "https://docs.arcade.dev/en/home/build-tools/create-a-tool-with-auth",
+    "https://docs.arcade.dev/en/references/api",
+    "https://docs.arcade.dev/en/references/arcade-cli",
     "https://docs.arcade.dev/en/resources/contact-us",
     "https://docs.arcade.dev/en/resources/examples",
     "https://docs.arcade.dev/en/resources/faq",
@@ -349,26 +300,9 @@
     "https://docs.arcade.dev/en/resources/registry-early-access",
     "https://docs.arcade.dev/en/resources/security-research-program",
     "https://docs.arcade.dev/en/resources/tools",
-    "https://docs.arcade.dev/get-started/mcp-clients",
-    "https://docs.arcade.dev/home",
-    "https://docs.arcade.dev/home/auth/how-arcade-helps",
-    "https://github.com/ArcadeAI/F1-Pitwall",
     "https://github.com/arcadeai/arcade-mcp",
-    "https://jobs.ashbyhq.com/arcadeai",
-    "https://www.arcade.dev/agents/gateway-templates?partner=langsmith-fleet",
-    "https://www.arcade.dev/blog",
-    "https://www.arcade.dev/blog/authors/guru-sattanathan",
-    "https://www.arcade.dev/blog/mcp-runtime-gateway/",
-    "https://www.arcade.dev/blog?category=company%20news",
-    "https://www.arcade.dev/contact",
-    "https://www.arcade.dev/mcp",
-    "https://www.arcade.dev/patterns",
-    "https://www.arcade.dev/pricing",
-    "https://www.arcade.dev/product",
-    "https://www.arcade.dev/tools",
-    "https://www.arcade.dev/white-papers",
-    "https://www.arcade.dev/workshop",
-    "https://www.truefoundry.com/blog/mcp-authentication-in-claude-code",
-    "https://www.zenml.io/llmops-database/secure-authentication-for-ai-agents-using-model-context-protocol"
+    "https://pypi.org/project/arcade-mcp-server/",
+    "https://www.arcade.dev/",
+    "https://www.arcade.dev/product"
   ]
 }
