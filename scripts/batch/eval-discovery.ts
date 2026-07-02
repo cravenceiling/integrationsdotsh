@@ -147,7 +147,14 @@ export function checklist(
   // Hosts the loop actually visited are grounded too — a service's docs often
   // live on a sibling registrable domain (canva.com → canva.dev).
   const visitedDomains = new Set((visited ?? []).map((url) => registrable(url)).filter(Boolean));
-  const groundingSet = new Set((grounding ?? []).map((url) => url.replace(/[.,;:]+$/, "")));
+  const groundingSet = new Set(
+    (grounding ?? []).flatMap((url) => {
+      const clean = url.replace(/[.,;:]+$/, "");
+      // URLs embedded in query params (auth.x.com/authorize?audience=https://api.y.com) ground too.
+      const embedded = decodeURIComponent(clean).match(/https?:\/\/[^\s"'<>),&\]`]+/g) ?? [];
+      return [clean, ...embedded];
+    }),
+  );
   // A HOST the loop read (in any URL) grounds other paths on that host — the
   // model saying management.filestackapi.com is fine when the docs showed
   // management.filestackapi.com/apps.
