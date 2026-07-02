@@ -28,8 +28,9 @@ export interface ConventionRow {
   path: string;
   status: ConventionStatus;
   detail: string;
+  detailTitle?: string;
   valueUrl?: string;
-  docsHref?: string;
+  specHref?: string;
 }
 
 type RecordLike = Record<string, unknown>;
@@ -44,10 +45,6 @@ function pathUrl(domain: string, path: string): string {
 function pathsText(paths: readonly string[]): string {
   if (paths.length <= 1) return paths[0] ?? "";
   return `${paths.slice(0, -1).join(", ")}, or ${paths[paths.length - 1]}`;
-}
-
-function plural(n: number, word: string): string {
-  return `${n} ${word}${n === 1 ? "" : "s"}`;
 }
 
 function stringArray(value: unknown): string[] {
@@ -65,11 +62,11 @@ function wasProbed(detect: RecordLike | null, key: ProbeKey): boolean {
 }
 
 function missingDetail(path: string): string {
-  return `Nothing at ${path}`;
+  return path;
 }
 
 function unprobedDetail(): string {
-  return "Not probed yet";
+  return "—";
 }
 
 function row(
@@ -78,19 +75,18 @@ function row(
   label: string,
   path: string,
   found: (() => { detail: string; valueUrl?: string } | null),
-  docsHref?: string,
+  specHref?: string,
 ): ConventionRow {
   if (!wasProbed(detect, key)) {
-    return { key, label, path, status: "unprobed", detail: unprobedDetail(), docsHref };
+    return { key, label, path, status: "unprobed", detail: unprobedDetail(), detailTitle: "not probed yet", specHref };
   }
   const hit = found();
-  if (hit) return { key, label, path, status: "found", ...hit, docsHref };
-  return { key, label, path, status: "missing", detail: missingDetail(path), docsHref };
+  if (hit) return { key, label, path, status: "found", ...hit, specHref };
+  return { key, label, path, status: "missing", detail: missingDetail(path), specHref };
 }
 
 export function buildConventionRows(detectValue: unknown, domain: string): ConventionRow[] {
   const detect = isRecord(detectValue) ? detectValue : null;
-  const docsHref = "/own-your-page/";
 
   return [
     row(
@@ -104,61 +100,51 @@ export function buildConventionRows(detectValue: unknown, domain: string): Conve
         const url = typeof value.url === "string" ? value.url : pathUrl(domain, INTEGRATIONS_JSON_PATH);
         return { detail: url, valueUrl: url };
       },
-      docsHref,
+      "/own-your-page/",
     ),
     row(detect, PROBE_KEYS.llmsTxt, "llms.txt", LLMS_TXT_PATH, () => {
       if (detect?.llmsTxt !== true) return null;
       const url = pathUrl(domain, LLMS_TXT_PATH);
       return { detail: url, valueUrl: url };
-    }, docsHref),
-    row(detect, PROBE_KEYS.apiCatalog, "API catalog", `${API_CATALOG_PATH} (RFC 9727)`, () => {
+    }, "https://llmstxt.org"),
+    row(detect, PROBE_KEYS.apiCatalog, "API catalog", API_CATALOG_PATH, () => {
       const catalog = isRecord(detect?.apiCatalog) ? detect.apiCatalog : null;
       if (!catalog) return null;
-      const counts = [
-        stringArray(catalog.rest).length ? plural(stringArray(catalog.rest).length, "REST link") : "",
-        stringArray(catalog.openapi).length ? plural(stringArray(catalog.openapi).length, "OpenAPI link") : "",
-        stringArray(catalog.docs).length ? plural(stringArray(catalog.docs).length, "docs link") : "",
-        stringArray(catalog.mcp).length ? plural(stringArray(catalog.mcp).length, "MCP link") : "",
-      ].filter(Boolean);
       const url = pathUrl(domain, API_CATALOG_PATH);
-      return { detail: counts.length ? `${url} (${counts.join(", ")})` : url, valueUrl: url };
-    }, docsHref),
+      return { detail: url, valueUrl: url };
+    }, "https://www.rfc-editor.org/rfc/rfc9727"),
     row(detect, PROBE_KEYS.openapiSchema, "OpenAPI document", pathsText(OPENAPI_PROBE_PATHS), () => {
       const schema = isRecord(detect?.apiSchema) ? detect.apiSchema : null;
       const url = typeof schema?.url === "string" ? schema.url : undefined;
       if (!url) return null;
-      const version = typeof schema?.version === "string" ? ` (${schema.version})` : "";
-      return { detail: `${url}${version}`, valueUrl: url };
-    }, docsHref),
+      return { detail: url, valueUrl: url };
+    }, "https://spec.openapis.org/oas/latest.html"),
     row(detect, PROBE_KEYS.mcpServerCard, "MCP server card", MCP_SERVER_CARD_PATH, () => {
       const mcp = Array.isArray(detect?.mcp) ? detect.mcp : [];
       const serverCard = mcp.find((item) => isRecord(item) && item.source === "server-card") as RecordLike | undefined;
       const endpoint = typeof serverCard?.url === "string" ? serverCard.url : undefined;
       if (!endpoint) return null;
       return { detail: endpoint, valueUrl: endpoint };
-    }, docsHref),
+    }, "https://modelcontextprotocol.io"),
     row(detect, PROBE_KEYS.oauthProtectedResource, "OAuth protected resource", OAUTH_PROTECTED_RESOURCE_PATH, () => {
       const auth = isRecord(detect?.auth) ? detect.auth : null;
       const oauth = isRecord(auth?.oauth) ? auth.oauth : null;
       if (!oauth) return null;
       const protectedResourceUrl = typeof oauth.protectedResourceUrl === "string" ? oauth.protectedResourceUrl : pathUrl(domain, OAUTH_PROTECTED_RESOURCE_PATH);
-      const servers = stringArray(oauth.authorizationServers);
-      return { detail: servers.length ? `${protectedResourceUrl} -> ${servers.join(", ")}` : protectedResourceUrl, valueUrl: protectedResourceUrl };
-    }, docsHref),
+      return { detail: protectedResourceUrl, valueUrl: protectedResourceUrl };
+    }, "https://www.rfc-editor.org/rfc/rfc9728"),
     row(detect, PROBE_KEYS.agentCard, "Agent card", AGENT_CARD_PATH, () => {
       const card = isRecord(detect?.agentCard) ? detect.agentCard : null;
       if (!card) return null;
       const url = typeof card.url === "string" ? card.url : pathUrl(domain, AGENT_CARD_PATH);
-      const name = typeof card.name === "string" ? card.name : "agent card";
-      return { detail: `${name} (${url})`, valueUrl: url };
-    }, docsHref),
+      return { detail: url, valueUrl: url };
+    }, "https://a2a-protocol.org"),
     row(detect, PROBE_KEYS.agentSkills, "Agent skills", AGENT_SKILLS_PATH, () => {
       const skills = isRecord(detect?.agentSkills) ? detect.agentSkills : null;
       const count = typeof skills?.count === "number" ? skills.count : 0;
       if (!skills || !count) return null;
-      const names = stringArray(skills.names).slice(0, 4);
       const url = pathUrl(domain, AGENT_SKILLS_PATH);
-      return { detail: names.length ? `${plural(count, "skill")}: ${names.join(", ")}` : plural(count, "skill"), valueUrl: url };
-    }, docsHref),
+      return { detail: url, valueUrl: url };
+    }),
   ];
 }

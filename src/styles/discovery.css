@@ -29,16 +29,24 @@ a.disc-ename:hover { text-decoration: underline; text-underline-offset: 3px; }
 .disc-prov-det { color: var(--gray-700); border: 1px solid var(--gray-200); }
 .disc-prov-disc { color: var(--gray-400); }
 .disc-prov-decl { color: var(--gray-700); border: 1px solid var(--gray-200); background: var(--gray-25); }
-.disc-conv { margin-top: 38px; }
-.conv-list { list-style: none; padding: 0; margin: 0; }
-.conv-row { display: grid; grid-template-columns: minmax(142px, 0.38fr) 24px minmax(0, 1fr); gap: 12px; align-items: baseline; padding: 12px 0; border-bottom: 1px solid var(--gray-100); }
-.conv-label { font-size: 12px; color: var(--gray-700); background: transparent; padding: 0; border-radius: 0; word-break: break-word; }
+.disc-conv { margin-top: 24px; max-width: 760px; }
+.conv-summary { cursor: pointer; width: max-content; max-width: 100%; }
+.conv-summary-text { text-transform: none; letter-spacing: 0; }
+.conv-list { list-style: none; padding: 0; margin: 10px 0 0; }
+.conv-row { display: grid; grid-template-columns: minmax(136px, 0.32fr) 18px minmax(0, 1fr); gap: 10px; align-items: baseline; padding: 8px 0; border-bottom: 1px solid var(--gray-100); }
+.conv-name { font-family: var(--font-mono); font-size: 12px; color: var(--gray-700); text-decoration: none; word-break: break-word; }
+a.conv-name:hover { text-decoration: underline; text-underline-offset: 2px; }
 .conv-status { font-family: var(--font-mono); font-size: 12px; color: var(--gray-400); text-align: center; }
 .conv-status-found { color: var(--gray-1000); }
 .conv-status-missing, .conv-status-unprobed { color: var(--gray-400); }
-.conv-detail { min-width: 0; font-size: 13px; color: var(--gray-500); line-height: 1.55; overflow-wrap: anywhere; }
+.conv-detail { min-width: 0; font-size: 12px; color: var(--gray-500); line-height: 1.55; overflow-wrap: anywhere; }
+.conv-path { font-family: var(--font-mono); color: var(--gray-400); background: transparent; padding: 0; border-radius: 0; }
 .conv-link { color: var(--gray-1000); text-decoration: underline; text-underline-offset: 2px; }
 .conv-link:hover { color: var(--gray-500); }
+.conv-url { word-break: break-all; }
+.conv-owner { margin: 10px 0 0; font-family: var(--font-mono); font-size: 11.5px; color: var(--gray-400); }
+.conv-owner a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.conv-owner a:hover { color: var(--gray-1000); }
 .conv-action { appearance: none; border: 0; background: transparent; padding: 0; margin: 0; font: inherit; color: var(--gray-1000); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
 .conv-action:hover { color: var(--gray-500); }
 .disc-creds { margin-top: 26px; padding-top: 6px; }

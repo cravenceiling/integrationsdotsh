@@ -46,42 +46,45 @@ function Prov({ p }: { p: Basis }) {
 function ConventionDetail({ row }: { row: ConventionRow }) {
   if (row.status === "found") {
     return row.valueUrl ? (
-      <a className="conv-link" href={row.valueUrl} target="_blank" rel="noopener noreferrer">
+      <a className="conv-link conv-url" href={row.valueUrl} target="_blank" rel="noopener">
         {row.detail}
       </a>
     ) : (
-      <span>{row.detail}</span>
+      <span className="conv-url">{row.detail}</span>
     );
   }
   if (row.status === "unprobed") {
-    return <span>{row.detail}</span>;
+    return (
+      <span className="conv-path" title={row.detailTitle}>
+        {row.detail}
+      </span>
+    );
   }
   return (
-    <span>
-      Nothing at{" "}
-      {row.docsHref ? (
-        <a className="conv-link" href={row.docsHref}>
-          {row.path}
-        </a>
-      ) : (
-        row.path
-      )}
-    </span>
+    <code className="conv-path">{row.detail}</code>
   );
 }
 
 function Conventions({ rows }: { rows: ConventionRow[] }) {
   const found = rows.filter((row) => row.status === "found").length;
+  const probed = rows.filter((row) => row.status !== "unprobed").length;
   return (
-    <section className="disc-sec disc-conv" id="conventions">
-      <div className="sec-header">
-        <span className="sec-label">Conventions</span>
-        <span className="sec-note">{found}/{rows.length}</span>
-      </div>
+    <details className="disc-conv" id="conventions">
+      <summary className="conv-summary">
+        <span className="sec-label conv-summary-text">
+          conventions · {found}/{probed} published
+        </span>
+      </summary>
       <ul className="conv-list">
         {rows.map((row) => (
           <li className="conv-row" key={row.key}>
-            <code className="conv-label">{row.label}</code>
+            {row.specHref ? (
+              <a className="conv-name" href={row.specHref} target="_blank" rel="noopener">
+                {row.label}
+              </a>
+            ) : (
+              <span className="conv-name">{row.label}</span>
+            )}
             <span className={`conv-status conv-status-${row.status}`} aria-label={row.status}>
               {row.status === "found" ? "✓" : row.status === "missing" ? "✗" : "—"}
             </span>
@@ -91,7 +94,10 @@ function Conventions({ rows }: { rows: ConventionRow[] }) {
           </li>
         ))}
       </ul>
-    </section>
+      <p className="conv-owner">
+        Own these signals → <a href="/own-your-page/">/own-your-page</a>
+      </p>
+    </details>
   );
 }
 
@@ -293,8 +299,6 @@ export default function Surfaces({
         </section>
       ))}
 
-      <Conventions rows={conventions} />
-
       {credList.length > 0 && (
         <section className="disc-sec disc-creds">
           <div className="sec-header">
@@ -324,6 +328,8 @@ export default function Surfaces({
           ))}
         </section>
       )}
+
+      <Conventions rows={conventions} />
     </div>
   );
 }
