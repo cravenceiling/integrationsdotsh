@@ -262,7 +262,7 @@ function demoteBadMcpUrls(
   if (!Array.isArray(result.surfaces)) return;
   for (const surface of result.surfaces) {
     if (surface.type !== "mcp" || !surface.url) continue;
-    if (!/[?&](redirect|returnTo|continue)=|\/(login|signin|sign-in|choose-org|settings)\b/i.test(surface.url)) continue;
+    if (!/[?&](redirect|returnTo|continue)=|\/(login|signin|sign-in|choose-org|settings)\b|^https?:\/\/docs\.|\/docs\//i.test(surface.url)) continue;
     const url = surface.url;
     delete surface.url;
     if (!surface.docs) surface.docs = url;
