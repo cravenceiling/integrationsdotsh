@@ -2,14 +2,16 @@
 //
 // Two contexts call this:
 //  - build-time prerender: no worker env — fetch the GitHub API directly by
-//    default (one call per build, module-cached), with a 1-hour file cache and
-//    stale cache fallback when GitHub is unavailable. Set
+//    default (one call per build, module-cached), with a 1-hour file cache.
+//    If GitHub is unavailable, fall back to the newer of the stale file cache
+//    and the committed seed so cacheless CI builds still bake a count. Set
 //    INTEGRATIONS_SKIP_GITHUB_STARS=1 to skip the fetch for offline builds.
 //  - worker SSR: read the baked /disc/meta.json through the ASSETS binding
 //    (written at build from the same GitHub fetch), so runtime pages show the
 //    same number as the prerendered ones without touching the GitHub API.
 
 import { mkdir, readFile, writeFile } from "node:fs/promises";
+import seed from "~/data/github-stars.json";
 
 const REPO = "UsefulSoftwareCo/integrationsdotsh";
 const GITHUB_STARS_URL = `https://api.github.com/repos/${REPO}`;
@@ -24,15 +26,32 @@ interface AssetsFetcher {
 
 let cached: Promise<number | null> | undefined;
 
-async function readStarsCache(): Promise<{ stars: number; fetchedAt: number } | null> {
+type StarsSnapshot = { stars: number; fetchedAt: number };
+
+function parseStarsSnapshot(data: unknown): StarsSnapshot | null {
+  if (!data || typeof data !== "object") return null;
+  const snapshot = data as { stars?: unknown; fetchedAt?: unknown };
+  return typeof snapshot.stars === "number" && typeof snapshot.fetchedAt === "number"
+    ? { stars: snapshot.stars, fetchedAt: snapshot.fetchedAt }
+    : null;
+}
+
+function readStarsSeed(): StarsSnapshot | null {
+  return parseStarsSnapshot(seed);
+}
+
+function newerStarsSnapshot(
+  a: StarsSnapshot | null,
+  b: StarsSnapshot | null,
+): StarsSnapshot | null {
+  if (!a) return b;
+  if (!b) return a;
+  return a.fetchedAt >= b.fetchedAt ? a : b;
+}
+
+async function readStarsCache(): Promise<StarsSnapshot | null> {
   try {
-    const data = JSON.parse(await readFile(STARS_CACHE_FILE, "utf8")) as {
-      stars?: unknown;
-      fetchedAt?: unknown;
-    };
-    return typeof data.stars === "number" && typeof data.fetchedAt === "number"
-      ? { stars: data.stars, fetchedAt: data.fetchedAt }
-      : null;
+    return parseStarsSnapshot(JSON.parse(await readFile(STARS_CACHE_FILE, "utf8")));
   } catch {
     return null;
   }
@@ -66,7 +85,7 @@ async function fromGitHub(): Promise<number | null> {
   const cache = await readStarsCache();
   if (cache && Date.now() - cache.fetchedAt < STARS_CACHE_TTL_MS) return cache.stars;
   const stars = await fetchGitHubStars();
-  if (stars == null) return cache?.stars ?? null;
+  if (stars == null) return newerStarsSnapshot(cache, readStarsSeed())?.stars ?? null;
   await writeStarsCache(stars);
   return stars;
 }
