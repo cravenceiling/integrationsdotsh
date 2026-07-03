@@ -94,7 +94,7 @@ const example = `{
 // Prompt A — the main one. Paste into a coding agent from the product's repo.
 // It embeds a compact schema summary so it works offline, and quotes the exact
 // paths this site probes (see src/lib/conventions.ts + src/lib/detect.ts).
-const promptMain = `You are working inside my product's repository. Goal: make my product discoverable on integrations.sh by publishing standard discovery files on my own domain. Derive every value from THIS repo and its docs. Never invent endpoints, specs, or auth. Leave out any surface my product does not actually have.
+const promptMain = `You are working inside my product's repository. Goal: make my product discoverable on integrations.sh by publishing discovery files on my own domain — both the open standards it reads and its own /.well-known/integrations.json declaration. Publish every format that applies to my product; they are complementary, not alternatives. Derive every value from THIS repo and its docs. Never invent endpoints, specs, or auth. Leave out any file or surface my product does not actually have.
 
 # 1. Inventory the integration surfaces
 
@@ -155,18 +155,28 @@ Rules:
 - Only include surfaces that exist. Omit "credentials" / "surfaces" entirely if there are none.
 - The file must parse as strict JSON and validate against the v3 shape above, or integrations.sh silently ignores it.
 
-# 3. Also publish, if applicable
+# 3. Publish the open standards that apply
 
-- If my product has an HTTP API and an OpenAPI/Swagger spec exists (or can be generated from the code), serve it at /openapi.json (integrations.sh also probes /swagger.json, /api/openapi.json, /v1/openapi.json, /api/schema/ — /openapi.json is the canonical one). Serve as application/json, publicly cacheable. If a spec route already exists, just make sure one of those paths resolves to it.
-- If my product ships an MCP server, also serve /.well-known/mcp/server-card.json with at least { "url": "<mcp connect endpoint>" } and, if the server needs auth, "authentication": { "type": "oauth2", "authorization_server"?: "<as url>" }. application/json, publicly cacheable.
+integrations.sh reads these alongside integrations.json — publish every one my product qualifies for:
+
+- OpenAPI: if my product has an HTTP API and an OpenAPI/Swagger spec exists (or can be generated from the code), serve it at /openapi.json (integrations.sh also probes /swagger.json, /api/openapi.json, /v1/openapi.json, /api/schema/ — /openapi.json is the canonical one). Serve as application/json, publicly cacheable. If a spec route already exists, just make sure one of those paths resolves to it.
+- MCP server card: if my product ships an MCP server, serve /.well-known/mcp/server-card.json with at least { "url": "<mcp connect endpoint>" } and, if the server needs auth, "authentication": { "type": "oauth2", "authorization_server"?: "<as url>" }. application/json, publicly cacheable.
+- llms.txt: if my docs have a good plain-language overview, serve /llms.txt summarizing the product and linking the key docs pages.
+- api-catalog (RFC 9727): if I publish more than one API surface, serve /.well-known/api-catalog as a linkset pointing at my API base URLs, OpenAPI docs, and MCP endpoints.
+- OAuth protected resource (RFC 9728): if my API or MCP endpoint is protected by OAuth, serve /.well-known/oauth-protected-resource with the resource id and authorization server(s).
+- Agent card: if my site publishes an agent-facing identity, serve /.well-known/agent-card.json.
+- Agent skills: if my product ships reusable agent skills or task instructions, serve /.well-known/agent-skills/index.json listing them.
+
+Skip any of these that don't apply — only publish files backed by something real in this repo.
 
 # 4. Verify
 
-Print copy-paste curl commands to confirm each published file resolves on my live domain with a JSON content-type, e.g.:
+Print copy-paste curl commands to confirm EVERY file you published resolves on my live domain with the right content-type (JSON files as application/json), e.g.:
   curl -sS -D- -o/dev/null https://MY_DOMAIN/.well-known/integrations.json
   curl -sS https://MY_DOMAIN/.well-known/integrations.json | jq .
   curl -sS -D- -o/dev/null https://MY_DOMAIN/openapi.json                 # if you published one
   curl -sS https://MY_DOMAIN/.well-known/mcp/server-card.json | jq .      # if you published one
+  ...and one per standard from step 3 that you published.
 
 Then tell me: open https://integrations.sh/MY_DOMAIN/ and click "Map integration surface" to publish the listing.`;
 
@@ -193,6 +203,10 @@ const formats = [
   { path: "/.well-known/agent-skills/index.json", feeds: "Agent skill inventory.", adoption: "Use it when your domain publishes reusable skills or task instructions." },
   { path: "/.well-known/integrations.json", feeds: "Your declared v3 summary, credentials, and surfaces.", adoption: "Use it when you want this registry page to reflect your own integration map directly." },
 ];
+
+const integrationsFormat = formats.find((format) => format.path === "/.well-known/integrations.json");
+if (!integrationsFormat) throw new Error("Missing integrations.json format");
+const standardFormats = formats.filter((format) => format.path !== integrationsFormat.path);
 ---
 
 <Base title={title} description={description} path="/publishing/">
@@ -203,22 +217,94 @@ const formats = [
       <header class="own-head">
         <h1>Get your service listed</h1>
         <p>
-          integrations.sh isn't a closed registry — it reads open discovery files from your own domain. Publish a couple of
-          standard files, and any client that implements the same checks can find you. You're not waiting on us to merge a PR;
-          your listing is pulled from your site. If a better community standard emerges, we'll happily adopt it.
+          integrations.sh isn't a closed registry. Publish discovery metadata on your own domain, and your listing is pulled
+          from your site instead of waiting on us to merge a PR.
         </p>
       </header>
 
+      <section>
+        <p class="sec-intro">
+          We read open standards and integrations.sh's own declaration format. Publish whichever you have — they all feed
+          your listing, and more coverage means a richer page.
+        </p>
+        <div class="format-tabs" data-tabs>
+          <div class="tab-list" role="tablist" aria-label="Publishing formats">
+            <button
+              class="tab-btn"
+              type="button"
+              role="tab"
+              id="formats-tab-standards"
+              aria-selected="true"
+              aria-controls="formats-panel-standards"
+            >
+              Official standards
+            </button>
+            <button
+              class="tab-btn"
+              type="button"
+              role="tab"
+              id="formats-tab-integrations"
+              aria-selected="false"
+              aria-controls="formats-panel-integrations"
+              tabindex="-1"
+            >
+              integrations.json
+            </button>
+          </div>
+          <div
+            class="tab-panel"
+            role="tabpanel"
+            id="formats-panel-standards"
+            aria-labelledby="formats-tab-standards"
+          >
+            <p>
+              Publish any or all of these open, official formats and we'll pick them up. Nothing here is proprietary to us.
+            </p>
+            <div class="format-table">
+              {standardFormats.map((format) => (
+                <div class="format-row">
+                  <code>{format.path}</code>
+                  <p>{format.feeds}</p>
+                  <p>{format.adoption}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div
+            class="tab-panel"
+            role="tabpanel"
+            id="formats-panel-integrations"
+            aria-labelledby="formats-tab-integrations"
+            hidden
+          >
+            <div class="format-detail">
+              <code>{integrationsFormat.path}</code>
+              <p>{integrationsFormat.feeds}</p>
+              <p>{integrationsFormat.adoption}</p>
+            </div>
+            <p>
+              <code>/.well-known/integrations.json</code> is the integrations.sh owner declaration format. It is a v3 discovery
+              subset you can author: <code>{`{ version: 3, summary?, credentials?, surfaces? }`}</code>. Credentials and surfaces
+              use the same wire schema as the registry output.
+            </p>
+            <pre class="code-block own-code"><code>{example}</code></pre>
+          </div>
+        </div>
+      </section>
+
       <section class="flow">
         <div class="sec-header"><span class="sec-label">Get Listed</span></div>
+        <p class="sec-intro">
+          Use these steps to publish and verify the files on your live domain — the prompt covers every format above.
+        </p>
 
         <ol class="steps">
           <li class="step">
             <div class="step-head"><span class="step-n">1</span><h2>Publish discovery files</h2></div>
             <p>
               Paste this into your coding agent (Claude Code, Cursor, Codex) from your product's repo. It inventories your
-              integration surfaces, writes <code>/.well-known/integrations.json</code>, and serves an OpenAPI spec and MCP
-              server card if you have them.
+              integration surfaces, writes <code>/.well-known/integrations.json</code>, and publishes every open standard
+              that applies — OpenAPI spec, MCP server card, llms.txt, and the rest.
             </p>
 
             <div class="prompt" data-copy>
@@ -268,37 +354,6 @@ curl -sS https://your-domain.com/.well-known/mcp/server-card.json | jq . # if pu
       </section>
 
       <section>
-        <div class="sec-header"><span class="sec-label">integrations.json</span></div>
-        <p>
-          <code>/.well-known/integrations.json</code> is the integrations.sh owner declaration format. It is a v3 discovery
-          subset you can author: <code>{`{ version: 3, summary?, credentials?, surfaces? }`}</code>. Credentials and surfaces
-          use the same wire schema as the registry output.
-        </p>
-        <pre class="code-block own-code"><code>{example}</code></pre>
-        <p>
-          We needed a way to represent this data for ourselves; we publish the format so you can own it. If a better community
-          standard emerges, we'll happily migrate.
-        </p>
-      </section>
-
-      <section>
-        <div class="sec-header"><span class="sec-label">Formats We Read</span></div>
-        <p class="sec-intro">
-          <code>integrations.json</code> is the direct route, but you can also publish any of these and we'll pick them up. All
-          are open — nothing is proprietary to us.
-        </p>
-        <div class="format-table">
-          {formats.map((format) => (
-            <div class="format-row">
-              <code>{format.path}</code>
-              <p>{format.feeds}</p>
-              <p>{format.adoption}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section>
         <div class="sec-header"><span class="sec-label">What We May Add</span></div>
         <p>
           Owner declarations are respected as the owner's statement of intent. The registry may additionally record verified
@@ -335,6 +390,39 @@ curl -sS https://your-domain.com/.well-known/mcp/server-card.json | jq . # if pu
       btn.classList.add("copied");
       btn.textContent = "copied";
       setTimeout(() => { btn.classList.remove("copied"); btn.textContent = "copy"; }, 1400);
+    });
+  }
+
+  for (const tablist of document.querySelectorAll<HTMLElement>("[data-tabs] [role='tablist']")) {
+    const tabs = Array.from(tablist.querySelectorAll<HTMLButtonElement>("[role=tab]"));
+    const activate = (tab: HTMLButtonElement) => {
+      for (const item of tabs) {
+        const selected = item === tab;
+        item.setAttribute("aria-selected", String(selected));
+        item.tabIndex = selected ? 0 : -1;
+        const panel = document.getElementById(item.getAttribute("aria-controls") ?? "");
+        if (panel) panel.hidden = !selected;
+      }
+    };
+
+    tablist.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const tab = target.closest<HTMLButtonElement>("[role=tab]");
+      if (!tab || !tablist.contains(tab)) return;
+      activate(tab);
+    });
+
+    tablist.addEventListener("keydown", (event) => {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      if (tabs.length === 0) return;
+      event.preventDefault();
+      const currentIndex = Math.max(tabs.indexOf(document.activeElement as HTMLButtonElement), 0);
+      const offset = event.key === "ArrowRight" ? 1 : -1;
+      const next = tabs[(currentIndex + offset + tabs.length) % tabs.length];
+      if (!next) return;
+      next.focus();
+      activate(next);
     });
   }
 </script>
@@ -400,14 +488,32 @@ curl -sS https://your-domain.com/.well-known/mcp/server-card.json | jq . # if pu
     border: 1px solid var(--gray-100); border-radius: 4px; padding: 1px 5px; font-size: 12px;
   }
 
+  .format-tabs { margin-top: 18px; }
+  .tab-list { display: flex; gap: 18px; border-bottom: 1px solid var(--gray-100); }
+  .tab-btn {
+    appearance: none; cursor: pointer;
+    margin: 0 0 -1px; padding: 0 0 9px;
+    font-family: var(--font-mono); font-size: 12px; color: var(--gray-500);
+    background: transparent; border: 0; border-bottom: 1px solid transparent;
+    transition: color 0.12s, border-color 0.12s;
+  }
+  .tab-btn:hover { color: var(--gray-1000); }
+  .tab-btn[aria-selected="true"] { color: var(--gray-1000); border-bottom-color: var(--gray-1000); }
+  .tab-btn:focus-visible { outline: 2px solid var(--gray-400); outline-offset: 3px; border-radius: 3px; }
+  .tab-panel { padding-top: 16px; }
+  .tab-panel[hidden] { display: none; }
+  .tab-panel > :first-child { margin-top: 0; }
+
   .format-table { margin-top: 12px; }
   .format-row { display: grid; grid-template-columns: minmax(190px, 0.55fr) minmax(0, 1fr) minmax(0, 1fr); gap: 18px; padding: 13px 0; border-bottom: 1px solid var(--gray-100); align-items: baseline; }
-  .format-row code { color: var(--gray-1000); background: var(--gray-25); border: 1px solid var(--gray-100); border-radius: 4px; padding: 1px 5px; font-size: 12px; overflow-wrap: anywhere; }
-  .format-row p { margin: 0; color: var(--gray-500); font-size: 13px; line-height: 1.55; }
+  .format-detail { display: grid; grid-template-columns: minmax(190px, 0.55fr) minmax(0, 1fr) minmax(0, 1fr); gap: 18px; margin: 0 0 14px; padding: 13px 0; border-bottom: 1px solid var(--gray-100); align-items: baseline; }
+  .format-row code, .format-detail code { color: var(--gray-1000); background: var(--gray-25); border: 1px solid var(--gray-100); border-radius: 4px; padding: 1px 5px; font-size: 12px; overflow-wrap: anywhere; }
+  .format-row p, .format-detail p { margin: 0; color: var(--gray-500); font-size: 13px; line-height: 1.55; }
   .own-code { margin: 14px 0; max-height: 560px; }
 
   @media (max-width: 720px) {
     .own-head h1 { font-size: 29px; }
-    .format-row { grid-template-columns: 1fr; gap: 5px; }
+    .tab-list { gap: 14px; }
+    .format-row, .format-detail { grid-template-columns: 1fr; gap: 5px; }
   }
 </style>
