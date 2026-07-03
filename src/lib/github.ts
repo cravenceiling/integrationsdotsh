@@ -1,14 +1,15 @@
-// GitHub star count for the nav badge, resolved once per process and cached.
+// Build-time GitHub star seed for the nav badge, resolved once per process.
 //
-// Two contexts call this:
+// This is the first layer of the star-count story:
 //  - build-time prerender: no worker env — fetch the GitHub API directly by
 //    default (one call per build, module-cached), with a 1-hour file cache.
 //    If GitHub is unavailable, fall back to the newer of the stale file cache
-//    and the committed seed so cacheless CI builds still bake a count. Set
-//    INTEGRATIONS_SKIP_GITHUB_STARS=1 to skip the fetch for offline builds.
-//  - worker SSR: read the baked /disc/meta.json through the ASSETS binding
-//    (written at build from the same GitHub fetch), so runtime pages show the
-//    same number as the prerendered ones without touching the GitHub API.
+//    and the committed seed (refreshed daily by CI) so cacheless CI builds
+//    still bake a count. Set INTEGRATIONS_SKIP_GITHUB_STARS=1 to skip the
+//    fetch for offline builds.
+//  - worker SSR: read the baked /disc/meta.json through the ASSETS binding.
+// The client-side nav enhancement then asks /api/stars.json for the runtime
+// layer, which is edge-cached and falls back to this baked value.
 
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import seed from "~/data/github-stars.json";

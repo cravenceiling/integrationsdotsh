@@ -1,7 +1,8 @@
 ---
-// Top nav: wordmark + GitHub star badge. Star count comes from getStars() —
-// GitHub API at build time for prerendered pages, the baked /disc/meta.json
-// for worker-rendered pages — so both always show the same number.
+// Top nav: wordmark + GitHub star badge. The server-rendered count is the
+// baked build value (GitHub fetch/file cache/CI seed, or /disc/meta.json for
+// worker SSR) so it paints immediately. A tiny client script then asks
+// /api/stars.json for the edge-cached runtime value and updates only the text.
 import { REPO_URL, getStars } from "~/lib/github.ts";
 import { formatStars } from "~/lib/format.ts";
 
@@ -23,3 +24,30 @@ const stars = await getStars(Astro.locals.runtime?.env);
     </a>
   </div>
 </nav>
+
+<script>
+  import { formatStars } from "~/lib/format.ts";
+
+  async function updateGitHubStars() {
+    try {
+      const res = await fetch("/api/stars.json");
+      if (!res.ok) return;
+      const data = (await res.json()) as { stars?: unknown };
+      if (typeof data.stars !== "number") return;
+
+      const link = document.querySelector<HTMLAnchorElement>(".ghstar");
+      if (!link) return;
+      let count = link.querySelector<HTMLSpanElement>(".ghstar-n");
+      if (!count) {
+        count = document.createElement("span");
+        count.className = "ghstar-n";
+        link.append(count);
+      }
+      count.textContent = formatStars(data.stars);
+    } catch {
+      // The baked server value is already visible.
+    }
+  }
+
+  updateGitHubStars();
+</script>
