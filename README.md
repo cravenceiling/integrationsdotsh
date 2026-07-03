@@ -179,9 +179,9 @@ bun run cf:deploy       # build + wrangler deploy
 bun run cf:deploy-only   # deploy an already-built dist/
 ```
 
-A GitHub Actions workflow (`.github/workflows/deploy.yml`) deploys on push to `main` once the
-`CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` repo secrets are set; until then, deploys are
-run manually with the commands above.
+Cloudflare Workers Builds (the repo's git integration) builds and deploys every push to `main`
+automatically — the "Workers Builds: integrationsdotsh" check on each commit. The commands above
+are for manual/emergency deploys only.
 
 ---
 
