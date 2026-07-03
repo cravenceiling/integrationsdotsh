@@ -16,7 +16,6 @@ import resvgWasmModule from "@resvg/resvg-wasm/index_bg.wasm?module";
 import yogaWasmModule from "satori/yoga.wasm?module";
 import { apiContext, apiHandler } from "./api.ts";
 import { canonicalRedirect } from "./canonical.ts";
-import { sitemapSurfacesResponse } from "./sitemap-surfaces.ts";
 import { discoveryDoc, discoveryKvGet } from "./discovery-doc.ts";
 import { domainsJsonWithLiveIndex, upsertLiveIndex } from "./live-index.ts";
 import { setChat, setWebBackend, discoverWithProgress, preserveSlugs } from "./operations.ts";
@@ -411,7 +410,6 @@ async function handleRequest(
     if (canonical) return canonical;
     const aliasRedirect = aliasDomainRedirect(request, url);
     if (aliasRedirect) return aliasRedirect;
-    if (url.pathname === "/sitemap-surfaces.xml") return sitemapSurfacesResponse();
     wireAi(env);
 
     // First-party analytics proxy — posthog-js points api_host here (see
