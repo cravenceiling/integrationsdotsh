@@ -12209,6 +12209,33 @@
       ]
     },
     {
+      "domain": "dub.co",
+      "summary": "Dub (dub.co) exposes an authenticated REST API (Bearer API key) plus two official remote MCP servers — Dub Links and Dub Partners — both authenticated via an API key passed in the Mcp-Dub-Token header; no public GraphQL or CLI surface was confirmed.",
+      "surfaces": [
+        {
+          "slug": "dub-api",
+          "name": "Dub API",
+          "type": "http",
+          "authStatus": "required",
+          "url": "https://api.dub.co"
+        },
+        {
+          "slug": "dub-links-mcp-server",
+          "name": "Dub Links MCP server",
+          "type": "mcp",
+          "authStatus": "required",
+          "url": "https://mcp.dub.sh/mcp/dub-links"
+        },
+        {
+          "slug": "dub-partners-mcp-server",
+          "name": "Dub Partners MCP server",
+          "type": "mcp",
+          "authStatus": "required",
+          "url": "https://mcp.dub.sh/mcp/dub-partners"
+        }
+      ]
+    },
+    {
       "domain": "duffel.com",
       "summary": "Duffel exposes one public developer surface: the authenticated v2 HTTP API at https://api.duffel.com/air, using a Duffel access token via Authorization: Bearer.",
       "surfaces": [
