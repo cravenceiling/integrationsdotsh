@@ -11,6 +11,7 @@
 import Base from "~/layouts/Base.astro";
 import Breadcrumb from "~/components/Breadcrumb.astro";
 import Setup from "~/components/surface/Setup.tsx";
+import { aliasesOf, canonicalDomain } from "~/lib/domain-aliases.ts";
 import { faviconFor, isJunkDomain } from "~/lib/favicon.ts";
 import { isSdkNotCli } from "~/lib/surface-classify.ts";
 import {
@@ -29,7 +30,7 @@ import "~/styles/discovery.css";
 export const prerender = false;
 
 const runtime = Astro.locals.runtime;
-const domain = decodeURIComponent(Astro.params.domain ?? "").trim().toLowerCase();
+const domain = canonicalDomain(decodeURIComponent(Astro.params.domain ?? ""));
 const slug = decodeURIComponent(Astro.params.surface ?? "");
 
 // Only `/{something.with.a.dot}/{slug}/` is a surface page; anything else is a
@@ -46,7 +47,13 @@ let creds: Record<string, Credential> = {};
 
 if (looksLikeDomain && !isJunkDomain(domain) && runtime) {
   // Live discovery (KV) wins; fall back to the baseline discovery document.
-  const raw = await runtime.env.DISCOVERY.get(domain);
+  let raw = await runtime.env.DISCOVERY.get(domain);
+  if (!raw) {
+    for (const alias of aliasesOf(domain)) {
+      raw = await runtime.env.DISCOVERY.get(alias);
+      if (raw) break;
+    }
+  }
   if (raw) {
     const stored = JSON.parse(raw) as { result?: DiscoveryDoc };
     surface = find(stored.result);
