@@ -298,7 +298,7 @@ async function main(): Promise<void> {
     if (!existsSync(catalogPath)) {
       console.log(`validate-results: catalog file not found at ${catalogPath}, skipping catalog checks`);
     } else {
-      type CatalogSurface = { slug?: unknown; name?: unknown; type?: unknown; url?: unknown; spec?: unknown; command?: unknown; authStatus?: unknown };
+      type CatalogSurface = { slug?: unknown; name?: unknown; type?: unknown; url?: unknown; spec?: unknown; command?: unknown; packages?: unknown; authStatus?: unknown };
       type CatalogDomain = { domain?: unknown; summary?: unknown; surfaces?: CatalogSurface[] };
       const catalog = readJson<{ domains?: CatalogDomain[] }>(catalogPath);
       const domainCounts = new Map<string, number>();
@@ -321,12 +321,13 @@ async function main(): Promise<void> {
           const hasUrl = typeof s.url === "string" && s.url.trim().length > 0;
           const hasSpec = typeof s.spec === "string" && s.spec.trim().length > 0;
           const hasCommand = typeof s.command === "string" && s.command.trim().length > 0;
+          const hasPackages = Array.isArray(s.packages) && s.packages.length > 0;
           if ((type === "http" || type === "openapi" || type === "graphql") && !hasUrl && !hasSpec) {
             report.add("catalogMissingLocator", domain, `type=${type} name=${JSON.stringify(s.name)} (needs url or spec)`);
           } else if (type === "mcp" && !hasUrl) {
             report.add("catalogMissingLocator", domain, `type=mcp name=${JSON.stringify(s.name)} (needs url)`);
-          } else if (type === "cli" && !hasCommand) {
-            report.add("catalogMissingLocator", domain, `type=cli name=${JSON.stringify(s.name)} (needs command)`);
+          } else if (type === "cli" && !hasCommand && !hasPackages) {
+            report.add("catalogMissingLocator", domain, `type=cli name=${JSON.stringify(s.name)} (needs command or packages)`);
           }
 
           const key = `${type}|${normName(typeof s.name === "string" ? s.name : "")}`;

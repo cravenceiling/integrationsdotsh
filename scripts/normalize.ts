@@ -387,6 +387,7 @@ interface DiscoveredSurface {
   url?: string;
   spec?: string;
   command?: string;
+  packages?: Array<{ registryType?: string; identifier?: string; runtimeHint?: string }>;
   authStatus: "none" | "required" | "unknown";
 }
 
@@ -468,7 +469,7 @@ function buildDiscovered(
         };
       } else {
         rec.cli = {
-          install: surface.command ?? "",
+          install: surface.command ?? surface.packages?.[0]?.identifier ?? "",
           domain,
         };
       }
